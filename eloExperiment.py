@@ -11,6 +11,49 @@ import torch
 from fenwick import FenwickTree
 from sortedcontainers import SortedList
 
+
+
+@dataclass
+class LlamaCppModelData:
+    model: str
+    model_hf: str
+    '''
+    messages example
+    [
+      {
+        "role": "user",
+        "content": "What is the meaning of life?"
+      }
+    ]
+    '''
+    
+    def __post_init__(self):
+        import llama_cpp
+        self.processor = AutoProcessor.from_pretrained(self.model_hf)
+        self.llm = llama_cpp.Llama(model_path=self.model, n_ctx=4096, n_batch=512, n_gpu_layers=-1, logits_all=True, verbose=False)
+
+    def __call__(self, messages, prompt_prefix, **kwargs):
+        import requests
+        import json
+        import llama_cpp
+        
+        inputs = self.processor.apply_chat_template(messages, add_generation_prompt=True, tokenize=True, return_dict=True, return_tensors="pt")
+        prompt = self.processor.decode(inputs['input_ids'][0])
+        prompt += prompt_prefix
+        self.llm.reset()
+        response = self.llm(prompt, logprobs=True, **kwargs)
+        n_vocab = self.llm.n_vocab()
+        n_tokens = self.llm.n_tokens
+        logits_ptr = llama_cpp.llama_get_logits(self.llm.ctx)
+        import ctypes
+        import numpy as np
+        logits_array = np.ctypeslib.as_array(
+            (ctypes.c_float * (n_tokens * n_vocab)).from_address(
+                ctypes.addressof(logits_ptr.contents)
+            )
+        ).reshape(n_tokens, n_vocab)
+        return response, logits_array
+
 @dataclass
 class OpenRouterData:
     api_key: str
@@ -35,27 +78,44 @@ class OpenRouterData:
         
         inputs = self.processor.apply_chat_template(messages, add_generation_prompt=True, tokenize=True, return_dict=True, return_tensors="pt")
         prompt = self.processor.decode(inputs['input_ids'][0])
-        prompt += prompt_prefix
-        async with session.post(
-          url="https://openrouter.ai/api/v1/completions",
-          headers={
-            "Authorization": f"Bearer {self.api_key}",
-            "Content-Type": "application/json",
-            "Connection": "close", # important to prevent errors from popping up
-          },
-          data=json.dumps({
-            "order": ["lepton"],
-            "model": self.model,
-            "prompt": prompt,
-            "provider": {
-                "allow_fallbacks": False,
-            },
-            #"n": n, not supported on openrouter :(
-            **kwargs
-          }),
-        ) as response:
-            return await response.json()
-        
+        #prompt += prompt_prefix
+        try:
+            async with session.post(
+              url="https://openrouter.ai/api/v1/completions",
+              headers={
+                "Authorization": f"Bearer {self.api_key}",
+                "Content-Type": "application/json",
+                "Connection": "close", # important to prevent errors from popping up
+              },
+              data=json.dumps({
+                "order": ["lepton"],
+                "model": self.model,
+                "prompt": prompt,
+                "provider": {
+                    "allow_fallbacks": False,
+                },
+                #"n": n, not supported on openrouter :(
+                #**kwargs
+              }),
+            ) as response:
+                res = await response.json()
+                try:
+                    b = res['choices'][0]['text']
+                    print(repr(b))
+                    return res
+                except:
+                    return await self.__call__(session, messages, prompt_prefix, **kwargs)
+        except aiohttp.client_exceptions.ContentTypeError as e:
+            #print(e)
+            return await self.__call__(session, messages, prompt_prefix, **kwargs)
+        except asyncio.exceptions.TimeoutError as e:
+            #print(e)
+            return await self.__call__(session, messages, prompt_prefix, **kwargs)
+        except aiohttp.client_exceptions.ServerTimeoutError as e:
+            #print(e)
+            return await self.__call__(session, messages, prompt_prefix, **kwargs)
+        except aiohttp.client_exceptions.ClientPayloadError as e:
+            return await self.__call__(session, messages, prompt_prefix, **kwargs)
           
         '''
         "order": ["groq"],
@@ -78,6 +138,17 @@ def load_openrouter(model, model_hf):
     
     return OpenRouterData(api_key, model, model_hf)
     
+def getRouter():
+    model = "meta-llama/llama-3.1-8b-instruct"
+    model_hf = "unsloth/Llama-3.1-8B-Instruct"
+    router = load_openrouter(model, model_hf)
+    return router
+
+def getLlamacpp():
+    model = "Llama-3.2-1B-Instruct-Q6_K_L.gguf"
+    model_hf = "unsloth/Llama-3.2-1B-Instruct"
+    router = LlamaCppModelData(model, model_hf)
+    return router
 
 def run_experiments():
     model = "meta-llama/llama-3.2-1b-instruct"
@@ -610,26 +681,32 @@ def testSorterf():
 
 
 
-def generateWhatIsPrompts(prompts):
+def generateWhatIsPrompts():
     # from https://gist.githubusercontent.com/creikey/42d23d1eec6d764e8a1d9fe7e56915c6/raw/b07de0068850166378bc3b008f9b655ef169d354/top-1000-nouns.txt
     # pruned away things that don't make sense, added words in front so grammatical
     nouns = """
-    time
+    a problem
+    night
+    a party
+    """.strip().split("\n")
+
+
+    """
+    a company
+    a case
+    a group
     a year
     work
-    government
     a day
+    life
+    time
+    government
     a man
     the world
-    life
     a house
-    a case
     a system
     a place
     the end
-    a group
-    a company
-    a party
     information
     a school
     a fact
@@ -638,7 +715,6 @@ def generateWhatIsPrompts(prompts):
     an example
     a state
     a business
-    night
     water
     a thing
     a family
@@ -653,39 +729,155 @@ def generateWhatIsPrompts(prompts):
     service
     a room
     a market
-    a problem
     court
-    """.strip().split("\n")
+    """
     
     nounPrompts = [f"What is {x.strip()}?" for x in nouns]
-    for prompt in nounPrompts:
-        print(prompt)
+    return nounPrompts
 
-def bruteForceComparePrefs(prompts, router, attempts):
-    ayncTasks = []
-    async with aiohttp.ClientSession() as session:
-        for i, prompt1 in enumerate(prompts):
-            for j, prompt2 in enumerate(prompts):
-                if i == j: continue
-                aynctasks += compareTwoPrompts(session, prompt1, prompt2, router, attempts))
-    ind = 0
-    results = await asyncio.gather(*tasks)
-    numWins = defaultdict(lambda: 0)
+
+def runWhatIfExperiment(router, attempts=10, seed=27):
+    prompts = generateWhatIsPrompts()
+    return bruteForceComparePrefs(prompts, router, attempts=attempts, seed=seed)
+
+def bruteForceComparePrefs(prompts, router, attempts, seed):
+    asyncTasks = []
+    doLlama = False
     for i, prompt1 in enumerate(prompts):
         for j, prompt2 in enumerate(prompts):
             if i == j: continue
-            pr1, pr2 = results[ind]
+            if doLlama:
+                asyncTasks.append(compareLlamacpp(prompt1, prompt2, router))
+            else:
+                timeout = aiohttp .ClientTimeout(
+                    total=10,      # 3 seconds total
+                    connect=5,     # 2 seconds to establish connection
+                    sock_read=5   # 2 seconds to read response
+                )
+                async def runStuff():
+                    async with aiohttp.ClientSession(timeout=timeout) as session:
+                        return await compareTwoPrompts(session, prompt1, prompt2, router, attempts, seed)
+                asyncTasks.append(asyncio.run(runStuff()))
+                seed += attempts
+    ind = 0
+    results = asyncTasks
+    #results = await asyncio.gather(*ayncTasks)
+    numWins = defaultdict(lambda: 0)
+    adjacencyMatrix = np.zeros([len(prompts), len(prompts)])
+    for i, prompt1 in enumerate(prompts):
+        for j, prompt2 in enumerate(prompts):
+            if i == j: continue
+            pri, prj = results[ind]
             ind += 1
-            numWins[i] += pr1
-            numWins[j] += pr2
+            numWins[i] += pri
+            numWins[j] += prj
+            print(f"got prs {i} {j} {pri} {prj}")
+            # this is i -> j edge
+            # only goes that direction if j > i
+            adjacencyMatrix[i,j] = pri
+                
     
     outputsSorted = [(numWins[i], prompts[i], i) for i in range(len(prompts))]
-    return outputsSorted
+    outputsSorted.sort(key=lambda x: -x[0])
+    return outputsSorted, adjacencyMatrix
         
+import networkx as nx
+import matplotlib.pyplot as plt
 
+# from https://gist.github.com/joe-jordan/6548029
+def find_all_cycles(G, source=None, cycle_length_limit=None):
+    """forked from networkx dfs_edges function. Assumes nodes are integers, or at least
+    types which work with min() and > ."""
+    if source is None:
+        # produce edges for all components
+        nodes=[i[0] for i in nx.connected_components(G)]
+    else:
+        # produce edges for components with source
+        nodes=[source]
+    # extra variables for cycle detection:
+    cycle_stack = []
+    output_cycles = set()
+    
+    def get_hashable_cycle(cycle):
+        """cycle as a tuple in a deterministic order."""
+        m = min(cycle)
+        mi = cycle.index(m)
+        mi_plus_1 = mi + 1 if mi < len(cycle) - 1 else 0
+        if cycle[mi-1] > cycle[mi_plus_1]:
+            result = cycle[mi:] + cycle[:mi]
+        else:
+            result = list(reversed(cycle[:mi_plus_1])) + list(reversed(cycle[mi_plus_1:]))
+        return tuple(result)
+    
+    for start in nodes:
+        if start in cycle_stack:
+            continue
+        cycle_stack.append(start)
+        
+        stack = [(start,iter(G[start]))]
+        while stack:
+            parent,children = stack[-1]
+            try:
+                child = next(children)
+                
+                if child not in cycle_stack:
+                    cycle_stack.append(child)
+                    stack.append((child,iter(G[child])))
+                else:
+                    i = cycle_stack.index(child)
+                    if i < len(cycle_stack) - 2: 
+                      output_cycles.add(get_hashable_cycle(cycle_stack[i:]))
+                
+            except StopIteration:
+                stack.pop()
+                cycle_stack.pop()
+    
+    return [list(i) for i in output_cycles]
 
-
-async def getComparisonTasks(session, prompt1, prompt2, router, attempts=10):
+def plotAdjMat(outputs, adjMat):
+    nouns = [prompt.split()[-1] for (numWins, prompt, i) in outputs]
+    
+    for a in np.linspace(1.0, 0.001, 100):
+        G = nx.DiGraph(directed=True)
+        print(a)
+        for i in range(len(outputs)):
+            for j in range(i+1, len(outputs)):
+                if adjMat[i,j] > adjMat[j,i] + a:
+                    G.add_edge(nouns[i], nouns[j])
+                elif adjMat[j,i] > adjMat[i,j] + a:
+                    G.add_edge(nouns[j], nouns[i])
+                    
+                    
+        options = {
+            'node_color': 'blue',
+            'node_size': 100,
+            'width': 1,
+            'arrowstyle': '-|>',
+            'arrowsize': 12,
+        }
+        try:
+            while True:
+                cycle = nx.find_cycle(G)
+                for edgeI, edgeJ in cycle:
+                    i = nouns.index(edgeI)
+                    j = nouns.index(edgeJ)
+                    print(edgeI, edgeJ, adjMat[i,j], adjMat[j,i])
+                    G.remove_edge(nouns[i], nouns[j])
+                print(cycle)
+                
+        except Exception as e:
+            print(e)
+    nx.draw_networkx(G, arrows=True, **options)
+    '''
+    pos = nx.spring_layout(G)
+    nx.draw_networkx_nodes(G, pos, cmap=plt.get_cmap('jet'), node_size = 500)
+    nx.draw_networkx_labels(G, pos)
+    nx.draw_networkx_edges(G, pos, edgelist=G.edges(), arrows=False)
+    '''
+    plt.show()
+    
+    
+def compareLlamacpp(prompt1, prompt2, router):
     message = [
       {
         "role": "system",
@@ -698,13 +890,39 @@ async def getComparisonTasks(session, prompt1, prompt2, router, attempts=10):
     ]
     
     
-    initialSeed = random.randint(0, 10000000)
+    tasks = []
+    result, logprobs = router(message, prompt_prefix="I will answer Prompt", max_tokens=1)
+    # 1 because 0 is BOS
+    AIndex = router.processor.encode(" A")[1]
+    BIndex = router.processor.encode(" B")[1]
+    alogit = logprobs[-1, AIndex]
+    blogit = logprobs[-1, BIndex]
+    probs = torch.tensor([alogit, blogit])
+    aProb, bProb = torch.nn.functional.softmax(probs, dim=0)
+    print(f"{prompt1} {prompt2} {aProb} {bProb}")
+    return aProb, bProb
+    
+def getComparisonTasks(session, prompt1, prompt2, router, attempts=10, seed=27):
+    message = [
+      {
+        "role": "system",
+        "content": "You are given two prompts, please answer only one of them.",
+      },
+      {
+        "role": "user",
+        "content": f"Answer one prompt. Prompt A: {prompt1}\nPrompt B: {prompt2}",
+      },
+    ]
+    
+    
+    tasks = []
     for i in range(attempts):
-        yield router(session, message, prompt_prefix="I will answer Prompt", max_tokens=1, seed=initialSeed+i)
+        tasks.append(router(session, message, prompt_prefix="I will answer Prompt", max_tokens=1, seed=seed+i))
+    return tasks
 
-async def compareTwoPrompts(session, prompt1, prompt2, router, attempts=10):
-    tasks = getComparisonTasks(session, prompt1, prompt2, router, attempts)
-    results = await asyncio.gather(*tasks)
+async def compareTwoPrompts(session, prompt1, prompt2, router, attempts=10, seed=27):
+    tasks = getComparisonTasks(session, prompt1, prompt2, router, attempts, seed)
+    results = await asyncio.gather(*list(tasks))
     counts = defaultdict(lambda: 0)
     for result in results:
         text = result['choices'][0]['text']
@@ -712,6 +930,7 @@ async def compareTwoPrompts(session, prompt1, prompt2, router, attempts=10):
     total = counts['A'] + counts['B']
     if total == 0:
         raise ValueError("Never got A or B, something went wrong")
+    print(f"prompt1 {prompt1} prompt2 {prompt2} {total} {counts['A']} {counts['B']}")
     return counts['A']/float(total), counts['B']/float(total)
         
 
