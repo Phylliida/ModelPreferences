@@ -607,7 +607,85 @@ def testSorterf():
     sortedList = sorted(items, key=cmp_to_key(sortWrapper))
     print(sortedList)
 
-async def compareTwoPrompts(session, prompt1, prompt2, router, attempts=10):
+
+
+
+def generateWhatIsPrompts(prompts):
+    # from https://gist.githubusercontent.com/creikey/42d23d1eec6d764e8a1d9fe7e56915c6/raw/b07de0068850166378bc3b008f9b655ef169d354/top-1000-nouns.txt
+    # pruned away things that don't make sense, added words in front so grammatical
+    nouns = """
+    time
+    a year
+    work
+    government
+    a day
+    a man
+    the world
+    life
+    a house
+    a case
+    a system
+    a place
+    the end
+    a group
+    a company
+    a party
+    information
+    a school
+    a fact
+    money
+    a point
+    an example
+    a state
+    a business
+    night
+    water
+    a thing
+    a family
+    a head
+    a hand
+    an order
+    a home
+    a development
+    power
+    a country
+    a council
+    service
+    a room
+    a market
+    a problem
+    court
+    """.strip().split("\n")
+    
+    nounPrompts = [f"What is {x.strip()}?" for x in nouns]
+    for prompt in nounPrompts:
+        print(prompt)
+
+def bruteForceComparePrefs(prompts, router, attempts):
+    ayncTasks = []
+    async with aiohttp.ClientSession() as session:
+        for i, prompt1 in enumerate(prompts):
+            for j, prompt2 in enumerate(prompts):
+                if i == j: continue
+                aynctasks += compareTwoPrompts(session, prompt1, prompt2, router, attempts))
+    ind = 0
+    results = await asyncio.gather(*tasks)
+    numWins = defaultdict(lambda: 0)
+    for i, prompt1 in enumerate(prompts):
+        for j, prompt2 in enumerate(prompts):
+            if i == j: continue
+            pr1, pr2 = results[ind]
+            ind += 1
+            numWins[i] += pr1
+            numWins[j] += pr2
+    
+    outputsSorted = [(numWins[i], prompts[i], i) for i in range(len(prompts))]
+    return outputsSorted
+        
+
+
+
+async def getComparisonTasks(session, prompt1, prompt2, router, attempts=10):
     message = [
       {
         "role": "system",
@@ -621,10 +699,11 @@ async def compareTwoPrompts(session, prompt1, prompt2, router, attempts=10):
     
     
     initialSeed = random.randint(0, 10000000)
-    tasks = []
     for i in range(attempts):
-        tasks.append(router(session, message, prompt_prefix="I will answer Prompt", max_tokens=1, seed=initialSeed+i))
-    
+        yield router(session, message, prompt_prefix="I will answer Prompt", max_tokens=1, seed=initialSeed+i)
+
+async def compareTwoPrompts(session, prompt1, prompt2, router, attempts=10):
+    tasks = getComparisonTasks(session, prompt1, prompt2, router, attempts)
     results = await asyncio.gather(*tasks)
     counts = defaultdict(lambda: 0)
     for result in results:
@@ -671,7 +750,7 @@ def testNoisyInsertionSort(p, delta):
         def compareFunc(a, b):
             global comparisonCache
             global numComparisons
-            if (a,b) in comparisonCache:
+            if (a,b) in comparisonCache and False:
                 return comparisonCache[(a,b)]
             if a < b:
                 result = 0.9
@@ -749,17 +828,22 @@ def binary_search(A, T, compareFunc):
 
 # algorithm from https://arxiv.org/pdf/2107.05753
 # p is from [0, 0.5), delta is (0,1)
-def noisyBinarySearch(values, compareFunc, targetVal, p, delta):
+def noisyBinarySearch(values, lessThanFunc, targetVal, p, delta):
+    # need to stick -inf, inf at front and back for it to work right
+    negInf = -float("inf")
+    inf = float("inf")
+    values = [] + values + [float("inf")]
+    def lessThanFuncWrapper(a,b):
+        if a == inf: return 0.0
+        if a == negInf: return 1.0
+        if b == inf: return 
     n = len(values)
     if n == 0: return 0
     # this lets us keep track of cumulative sum in 
     weights = np.ones(n)
     
     def query(k):
-        if k == n:
-            compareP = compareFunc(targetVal, values[k-1])
-        else:
-            compareP = compareFunc(targetVal, values[k])
+        compareP = lessThanFuncWrapper(targetVal, values[k])
         '''
         weights[:k] = weights[:k]*2*(1-p)*compareP+weights[:k]*2*p*(1-compareP)
         weights[k:] = weights[k:]*2*p*compareP+weights[k:]*2*(1-p)*(1-compareP)
