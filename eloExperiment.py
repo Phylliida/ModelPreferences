@@ -8,6 +8,8 @@ import random
 import swiss
 import math
 import torch
+from fenwick import FenwickTree
+from sortedcontainers import SortedList
 
 @dataclass
 class OpenRouterData:
@@ -152,7 +154,7 @@ async def evaluatePairsAndUpdateTrueSkill(teams, pairs, compareFunction, elos):
 def getPartitionsHelper(arr, partitionSize, offset):
     startIndex = 0
     # overlap them
-    if offset:
+    if offset > 0:
         startIndex = offset
         initialGroup = arr[:startIndex]
         yield list(initialGroup)
@@ -246,7 +248,70 @@ async def testTrueskill(teams, compareFunction, numRounds, seed, bracketSize=20)
                         chosen.add(pairI)
                         chosen.add(pairJ)
         
-                    
+import numpy as np     
+async def testSwiss2(teams, compareFunction, numRounds, seed, bracketSize=2):
+    
+    random.seed(seed)
+
+    from trueskill import Rating, quality_1vs1, rate_1vs1
+    partitionSize = bracketSize
+    # make sure each partition is even in size so we can assign pairs
+    if partitionSize % 2 != 0:
+        partitionSize += 1
+    # initial random pairing, just shuffle list then do (0,-1), (1,-2), etc.
+    indices = list(range(len(teams)))
+    random.shuffle(indices)
+    elos = [Rating(30) for _ in teams]
+    pairs = [(indices[i], indices[-i-1]) for i in range(len(indices)//2)]
+    
+    opponents = defaultdict(lambda: set(range(len(elos))))
+    for i in range(len(elos)):
+        opponents[i].remove(i) # no self play
+        
+    teamsArr = -np.array(teams)
+    curMuArray = np.array([e.mu for e in elos])
+    currentValues = np.zeros(len(elos))
+    rangeArr = np.arange(len(elos))
+    offset = 0
+    for roundNum in range(numRounds):
+        print(roundNum)
+        print(teamsArr[np.argsort(curMuArray)])
+        if np.all(np.argsort(curMuArray) == np.argsort(teamsArr)):
+            return roundNum
+        #print(f"round {roundNum} {[teams[i] for i in torch.argsort(torch.tensor(elos))]}")
+        #print(f"elos             {[(teams[i], round(elos[i]*10)/10) for i in torch.argsort(torch.tensor(elos))]}")
+        
+        await evaluatePairsAndUpdateTrueSkill(teams, pairs, compareFunction, elos)
+        for i, e in enumerate(elos):
+            curMuArray[i] = e.mu
+        
+        
+        pairs = []
+        sortedIndices = np.argsort(curMuArray)
+            
+        '''
+        offset = (offset + 1) % partitionSize
+        for i in range(len(sortedIndices)//2):
+            startI = offset + i*2
+            endI = offset + i*2 + 1
+            if endI >= len(sortedIndices): break
+            if quality_1vs1(elos[startI], elos[endI]) > 0.5:
+                if random.random() < 0.5:
+                    pairs.append((startI, endI))
+                else:
+                    pairs.append((endI, startI))
+        '''
+
+        
+        for partition in getPartitions(sortedIndices, partitionSize, offset=offset):
+            random.shuffle(partition)
+            for i in range(len(partition)//2):
+                if quality_1vs1(elos[partition[i]], elos[partition[-i-1]]) > 0.5:
+                    pairs.append((partition[i], partition[-i-1]))
+
+       
+    return elos
+    
 
 
 
@@ -335,7 +400,8 @@ def testSorter():
     dataPointsY = []
     from matplotlib import pyplot as plt
     import numpy as np
-    for listSize in range(10, 500, 10):
+    print("list size", "num compares", "n^2")
+    for listSize in range(100, 2000, 100):
         numCompares = 0
         lookupGlobal = {}
         async def testCompare(a, b):
@@ -353,9 +419,9 @@ def testSorter():
         dataPointsX.append(listSize)
         items = list(range(listSize))
         random.shuffle(items)
-        itersTake = asyncio.run(testTrueskill(items, testCompare, numRounds=500000, seed=27))
-        print(listSize, itersTake, numCompares, listSize**2)
-        dataPointsY.append(itersTake)
+        itersTake = asyncio.run(testSwiss2(items, testCompare, numRounds=500000, seed=27))
+        print(listSize, numCompares, listSize**2)
+        dataPointsY.append(numCompares)
     plt.plot(dataPointsX, dataPointsY, marker='o', linewidth=2)
     plt.show()
     
@@ -569,4 +635,162 @@ async def compareTwoPrompts(session, prompt1, prompt2, router, attempts=10):
         raise ValueError("Never got A or B, something went wrong")
     return counts['A']/float(total), counts['B']/float(total)
         
+
+def noisyBinarySearch(arr,x,sigma):
+    n = len(arr)
+    while True:
+        pass
+
+
+# we kill the algorithm if it takes longer than
+# expectedNumberQueries log expectedNumberQueries 
+# and restart it
+# this is from collary 19
+def safeAlgorithm(alogorithm, expectedNumberQueries):
+    while True:
+        finalValue = None
+        steps = 0
+        failed = False
+        for step in algorithm():
+            finalValue = step
+            steps += 1
+            if steps > expectedNumberQueries*math.log(expectedNumberQueries):
+                failed = True
+        if not failed:
+            return finalValue
+    
+
+
+
+def testNoisyInsertionSort(p, delta):
+    global comparisonCache
+    global numComparisons
+    for i in range(10, 10000, 100):
+        numComparisons = 0
+        comparisonCache = {}
+        def compareFunc(a, b):
+            global comparisonCache
+            global numComparisons
+            if (a,b) in comparisonCache:
+                return comparisonCache[(a,b)]
+            if a > b:
+                result = 0.7
+            else:
+                result = 0.3
+            comparisonCache[(a,b)] = result
+            numComparisons += 1
+            return result
+        arr = list(range(i))
+        random.shuffle(arr)
+        result = noisyInsertionSort(arr, compareFunc, p, delta)
+        print(f"size {i} has {numComparisons} comparisons")
+
+
+def noisyInsertionSort(elements, compareFunc, p, delta):
+    
+    # takes n log n comparisons worst case because of binary search
+    # technically it is more but not in terms of comparisons which is what we care about
+    # realistically it's much faster
+    
+    
+    sortedElements = []
+    for e in elements:
+        insertionPoint = noisyBinarySearch(sortedElements, compareFunc, e, p, delta)
+        sortedElements.insert(insertionPoint, e)
+    
+    return sortedElements
+
+
+
+
+
+
+
+
+def simpleCompareTest(values, value, p, delta):
+    
+       
+    return noisyBinarySearch(values, compareFunc, value, p, delta)
+
+# algorithm from https://arxiv.org/pdf/2107.05753
+# p is from [0, 0.5), delta is (0,1)
+def noisyBinarySearch(values, compareFunc, targetVal, p, delta):
+    n = len(values)
+    if n == 0: return 0
+    # this lets us keep track of cumulative sum in 
+    weights = np.ones(n)
+    
+    def query(k):
+        compareP = compareFunc(targetVal, values[k])
+        weights[:k] = weights[:k]*2*(1-p)*compareP+weights[:k]*2*p*(1-compareP)
+        weights[k:] = weights[k:]*2*p*compareP+weights[k:]*2*(1-p)*(1-compareP)
         
+        '''
+        if compareP > 0.5:
+            # if v is compatible with the answer
+            weights[:k] = weights[:k]*2*(1-p)
+            # if v is not compatible with the answer
+            weights[k:] = weights[k:]*2*p
+        # no answer
+        else:
+            # if v is not compatible with the answer
+            weights[:k] = weights[:k]*2*p
+            # if v is compatible with the answer
+            weights[k:] = weights[k:]*2*(1-p)
+        '''
+        # do this so we get the exact value
+        # subtracts previousWeight (so now zero) then adds w (so now w)
+            
+    iters = 0
+    while True:
+        totalWeight = np.sum(weights)
+        cumsum = np.cumsum(weights)
+        # binary search for k where below it is half our total weight
+        greaterIndices = np.where(cumsum >= totalWeight/2.0)[0]
+        k = greaterIndices[0]
+        kWeight = weights[k]
+        kCumWeight = cumsum[k]
+        remainingWeight = totalWeight - kCumWeight
+        queryPr = (1/(2.0*kWeight))*(kCumWeight-remainingWeight)
+        #print(f"Query pr {queryPr}")
+        if random.random() < queryPr or k+1 >= n:
+            query(k)
+        else:
+            query(k+1)
+        totalWeight = np.sum(weights)
+        largestIndex = np.argmax(weights)
+        largestWeight = weights[largestIndex]
+        #print("Largest weight: ", largestWeight, " largest index ", largestIndex)
+        #print("total weight", totalWeight)
+        # stop condition
+        if largestWeight/totalWeight >= 1 - delta:
+            #print(f"got index: {largestIndex}")
+            return largestIndex
+    
+'''
+def SafeBinarySearch # apply lemma 18 to theorem 10
+
+def SafeWeakSort # lemma 18 to lemma 17
+
+def SafeLessThan # lemma 18 to lemma 13
+        
+def lessThan(x,y,p,sigma):
+    a = 0.5
+    while True:
+        if noisyComparison(x,y) == 1:
+            a = (1-p)*a/((1-p)*a+p*(1-a))
+        else:
+            a = p*a/(p*a+(1-p)*(1-a))
+        if a >= 1 - sigma: return True
+        if a < sigma: return False
+
+def safeSimpleSort(arr):
+    
+
+def noisySort(arr, p):
+    s = []
+    for a in arr:
+        if random.random() < 1.0/math.log(len(arr)):
+            s.append(a)
+    
+'''          
