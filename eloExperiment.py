@@ -665,7 +665,7 @@ def safeAlgorithm(alogorithm, expectedNumberQueries):
 def testNoisyInsertionSort(p, delta):
     global comparisonCache
     global numComparisons
-    for i in range(10, 10000, 100):
+    for i in range(10, 2000, 100):
         numComparisons = 0
         comparisonCache = {}
         def compareFunc(a, b):
@@ -673,10 +673,12 @@ def testNoisyInsertionSort(p, delta):
             global numComparisons
             if (a,b) in comparisonCache:
                 return comparisonCache[(a,b)]
-            if a > b:
-                result = 0.7
+            if a < b:
+                result = 0.9
             else:
-                result = 0.3
+                result = 0.1
+            if random.random() < 0.1:
+                result = 1.0-result
             comparisonCache[(a,b)] = result
             numComparisons += 1
             return result
@@ -692,13 +694,26 @@ def noisyInsertionSort(elements, compareFunc, p, delta):
     # technically it is more but not in terms of comparisons which is what we care about
     # realistically it's much faster
     
-    
-    sortedElements = []
-    for e in elements:
-        insertionPoint = noisyBinarySearch(sortedElements, compareFunc, e, p, delta)
-        sortedElements.insert(insertionPoint, e)
-    
-    return sortedElements
+    elementsCopy = list(enumerate(elements))
+    insertionPoints = defaultdict(lambda: 0)
+    for k in range(50):
+        sortedElements = []
+        random.shuffle(elementsCopy)
+        for i, (ind, e) in enumerate(elementsCopy):
+            insertionPoint = binary_search(sortedElements, (e, ind), compareFunc)
+            #insertionPoint = noisyBinarySearch(sortedElements, compareFunc, (e, ind), p, delta)
+            #print(f"Inserting at position {insertionPoint}")
+            sortedElements.insert(insertionPoint, (e, ind))
+            #print(sortedElements)
+        for i, (e, ind) in enumerate(sortedElements):
+            insertionPoints[ind] += i
+        #return sortedElements
+        #rint(sortedElements)
+    tuples = sorted([(insertionPoints[i]/5.0, i) for i in range(len(elementsCopy))])
+    #print(tuples)
+    resultElements = [elements[t[1]] for t in tuples]
+    print(resultElements)
+    return resultElements
 
 
 
@@ -712,6 +727,26 @@ def simpleCompareTest(values, value, p, delta):
        
     return noisyBinarySearch(values, compareFunc, value, p, delta)
 
+
+from bisect import bisect_left
+
+
+def binary_search(A, T, compareFunc):
+    n = len(A)
+    L = 0
+    R = n - 1
+    while L <= R:
+        m = (L + R) // 2
+        if compareFunc(A[m], T) < 0.5:
+            L = m + 1
+        elif compareFunc(A[m], T) > 0.5:
+            R = m - 1
+        else:
+            return m
+    return R+1
+
+
+
 # algorithm from https://arxiv.org/pdf/2107.05753
 # p is from [0, 0.5), delta is (0,1)
 def noisyBinarySearch(values, compareFunc, targetVal, p, delta):
@@ -721,10 +756,13 @@ def noisyBinarySearch(values, compareFunc, targetVal, p, delta):
     weights = np.ones(n)
     
     def query(k):
-        compareP = compareFunc(targetVal, values[k])
+        if k == n:
+            compareP = compareFunc(targetVal, values[k-1])
+        else:
+            compareP = compareFunc(targetVal, values[k])
+        '''
         weights[:k] = weights[:k]*2*(1-p)*compareP+weights[:k]*2*p*(1-compareP)
         weights[k:] = weights[k:]*2*p*compareP+weights[k:]*2*(1-p)*(1-compareP)
-        
         '''
         if compareP > 0.5:
             # if v is compatible with the answer
@@ -737,7 +775,6 @@ def noisyBinarySearch(values, compareFunc, targetVal, p, delta):
             weights[:k] = weights[:k]*2*p
             # if v is compatible with the answer
             weights[k:] = weights[k:]*2*(1-p)
-        '''
         # do this so we get the exact value
         # subtracts previousWeight (so now zero) then adds w (so now w)
             
@@ -753,11 +790,12 @@ def noisyBinarySearch(values, compareFunc, targetVal, p, delta):
         remainingWeight = totalWeight - kCumWeight
         queryPr = (1/(2.0*kWeight))*(kCumWeight-remainingWeight)
         #print(f"Query pr {queryPr}")
-        if random.random() < queryPr or k+1 >= n:
+        if random.random() < queryPr:
             query(k)
         else:
             query(k+1)
         totalWeight = np.sum(weights)
+        #print(weights)
         largestIndex = np.argmax(weights)
         largestWeight = weights[largestIndex]
         #print("Largest weight: ", largestWeight, " largest index ", largestIndex)
