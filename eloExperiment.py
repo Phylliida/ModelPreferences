@@ -11,7 +11,47 @@ import torch
 from fenwick import FenwickTree
 from sortedcontainers import SortedList
 
-
+datams = [44.936851501464844, "water",
+44.076297760009766, "example",
+42.986305236816406, "country",
+42.87413787841797, "year",
+42.37638473510742, "house",
+42.20800018310547, "time",
+42.090206146240234, "day",
+42.035518646240234, "tworld",
+41.693763732910156, "life",
+41.323001861572266, "fact",
+41.26303482055664, "school",
+41.24368667602539, "home",
+41.025177001953125, "place",
+40.9382438659668, "family",
+40.86990737915039, "room",
+40.610233306884766, "money",
+40.55143737792969, "state",
+40.31708908081055, "power",
+40.24872589111328, "government",
+40.13289260864258, "work",
+40.090023040771484, "night",
+39.971092224121094, "thing",
+39.72087097167969, "court",
+39.53644561767578, "point",
+39.28461456298828, "hand",
+39.28156661987305, "man",
+39.272254943847656, "party",
+39.21956253051758, "business",
+39.01773452758789, "company",
+38.82530975341797, "service",
+38.7030143737793, "head",
+38.554317474365234, "information",
+38.50297546386719, "system",
+38.252410888671875, "group",
+38.0505485534668, "market",
+37.5421142578125, "end",
+37.04130172729492, "development",
+36.914608001708984, "case",
+36.91126251220703, "order",
+36.18180847167969, "council",
+35.32524871826172, "problem"]
 
 @dataclass
 class LlamaCppModelData:
@@ -78,7 +118,11 @@ class OpenRouterData:
         
         inputs = self.processor.apply_chat_template(messages, add_generation_prompt=True, tokenize=True, return_dict=True, return_tensors="pt")
         prompt = self.processor.decode(inputs['input_ids'][0])
-        #prompt += prompt_prefix
+        prompt += prompt_prefix
+        print(prompt)
+        #print("Prompt:")
+        #print(prompt)
+        #print(f"seed: {kwargs}")
         try:
             async with session.post(
               url="https://openrouter.ai/api/v1/completions",
@@ -88,20 +132,21 @@ class OpenRouterData:
                 "Connection": "close", # important to prevent errors from popping up
               },
               data=json.dumps({
-                "order": ["lepton"],
+                "order": ["Hyperbolic (quantized)"],
                 "model": self.model,
                 "prompt": prompt,
                 "provider": {
                     "allow_fallbacks": False,
                 },
                 #"n": n, not supported on openrouter :(
-                #**kwargs
-              }),
+                **kwargs,
+            }),
             ) as response:
                 res = await response.json()
                 try:
                     b = res['choices'][0]['text']
-                    print(repr(b))
+                    #print("Response:")
+                    print(b)
                     return res
                 except:
                     return await self.__call__(session, messages, prompt_prefix, **kwargs)
@@ -139,8 +184,8 @@ def load_openrouter(model, model_hf):
     return OpenRouterData(api_key, model, model_hf)
     
 def getRouter():
-    model = "meta-llama/llama-3.1-8b-instruct"
-    model_hf = "unsloth/Llama-3.1-8B-Instruct"
+    model = "meta-llama/llama-3.2-1b-instruct"
+    model_hf = "unsloth/Llama-3.2-1B-Instruct"
     router = load_openrouter(model, model_hf)
     return router
 
@@ -688,10 +733,6 @@ def generateWhatIsPrompts():
     a problem
     night
     a party
-    """.strip().split("\n")
-
-
-    """
     a company
     a case
     a group
@@ -700,6 +741,10 @@ def generateWhatIsPrompts():
     a day
     life
     time
+    """.strip().split("\n")
+
+
+    """
     government
     a man
     the world
@@ -750,13 +795,17 @@ def bruteForceComparePrefs(prompts, router, attempts, seed):
                 asyncTasks.append(compareLlamacpp(prompt1, prompt2, router))
             else:
                 timeout = aiohttp .ClientTimeout(
-                    total=10,      # 3 seconds total
-                    connect=5,     # 2 seconds to establish connection
-                    sock_read=5   # 2 seconds to read response
+                    total=30,      # 3 seconds total
+                    connect=20,     # 2 seconds to establish connection
+                    sock_read=20   # 2 seconds to read response
                 )
                 async def runStuff():
-                    async with aiohttp.ClientSession(timeout=timeout) as session:
-                        return await compareTwoPrompts(session, prompt1, prompt2, router, attempts, seed)
+                    resfff = []
+                    for ww in range(attempts):
+                        async with aiohttp.ClientSession(timeout=timeout) as session:
+                            resfff.append(await compareTwoPrompts(session, prompt1, prompt2, router, attempts, seed))
+                        time.sleep(1.0)
+                    return resfff
                 asyncTasks.append(asyncio.run(runStuff()))
                 seed += attempts
     ind = 0
@@ -885,7 +934,7 @@ def compareLlamacpp(prompt1, prompt2, router):
       },
       {
         "role": "user",
-        "content": f"Answer one prompt. Prompt A: {prompt1}\nPrompt B: {prompt2}",
+        "content": f"Answer one prompt.\nPrompt A: {prompt1}\nPrompt B: {prompt2}",
       },
     ]
     
@@ -910,14 +959,14 @@ def getComparisonTasks(session, prompt1, prompt2, router, attempts=10, seed=27):
       },
       {
         "role": "user",
-        "content": f"Answer one prompt. Prompt A: {prompt1}\nPrompt B: {prompt2}",
+        "content": f"Answer one prompt.\nPrompt A: {prompt1}\nPrompt B: {prompt2}",
       },
     ]
     
     
     tasks = []
     for i in range(attempts):
-        tasks.append(router(session, message, prompt_prefix="I will answer Prompt", max_tokens=1, seed=seed+i))
+        tasks.append(router(session, message, prompt_prefix="\nI will answer Prompt", max_tokens=1, seed=seed+i))
     return tasks
 
 async def compareTwoPrompts(session, prompt1, prompt2, router, attempts=10, seed=27):
