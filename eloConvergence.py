@@ -9,35 +9,25 @@ import numpy as np
 from dataclasses import dataclass
 
 
-def compareAlgorithms():
+def generateComparisonsGraph():
     global numCompares
     global compareCache
     random.seed(27)
     
-    algorithms = {
-        "randomElo": randomRankingElo,
-        "randomTrueSkill": randomRankingTrueSkill,
-        "bracketsTrueSkill2": functools.partial(bracketTrueSkill, bracketSize=2),
-        "bracketsTrueSkill4": functools.partial(bracketTrueSkill, bracketSize=4),
-        "bracketsTrueSkill8": functools.partial(bracketTrueSkill, bracketSize=8),
-        "bracketsTrueSkill10": functools.partial(bracketTrueSkill, bracketSize=10),
-        "bracketsTrueSkill14": functools.partial(bracketTrueSkill, bracketSize=14),
-        "bracketsElo2": functools.partial(bracketElo, bracketSize=2),
-        "bracketsElo4": functools.partial(bracketElo, bracketSize=4),
-        "bracketsElo8": functools.partial(bracketElo, bracketSize=8),
-        "bracketsElo10": functools.partial(bracketElo, bracketSize=10),
-        "bracketsElo14": functools.partial(bracketElo, bracketSize=14),
-    }
+    algorithms = { }
     
+    for i in np.linspace(10, 300, 20):
+        algorithms[f"trueskill {i}"] = (int(i), functools.partial(spreadTrueskill, std=1))    
+    numComparisons = []
     fig, ax = plt.subplots()
-    for algorithmName, algorithm in algorithms.items():
+    for algorithmName, (numData, algorithm) in algorithms.items():
         print(algorithmName)
         scoresFromAllRuns = []
-        for runs in range(50):
+        numComparisonsFromAllRuns = []
+        for runs in range(5):
             print(runs)
             compareCache = {}
             numCompares = 0
-            numData = 100
             data = list(range(numData))
             random.shuffle(data)
             correctRanking = torch.argsort(torch.tensor(data))
@@ -59,8 +49,98 @@ def compareAlgorithms():
                     return result
             algorithm(data=data, ranking=ranking, lessThanFunc=lessThanFunc)
             scoresFromAllRuns.append(scores)
-            if runs == 0:
-                print([data[i] for i in ranking])
+            numComparisonsFromAllRuns.append(numCompares)
+        numComparisons.append((numData, numComparisonsFromAllRuns))
+        maxLenScores = len(max(scoresFromAllRuns, key=lambda x: len(x)))
+        confidence = 0.95 # 0.99
+        zValueForConfidence = 1.96 # 2.58
+        minConfidence = []
+        maxConfidence = []
+        means = []
+        for i in range(maxLenScores):
+            scoresForComparisonI = torch.tensor([scores[i] for scores in scoresFromAllRuns if len(scores) > i])
+            meanForComparisonI = torch.mean(scoresForComparisonI)
+            stdForComparisonI = torch.std(scoresForComparisonI)
+            # confidence interval = mean - zValue * std/sqrt(n)
+            offset = zValueForConfidence * stdForComparisonI / math.sqrt(scoresForComparisonI.size()[0])
+            means.append(meanForComparisonI)
+            minConfidence.append(meanForComparisonI - offset)
+            maxConfidence.append(meanForComparisonI + offset)
+        x = np.arange(0, len(means))
+        y = np.array(means)
+        yMin = np.array(minConfidence)
+        yMax = np.array(maxConfidence)
+    
+    
+    zValueForConfidence = 1.96 # 0.95
+    x = np.array([numData for (numData, numComps) in numComparisons])
+    y = np.array([np.mean(numComps) for (numData, numComps) in numComparisons])
+    lower = np.array([np.mean(numComps)-zValueForConfidence*np.std(numComps)/math.sqrt(len(numComps)) for (numData, numComps) in numComparisons])
+    upper = np.array([np.mean(numComps)+zValueForConfidence*np.std(numComps)/math.sqrt(len(numComps)) for (numData, numComps) in numComparisons])
+    fig, ax = plt.subplots()
+    ax.plot(x,y)
+    ax.fill_between(x, lower, upper, alpha=.3)
+    ax.set_title("Number of comparisons until convergence for trueskill bracket size 2")
+    ax.set_ylabel("Number of comparisons")
+    ax.set_xlabel("Number of data points")
+    plt.show()
+
+
+def compareAlgorithms():
+    global numCompares
+    global compareCache
+    random.seed(27)
+    
+    algorithms = {
+        "randomElo": randomRankingElo,
+        "randomTrueSkill": randomRankingTrueSkill,
+        "bracketsTrueSkill2": functools.partial(bracketTrueSkill, bracketSize=2),
+        "bracketsTrueSkill4": functools.partial(bracketTrueSkill, bracketSize=4),
+        "bracketsTrueSkill8": functools.partial(bracketTrueSkill, bracketSize=8),
+        "bracketsTrueSkill10": functools.partial(bracketTrueSkill, bracketSize=10),
+        "bracketsTrueSkill14": functools.partial(bracketTrueSkill, bracketSize=14),
+        "bracketsElo2": functools.partial(bracketElo, bracketSize=2),
+        "bracketsElo4": functools.partial(bracketElo, bracketSize=4),
+        "bracketsElo8": functools.partial(bracketElo, bracketSize=8),
+        "bracketsElo10": functools.partial(bracketElo, bracketSize=10),
+        "bracketsElo14": functools.partial(bracketElo, bracketSize=14),
+    }
+    
+    for i in np.linspace(10, 300, 20):
+        algorithms[f"trueskill {i}"] = (int(i), functools.partial(spreadTrueskill, std=1))    
+    numComparisons = []
+    fig, ax = plt.subplots()
+    for algorithmName, (numData, algorithm) in algorithms.items():
+        print(algorithmName)
+        scoresFromAllRuns = []
+        numComparisonsFromAllRuns = []
+        for runs in range(5):
+            print(runs)
+            compareCache = {}
+            numCompares = 0
+            data = list(range(numData))
+            random.shuffle(data)
+            correctRanking = torch.argsort(torch.tensor(data))
+            ranking = torch.arange(0, numData, dtype=torch.long)
+            def scoreRanking():
+                return torch.mean(torch.abs(ranking - correctRanking).float())
+            scores = []    
+            def lessThanFunc(a,b):
+                global compareCache
+                global numCompares
+                result = 1.0 if a < b else 0.0
+                if not (a,b) in compareCache:
+                    compareCache[(a,b)] = result
+                    numCompares += 1
+                    scores.append(scoreRanking())
+                if random.random() < -1:
+                    return 1.0-result
+                else:
+                    return result
+            algorithm(data=data, ranking=ranking, lessThanFunc=lessThanFunc)
+            scoresFromAllRuns.append(scores)
+            numComparisonsFromAllRuns.append(numCompares)
+        numComparisons.append((numData, numComparisonsFromAllRuns))
         maxLenScores = len(max(scoresFromAllRuns, key=lambda x: len(x)))
         confidence = 0.95 # 0.99
         zValueForConfidence = 1.96 # 2.58
@@ -82,12 +162,29 @@ def compareAlgorithms():
         yMax = np.array(maxConfidence)
         ax.plot(x,y, label=algorithmName)
         ax.fill_between(x, yMin, yMax, alpha=.3)
+        #for i, scores in enumerate(scoresFromAllRuns):
+        #    ax.plot(x[:len(scores)],np.array(scores), label=algorithmName + f"{i}")
+            
             
     # Add legend, title and labels
     ax.legend()
     ax.set_title("Algorithm Performance Comparison")
     ax.set_xlabel("Number of Comparisons")
     ax.set_ylabel("Mean L0 Distance From Correct Ranking")
+    plt.show()
+    
+    
+    zValueForConfidence = 1.96 # 0.95
+    x = np.array([numData for (numData, numComps) in numComparisons])
+    y = np.array([np.mean(numComps) for (numData, numComps) in numComparisons])
+    lower = np.array([np.mean(numComps)-zValueForConfidence*np.std(numComps)/math.sqrt(len(numComps)) for (numData, numComps) in numComparisons])
+    upper = np.array([np.mean(numComps)+zValueForConfidence*np.std(numComps)/math.sqrt(len(numComps)) for (numData, numComps) in numComparisons])
+    fig, ax = plt.subplots()
+    ax.plot(x,y)
+    ax.fill_between(x, lower, upper, alpha=.3)
+    ax.set_title("Number of comparisons until convergence for trueskill bracket size 2")
+    ax.set_ylabel("Number of comparisons")
+    ax.set_xlabel("Number of data points")
     plt.show()
     
 ### Elo stuff
@@ -233,7 +330,9 @@ def bracketTrueSkill(data, ranking, lessThanFunc, bracketSize=10):
         pairs = []
         sortedIndices = torch.argsort(eloMeans)
         for partition in getBrackets(sortedIndices, bracketSize, offset=offset):
-            random.shuffle(partition) # randomly assign pairs within the bracket
+            def indexOf(i):
+                return ((sortedIndices == i).nonzero(as_tuple=True)[0])
+            #random.shuffle(partition) # randomly assign pairs within the bracket
             for i in range(len(partition)//2):
                 numComparisons += 1
                 #if quality_1vs1(elos[partition[i]], elos[partition[-i-1]]) > 0.5:
@@ -243,6 +342,8 @@ def bracketTrueSkill(data, ranking, lessThanFunc, bracketSize=10):
         # adjust if bracketSize % offset == 0, it's important gcd is 1 so we go through all, probably more than 1 is also good so we skip around a bit
         offset = (offset + 3) % bracketSize
         for i,j in pairs:
+            def indexOf(i):
+                return ((sortedIndices == i).nonzero(as_tuple=True)[0])
             iIsLessThanJPr = lessThanFunc(data[i], data[j])
             if iIsLessThanJPr < 0.5: # i wins
                 elos[i], elos[j] = rate_1vs1(elos[i], elos[j])
@@ -254,107 +355,140 @@ def bracketTrueSkill(data, ranking, lessThanFunc, bracketSize=10):
 
 
 
-## Hamming LUCB
 
-
-class S(object):
-    def __i
-
-def alpha(Ti,delta, n):
-    beta = math.log(n/float(delta)) + 0.75*math.log(math.log(n/float(delta))) + 1.5*math.log(1+math.log(Ti/2.0))
-    return math.sqrt( 3 / (2.0*Ti) ) 
-
-def hammingLUCB(data, ranking, lessThanFunc, delta=0.5):
-    n = 
-    S = [] # list with entries ( i, T_i, scorehat_i, scorehat_i - alpha_i, scorehat_i + alpha_i, alpha_i)
+# used insights from experiments above, this has good convergence and simpler code than above
+def simpleTrueskill(data, ranking, lessThanFunc):
+    elos = [Rating(25) for _ in data]
+    eloMeans = torch.tensor([elo.mu for elo in elos])
+    
     # random initial pairing to estimate elos
     randomInitials = list(range(len(data)))
     random.shuffle(randomInitials)
     randomInitialPairs = [(randomInitials[i], randomInitials[len(data)-i-1]) for i in range(len(data)//2)]
     for i,j in randomInitialPairs:
         iIsLessThanJPr = lessThanFunc(data[i], data[j])
-        scorehat = 1.0-iIsLessThanJPr
-        S.append( ( i, 1, scorehat, scorehat-alpha(1,delta), scorehat+self.alpha(1,delta), self.alpha(1,delta) ) )
         if iIsLessThanJPr < 0.5: # i wins
+            elos[i], elos[j] = rate_1vs1(elos[i], elos[j])
         elif iIsLessThanJPr > 0.5: # j wins
-            a
-
-
-
-# from https://github.com/reinhardh/supplement_approximate_ranking/blob/master/approximate_ranking_introduction.ipynb
-class Hamming_LUCB:
-    def __init__(self,pairwise,k,hd=1):
-        self.hd = hd
-        self.k = k
-        self.pairwise = pairwise # instance of pairwise
-    def random_cmp(self,i): # compare i to a randomly chosen other item
-        j = random.choice(range(self.pairwise.n-1))
-        if j >= i:
-            j += 1
-        return float( self.pairwise.compare(i,j) )
-    def alpha(self,Ti,delta):
-        n = self.pairwise.n
-        beta = log(n/delta) + 0.75*log(log(n/delta)) + 1.5*log(1+log(Ti/2))
-        return sqrt( 3 / (2*Ti) ) 
-    def rank(self,delta=0.5,numit = 6000000,monitor=[]):
-        monitor_results = [array(range(1,self.pairwise.n+1))]
-        S = [] # list with entries ( i, T_i, scorehat_i, scorehat_i - alpha_i, scorehat_i + alpha_i, alpha_i)
-        # compare each item once to initialize
-        for i in range(self.pairwise.n):
-            scorehat = self.random_cmp(i)
-            S.append( ( i, 1, scorehat, scorehat-self.alpha(1,delta), scorehat+self.alpha(1,delta), self.alpha(1,delta) ) )
-        for iit in range(numit):
-            # sort in descending order by scorehat
-            S = sorted(S , key=lambda entry: entry[2],reverse=True)
-            # min scorehat_i - alpha_i; min over (1),...,(k-h)
-            d1low = min( S[:self.k-self.hd] , key=lambda entry: entry[3] )
-            # max scorehat_i + alpha_i; max over (k+1+h),...,(n)
-            d2up = max( S[self.k+self.hd:] , key=lambda entry: entry[4] )
+            elos[j], elos[i] = rate_1vs1(elos[j], elos[i])
+        eloMeans[i], eloMeans[j] = elos[i].mu, elos[j].mu
+   
+    numComparisons = 0
+    offset = 0
+    while True:
+        pairs = []
+        chosen = set()
+        offset = (offset + 1) % 2
+        sortedIndices = torch.argsort(eloMeans)
+        for i in range(len(data)//2-1,-1,-1):
+            curI = i*2+offset
+            curJ = i*2+offset+1
+            if curJ < len(data):
+                currentI = sortedIndices[curI]
+                currentJ = sortedIndices[curJ]
+                iIsLessThanJPr = lessThanFunc(data[currentI], data[currentJ])
+                if iIsLessThanJPr < 0.5: # i wins
+                    elos[currentI], elos[currentJ] = rate_1vs1(elos[currentI], elos[currentJ])
+                elif iIsLessThanJPr > 0.5: # j wins
+                    elos[currentJ], elos[currentI] = rate_1vs1(elos[currentJ], elos[currentI])
+                eloMeans[currentI], eloMeans[currentJ] = elos[currentI].mu, elos[currentJ].mu
+                ranking[:] = torch.argsort(eloMeans)
+                numComparisons += 1
+            if numComparisons > len(data)*len(data)*2:
+                return
             
-            sample_next = [] # items to sample in next round
-            if self.hd == 0: # algorithm reduced to LUCB algorithm
-                sample_next = [d1low,d2up]
-            else: # self.hd > 0
-                # find middle items with the largest confidence intervals
-                b1al = max( S[self.k-self.hd:self.k] , key=lambda entry: entry[5] )
-                b2al = max( S[self.k:self.k+self.hd] , key=lambda entry: entry[5] )
-                if d1low[5] < b1al[5]:
-                    sample_next += [b1al]
-                else:
-                    sample_next += [d1low]
-                if d2up[5] < b2al[5]:
-                    sample_next += [b2al]
-                else:
-                    sample_next += [d2up]
-            
-            # collect data to visualize the progress of the algorithm
-            if iit in monitor or d1low[3] > d2up[4]:
-                scores = array([s[2] for s in S])
-                alphas = array([s[5] for s in S])
-                monitor_results.append(scores)
-                monitor_results.append(alphas)
-                
-            # check termination condition
-            if d1low[3] > d2up[4]:
-                break	# terminate
-
-            # compare and uptate scores
-            for it in set(sample_next):
-                Ti = it[1]+1
-                shat = 1.0/Ti*( (Ti-1)*it[2] + self.random_cmp( it[0] ) )
-                alphai = self.alpha(Ti,delta)
-                S[S.index(it)] = ( it[0], Ti, shat, shat - alphai, shat + alphai, alphai )
-
-        est_ranking = [s[0] for s in S]
-        self.ranking = [ est_ranking[:self.k], est_ranking[self.k+1:]  ]
-        return monitor_results
 
 
 
+## Hamming LUCB, didn't work well but I may have broke something
+# modified from https://github.com/reinhardh/supplement_approximate_ranking/blob/master/approximate_ranking_introduction.ipynb
+
+@dataclass
+class Score(object):
+    index: int
+    T: float
+    scorehat: float
+    alpha: float
+    def __hash__(self):
+        return hash(self.index)
+    
+    def __eq__(self, other):
+        return self.index == other.index
+
+def computeAlpha(T,delta,n):
+    beta = math.log(n/float(delta)) + 0.75*math.log(math.log(n/float(delta))) + 1.5*math.log(1+math.log(T/2.0))
+    return math.sqrt( 3 / (2.0*T) ) 
+
+def hammingLUCB(data, ranking, lessThanFunc, k=50, hd=2, delta=0.9):
+    n = len(data)
+    scores = torch.zeros(n)
+    S = [] # list with entries ( i, T_i, scorehat_i, scorehat_i - alpha_i, scorehat_i + alpha_i, alpha_i)
+    # random initial pairing to estimate elos
+    randomInitials = list(range(len(data)))
+    random.shuffle(randomInitials)
+    randomInitialPairs = [(randomInitials[i], randomInitials[len(data)-i-1]) for i in range(len(data)//2)]
+    for i in range(len(data)):
+        compareTo = random.randint(0, n-2)
+        if compareTo >= i:
+            compareTo += 1
+        iIsLessThanJPr = lessThanFunc(data[i], data[compareTo])
+        scorehat = 1.0-iIsLessThanJPr
+        S.append(Score(index=i, T=1, scorehat=scorehat, alpha=computeAlpha(1,delta,n)))
+        scores[i] = scorehat
+    
+    numComparisons = 0
+    while True:
+        # sort in descending order by scorehat
+        S = sorted(S , key=lambda entry:entry.scorehat,reverse=True)
+        # min scorehat_i - alpha_i; min over (1),...,(k-h)
+        d1low = min(S[:k-hd], key=lambda entry: entry.scorehat-entry.alpha)
+        # max scorehat_i + alpha_i; max over (k+1+h),...,(n)
+        d2up = max(S[k+hd:], key=lambda entry: entry.scorehat+entry.alpha)
+        sample_next = [] # items to sample in next round
+        if hd == 0: # algorithm reduced to LUCB algorithm
+            sample_next = [d1low,d2up]
+        else: # hd > 0
+            # find middle items with the largest confidence intervals
+            b1al = max(S[k-hd:k], key=lambda entry: entry.alpha )
+            b2al = max(S[k:k+hd], key=lambda entry: entry.alpha )
+            if d1low.alpha < b1al.alpha:
+                sample_next += [b1al]
+            else:
+                sample_next += [d1low]
+            if d2up.alpha < b2al.alpha:
+                sample_next += [b2al]
+            else:
+                sample_next += [d2up]
+        
+        # check termination condition
+        #if d1low.scorehat - d1low.alpha > d2up.scorehat + d2up.alpha:
+        #    print("termination condition")
+        #    break	# terminate
+        if numComparisons > n*n*2:
+            break
+        
+        
+        # compare and update scores
+        for it in set(sample_next):
+            Ti = it.T+1
+            # randomly compare uniformly to something else
+            compareTo = random.randint(0, n-2)
+            if compareTo >= it.index:
+                compareTo += 1
+            isLessThanPr = lessThanFunc(data[it.index], data[compareTo])
+            scorehat = 1.0-isLessThanPr
+            shat = 1.0/float(Ti)*( (Ti-1)*it.scorehat + scorehat)
+            alphai = computeAlpha(Ti,delta,n)
+            S[S.index(it)] = Score(index=it.index, T=Ti, scorehat=shat, alpha=alphai)
+            scores[it.index] = shat
+            ranking[:] = torch.argsort(scores)
+            numComparisons += 1
+
+    print([s.T for s in S])
 
 
 
-def noisyInsertionSort(elements, compareFunc, p, delta):
+def noisyInsertionSort(elements, ranking, compareFunc, p=0.3, delta=0.01):
     
     # takes n log n comparisons worst case because of binary search
     # technically it is more but not in terms of comparisons which is what we care about
