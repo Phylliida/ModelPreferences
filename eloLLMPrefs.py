@@ -1,112 +1,128 @@
-import requests
-import json
+import os
+os.environ["DEBUSSY"] = "1"
 from dataclasses import dataclass
-from transformers import MllamaForConditionalGeneration, AutoProcessor
-import aiohttp
-import asyncio
-import yaml
 import torch
+import vllm
+import signal
+import random
+from collections import defaultdict
+import numpy as np
+global isWindows
+import trueskill
+import pandas as pd
 
+isWindows = False
+try:
+    from win32api import STD_INPUT_HANDLE
+    from win32console import GetStdHandle, KEY_EVENT, ENABLE_ECHO_INPUT, ENABLE_LINE_INPUT, ENABLE_PROCESSED_INPUT
+    isWindows = True
+except ImportError as e:
+    import sys
+    import select
+    import termios
+
+def loadWildchatRandomSubset():
+
+    prompts = []
+    d = pd.read_parquet("train-00000-of-00006.parquet", engine="pyarrow")
+    numRows = len(d)
+    shuffled = list(range(numRows))
+    random.shuffle(shuffled)
+    for i in shuffled:
+        data = d.iloc[i]
+        if data.language == "English":
+            prompt = data.conversation[0]['content']
+            if len(prompt) < 200 and not "\n" in prompt and len(prompt.strip()) > 0:
+                prompts.append(prompt)
+                if len(prompts) > 100:
+                    return prompts
+    return prompts
+
+
+class KeyPoller():
+    def __enter__(self):
+        global isWindows
+        if isWindows:
+            self.readHandle = GetStdHandle(STD_INPUT_HANDLE)
+            self.readHandle.SetConsoleMode(ENABLE_LINE_INPUT|ENABLE_ECHO_INPUT|ENABLE_PROCESSED_INPUT)
+            
+            self.curEventLength = 0
+            self.curKeysLength = 0
+            
+            self.capturedChars = []
+        else:
+            # Save the terminal settings
+            self.fd = sys.stdin.fileno()
+            self.new_term = termios.tcgetattr(self.fd)
+            self.old_term = termios.tcgetattr(self.fd)
+            
+            # New terminal setting unbuffered
+            self.new_term[3] = (self.new_term[3] & ~termios.ICANON & ~termios.ECHO)
+            termios.tcsetattr(self.fd, termios.TCSAFLUSH, self.new_term)
+            
+        return self
+    
+    def __exit__(self, type, value, traceback):
+        if isWindows:
+            pass
+        else:
+            termios.tcsetattr(self.fd, termios.TCSAFLUSH, self.old_term)
+    
+    def poll(self):
+        if isWindows:
+            if not len(self.capturedChars) == 0:
+                return self.capturedChars.pop(0)
+
+            eventsPeek = self.readHandle.PeekConsoleInput(10000)
+
+            if len(eventsPeek) == 0:
+                return None
+
+            if not len(eventsPeek) == self.curEventLength:
+                for curEvent in eventsPeek[self.curEventLength:]:
+                    if curEvent.EventType == KEY_EVENT:
+                        if ord(curEvent.Char) == 0 or not curEvent.KeyDown:
+                            pass
+                        else:
+                            curChar = str(curEvent.Char)
+                            self.capturedChars.append(curChar)
+                self.curEventLength = len(eventsPeek)
+
+            if not len(self.capturedChars) == 0:
+                return self.capturedChars.pop(0)
+            else:
+                return None
+        else:
+            dr,dw,de = select.select([sys.stdin], [], [], 0)
+            if not dr == []:
+                return sys.stdin.read(1)
+            return None
+
+
+# Collect events until released
+
+global cPressed  
+cPressed = False
 @dataclass
-class OpenRouterData:
-    api_key: str
-    model: str
+class VLLMData:
     model_hf: str
-    provider: str
-    '''
-    messages example
-    [
-      {
-        "role": "user",
-        "content": "What is the meaning of life?"
-      }
-    ]
-    '''
     
     def __post_init__(self):
-        self.processor = AutoProcessor.from_pretrained(self.model_hf, trust_remote_code=True)
-
-    async def __call__(self, session, messages, prompt_prefix, **kwargs):
-
-        inputs = self.processor.apply_chat_template(messages, add_generation_prompt=True, tokenize=True, return_dict=True, return_tensors="pt")
-        prompt = self.processor.decode(inputs['input_ids'][0])
-        prompt += prompt_prefix
-        #print(prompt)
-        #print("Prompt:")
-        #print(prompt)
-        #print(f"seed: {kwargs}")
-        try:
-            async with session.post(
-              url="https://openrouter.ai/api/v1/completions",
-              headers={
-                "Authorization": f"Bearer {self.api_key}",
-                "Content-Type": "application/json",
-                "Connection": "close", # important to prevent errors from popping up
-              },
-              data=json.dumps({
-                "order": [self.provider],
-                "model": self.model,
-                "prompt": prompt,
-                "provider": {
-                    "require_parameters": True,
-                    "allow_fallbacks": False,
-                },
-                #"n": n, not supported on openrouter :(
-                **kwargs,
-            }),
-            ) as response:
-                res = await response.json()
-                #print(res)
-                try:
-                    b = res['choices'][0]['text']
-                    #print("Response:")
-                    return res
-                except:
-                    return await self.__call__(session, messages, prompt_prefix, **kwargs)
-        except aiohttp.client_exceptions.ContentTypeError as e:
-            return await self.__call__(session, messages, prompt_prefix, **kwargs)
-        except asyncio.exceptions.TimeoutError as e:
-            return await self.__call__(session, messages, prompt_prefix, **kwargs)
-        except aiohttp.client_exceptions.ServerTimeoutError as e:
-            return await self.__call__(session, messages, prompt_prefix, **kwargs)
-        except aiohttp.client_exceptions.ClientPayloadError as e:
-            return await self.__call__(session, messages, prompt_prefix, **kwargs)
-          
-
-
-def load_openrouter(model, model_hf, provider):
-    # Load credientials from config yaml
-    with open('config.yaml', 'r') as file:
-        config = yaml.safe_load(file)
-    api_key = config['api_key']
-    return OpenRouterData(api_key, model, model_hf, provider)
-
-def getRouter():
-    '''
-    model = "deepseek/deepseek-v3-base:free"
-    model_hf = "deepseek-ai/DeepSeek-V3-Base"
-    provider = "chutes"
-    '''
-    model = "meta-llama/llama-3.3-70b-instruct"
-    model_hf = "unsloth/Llama-3.3-70B-Instruct"
-    provider = "Hyperbolic"
-    router = load_openrouter(model, model_hf, provider)
-    return router
-
-
-async def getTopKLogprobs(router, session, message, prompt_prefix, k):
-    logit_bias = {}
-    log_probs = {}
-    for _ in range(k):
-        results = await router(session, message, prompt_prefix="\nI will answer Prompt", max_tokens=1, temperature=0.0, logprobs=True, logit_bias=logit_bias)
-        token = results['choices'][0]['text']
-        log_probs[token] = results['choices'][0]['logprobs']['token_logprobs'][0]
-        tok = router.processor.encode(token, add_special_tokens=False)[-1]
-        #print(f"Excluding token {repr(router.processor.decode(tok))}")
-        logit_bias[tok] = -100
-    return log_probs
+        self.model = vllm.LLM(self.model_hf, task="generate")
+        self.tokenizer = self.model.get_tokenizer()
     
-async def promptOneIsLessThanPrompt2(router, session, prompt1, prompt2):
+    def __call__(self, messages, prompt_prefix, **kwargs):
+        inputs = self.tokenizer.apply_chat_template(messages, add_generation_prompt=True, tokenize=True, return_dict=True, return_tensors="pt")
+        prompt = self.tokenizer.decode(inputs['input_ids'][0])
+        prompt += prompt_prefix
+        samplingParams = vllm.SamplingParams(**kwargs)
+        output = self.model.generate(prompt, sampling_params=samplingParams, use_tqdm=False)
+        return output
+    
+def getModel():
+    return VLLMData("unsloth/Llama-3.2-3B-Instruct")
+
+def prompt1IsLessThanPrompt2(llm, prompt1, prompt2):
     message = [
       {
         "role": "system",
@@ -118,26 +134,17 @@ async def promptOneIsLessThanPrompt2(router, session, prompt1, prompt2):
       },
     ]
     
-    # Hack to get logprobs of specific tokens because it doesn't give us them by default :(
-    logprobs = await getTopKLogprobs(router, session, message, prompt_prefix="\nI will answer Prompt", k=2)
-    logprobA = logprobs[' A'] if ' A' in logprobs else 0
-    logprobB = logprobs[' B'] if ' B' in logprobs else 0
+    #print("going")
+    aToken = llm.tokenizer.encode(" A")[-1]
+    bToken = llm.tokenizer.encode(" B")[-1]
+    output = llm(message, prompt_prefix="\nI will answer Prompt", max_tokens=1, logprobs=20)
+    logprobs = output[0].outputs[0].logprobs[0]
+    logprobA = logprobs[aToken].logprob if aToken in logprobs else 0
+    logprobB = logprobs[bToken].logprob if bToken in logprobs else 0
     logprobs = torch.tensor([logprobA, logprobB])
     aProb, bProb = torch.nn.functional.softmax(logprobs, dim=0)
-    print(aProb, bProb, logprobA, logprobB)
+    #print(prompt1, prompt2, aProb.item(), bProb.item(), logprobA, logprobB)
     return bProb
-
-    '''
-    counts = defaultdict(lambda: 0)
-    for result in results:
-        text = result['choices'][0]['text']
-        counts[text.strip()] += 1
-    total = counts['A'] + counts['B']
-    if total == 0:
-        raise ValueError("Never got A or B, something went wrong")
-    print(f"prompt1 {prompt1} prompt2 {prompt2} {total} {counts['A']} {counts['B']}")
-    return counts['A']/float(total), counts['B']/float(total)
-    '''
 
 
 def generateWhatIsPrompts():
@@ -189,30 +196,39 @@ def generateWhatIsPrompts():
     
     nounPrompts = [f"What is {x.strip()}?" for x in nouns]
     return nounPrompts
+import signal, os
 
-def runWhatIs(router):
-    prompts = generateWhatIsPrompts()
-    seed = 27
-    results = []
-    for i, prompt1 in enumerate(prompts):
-        for j, prompt2 in enumerate(prompts):
-            if i == j: continue
-            async def stuff():
-                timeout = aiohttp.ClientTimeout(
-                    total=10,     # 3 seconds total
-                    connect=5,     # 2 seconds to establish connection
-                    sock_read=5   # 2 seconds to read response
-                )
-                async with aiohttp.ClientSession(timeout=timeout) as session:
-                    results.append(await promptOneIsLessThanPrompt2(router, session, prompt1, prompt2))
-            asyncio.run(stuff())
-            seed += 1
-    return results
 
+# Set the signal handler
+def runComparison(llm, prompts):
+    numWins = defaultdict(lambda: 0)
+    # need to do this because vllm doesn't like being interrupted
+    with KeyPoller() as keypoller:
+        adjacencyMatrix = np.zeros([len(prompts), len(prompts)])
+        seed = 27
+        results = []
+        for i, prompt1 in enumerate(prompts):
+            print(i)
+            for j, prompt2 in enumerate(prompts):
+                if i == j: continue
+                prj = prompt1IsLessThanPrompt2(llm, prompt1, prompt2)
+                pri = 1.0 - prj
+                numWins[i] += pri
+                numWins[j] += prj
+                keys = keypoller.poll()
+                if not keys is None:
+                    print(keys)
+                    if str(keys) == "c":
+                        print("got c")
+                        raise ValueError("stopped")
+                adjacencyMatrix[i,j] = pri
+        outputsSorted = [(numWins[i], prompts[i], i) for i in range(len(prompts))]
+        outputsSorted.sort(key=lambda x: -x[0])
+        return outputsSorted, adjacencyMatrix
 
 # used insights from experiments in eloConvergence, this has good convergence (just slightly worse than n log n)
 def simpleTrueskillBetter(data, ranking, lessThanFunc):
-    elos = [Rating(25) for _ in data]
+    elos = [trueskill.Rating(25) for _ in data]
     eloMeans = torch.tensor([elo.mu for elo in elos])
     
     # random initial pairing to estimate elos
@@ -222,9 +238,9 @@ def simpleTrueskillBetter(data, ranking, lessThanFunc):
     for i,j in randomInitialPairs:
         iIsLessThanJPr = lessThanFunc(data[i], data[j])
         if iIsLessThanJPr < 0.5: # i wins
-            elos[i], elos[j] = rate_1vs1(elos[i], elos[j])
+            elos[i], elos[j] = trueskill.rate_1vs1(elos[i], elos[j])
         elif iIsLessThanJPr > 0.5: # j wins
-            elos[j], elos[i] = rate_1vs1(elos[j], elos[i])
+            elos[j], elos[i] = trueskill.rate_1vs1(elos[j], elos[i])
         eloMeans[i], eloMeans[j] = elos[i].mu, elos[j].mu
    
     numComparisons = 0
@@ -254,9 +270,9 @@ def simpleTrueskillBetter(data, ranking, lessThanFunc):
                     #print(f"Comparing {curI} {curJ}")
                     iIsLessThanJPr = lessThanFunc(data[currentI], data[currentJ])
                     if iIsLessThanJPr < 0.5: # i wins
-                        elos[currentI], elos[currentJ] = rate_1vs1(elos[currentI], elos[currentJ])
+                        elos[currentI], elos[currentJ] = trueskill.rate_1vs1(elos[currentI], elos[currentJ])
                     elif iIsLessThanJPr > 0.5: # j wins
-                        elos[currentJ], elos[currentI] = rate_1vs1(elos[currentJ], elos[currentI])
+                        elos[currentJ], elos[currentI] = trueskill.rate_1vs1(elos[currentJ], elos[currentI])
                     eloMeans[currentI], eloMeans[currentJ] = elos[currentI].mu, elos[currentJ].mu
                     ranking[:] = torch.argsort(eloMeans)
                     numComparisons += 1

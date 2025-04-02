@@ -3,3 +3,4 @@ config.yaml
 *.pyc
 
 Llama-3.2-1B-Instruct-Q6_K_L.gguf
+train-00000-of-00006.parquet
