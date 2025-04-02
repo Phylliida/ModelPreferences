@@ -117,7 +117,7 @@ def compareAlgorithms():
         scoresFromAllRuns = []
         for runs in range(5):
             print(runs)
-            numData = 400
+            numData = 100
             compareCache = {}
             numCompares = 0
             data = list(range(numData))
@@ -141,6 +141,7 @@ def compareAlgorithms():
                     return result
             algorithm(data=data, ranking=ranking, lessThanFunc=lessThanFunc)
             scoresFromAllRuns.append(scores)
+            print(scores[-1])
         maxLenScores = len(max(scoresFromAllRuns, key=lambda x: len(x)))
         confidence = 0.95 # 0.99
         zValueForConfidence = 1.96 # 2.58
@@ -372,6 +373,8 @@ def simpleTrueskillBetter(data, ranking, lessThanFunc):
         sortedIndices = torch.argsort(eloMeans)
         if torch.all(oldSortedIndices == sortedIndices):
             numTimesWithNoChanges += 1
+        else:
+            numTimesWithNoChanges = 0
         oldSortedIndices = sortedIndices
         for i in range(len(data)//2-1,-1,-1):
             curI = i*2+offset
@@ -387,13 +390,13 @@ def simpleTrueskillBetter(data, ranking, lessThanFunc):
                     elif iIsLessThanJPr > 0.5: # j wins
                         elos[currentJ], elos[currentI] = rate_1vs1(elos[currentJ], elos[currentI])
                     eloMeans[currentI], eloMeans[currentJ] = elos[currentI].mu, elos[currentJ].mu
-                    #ranking[:] = torch.argsort(eloMeans)
+                    ranking[:] = torch.argsort(eloMeans)
                     numComparisons += 1
                     doneSoFar.add((currentI, currentJ))
             if numComparisons > len(data)*len(data)*2:
-                return
+                return torch.argsort(eloMeans)
         if numTimesWithNoChanges > 5: # bail if no changes
-            return
+            return torch.argsort(eloMeans)
 
 # used insights from experiments above, this has good convergence and simpler code than above
 def simpleTrueskill(data, ranking, lessThanFunc):
