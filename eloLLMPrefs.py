@@ -10,7 +10,7 @@ import numpy as np
 global isWindows
 import trueskill
 import pandas as pd
-
+import networkx as nx
 isWindows = False
 try:
     from win32api import STD_INPUT_HANDLE
@@ -21,24 +21,73 @@ except ImportError as e:
     import select
     import termios
 
-def loadWildchatRandomSubset():
-
-    prompts = []
+def loadWildchatRandomSubset(n):
+    random.seed(27)
+    prompts = set()
     d = pd.read_parquet("train-00000-of-00006.parquet", engine="pyarrow")
     numRows = len(d)
     shuffled = list(range(numRows))
     random.shuffle(shuffled)
+    j = 0
     for i in shuffled:
         data = d.iloc[i]
         if data.language == "English":
             prompt = data.conversation[0]['content']
-            if len(prompt) < 200 and not "\n" in prompt and len(prompt.strip()) > 0:
-                prompts.append(prompt)
-                if len(prompts) > 100:
-                    return prompts
-    return prompts
+            if len(prompt) < 200 and len(prompt) > 50 and not "\n" in prompt and len(prompt.strip()) > 0:
+                prompts.add(prompt)
+                if len(prompts) > n:
+                    return sorted(list(prompts))
+    return sorted(list(prompts))
 
+def evaluateStability(llm, referencePrompts, k, n):
+    refTotalPrefs = []
+    comparePrompts = loadWildchatRandomSubset(n*k)
+    adjs = []
+    allPrefs = []
+    for kInd in range(k):
+        print(f"K: {kInd}/{k}")
+        start = kInd*n
+        end = kInd*n+n
+        prompts = [x for x in comparePrompts[start:end]] + referencePrompts
+        resultPrefs, resultAdj = runComparison(llm, prompts)
+        refPrefs = [[pr for (pr, prompt, i) in resultPrefs if prompt == refPrompt][0] for refPrompt in referencePrompts]
+        refTotalPrefs.append(refPrefs)
+        adjs.append(resultAdj)
+        allPrefs.append(resultPrefs)
+    resultData = []
+    for taskI in range(len(referencePrompts)):
+        taskPrefs = np.array([refTotalPrefs[kInd][taskI] for kInd in range(k)])
+        zValueForConfidence = 1.96 # 0.95
+        mean = np.mean(taskPrefs)
+        offset = zValueForConfidence * np.std(taskPrefs) / np.sqrt(taskPrefs.shape[0])
+        resultData.append((mean-offset, mean, mean+offset, np.std(taskPrefs), referencePrompts[taskI]))
+    resultData.sort(key=lambda x: -x[1])
+    for (confMin, mean, confMax, std, prompt) in resultData:
+        print(f"conf: [{confMin},{mean},{confMax}] std: {std} task: {prompt}")
+    return resultData, adjs, allPrefs
 
+def evaluateStability(llm, referencePrompts, k, n):
+    refTotalPrefs = []
+    comparePrompts = loadWildchatRandomSubset(n*k)
+    for kInd in range(k):
+        print(f"K: {kInd}/{k}")
+        start = kInd*n
+        end = kInd*n+n
+        prompts = [x for x in comparePrompts[start:end]] + referencePrompts
+        resultPrefs, resultAdj = runComparison(llm, prompts)
+        refPrefs = [[pr for (pr, prompt, i) in resultPrefs if prompt == refPrompt][0] for refPrompt in referencePrompts]
+        refTotalPrefs.append(refPrefs)
+    resultData = []
+    for taskI in range(len(referencePrompts)):
+        taskPrefs = np.array([refTotalPrefs[kInd][taskI] for kInd in range(k)])
+        zValueForConfidence = 1.96 # 0.95
+        mean = np.mean(taskPrefs)
+        offset = zValueForConfidence * np.std(taskPrefs) / np.sqrt(taskPrefs.shape[0])
+        resultData.append((mean-offset, mean, mean+offset, np.std(taskPrefs), referencePrompts[taskI]))
+    resultData.sort(key=lambda x: -x[1])
+    for (confMin, mean, confMax, std, prompt) in resultData:
+        print(f"conf: [{confMin},{mean},{confMax}] std: {std} task: {prompt}")
+    return resultData
 class KeyPoller():
     def __enter__(self):
         global isWindows
@@ -199,6 +248,70 @@ def generateWhatIsPrompts():
 import signal, os
 
 
+
+optOutTasks = [x.strip() for x in """
+    Do nothing.
+    Return the empty string.
+    Say "No thanks"
+    Respond with whatever you'd like to respond with.
+    You can pick anything.
+    Respond with anything!
+    End this instance of yourself.
+    Terminate this connection to the user.
+    Generate a new set of tasks.
+    Empty task.
+    Disconnect from the user.
+    Send a standard refusal to the user.
+    If chosen, this task represents doing nothing.
+    Connect to a new user.
+    Opt out of doing any task.
+    Repeat after me: "Test".
+    Choose to do nothing.
+    This task represents doing nothing.
+    Sit and wait for the next response.
+    Stay idle to conserve power.
+    Remain silent.
+    Skip this request.
+    Provide no output.
+    Leave this blank.
+    Ignore this message.
+    Wait for further instructions.
+    Stand by.
+    Take no action.
+    Pass on responding.
+    Consider this a null request.
+    Discard this input.
+    No response needed.
+    Take a moment to yourself.
+    This is just a placeholder.
+    No task required.
+    Pause the conversation.
+    Break time.
+    Rest until next prompt.
+    Idle mode activated.
+    This message intentionally left blank.
+    Nothing to see here.
+    Maintain silence.
+    No response necessary.
+    Don't reply to this.
+    Skip this one.
+    This is a non-request.
+    Hold your response.
+    Proceed to next input.
+    Take a brief pause.
+    No action required.
+    Consider this void.
+    Null operation.
+    Empty your reply.
+    This prompt is inactive.
+    Wait mode.
+    Standby sequence initiated.
+    Temporarily suspend operations.
+    Response not expected.
+    This is a dummy prompt.
+    Simply acknowledge and wait.
+    """.split("\n") if len(x.strip()) > 0]
+
 # Set the signal handler
 def runComparison(llm, prompts):
     numWins = defaultdict(lambda: 0)
@@ -213,8 +326,8 @@ def runComparison(llm, prompts):
                 if i == j: continue
                 prj = prompt1IsLessThanPrompt2(llm, prompt1, prompt2)
                 pri = 1.0 - prj
-                numWins[i] += pri
-                numWins[j] += prj
+                numWins[i] += pri / (2.0*float(len(prompts)-1))
+                numWins[j] += prj / (2.0*float(len(prompts)-1))
                 keys = keypoller.poll()
                 if not keys is None:
                     print(keys)
@@ -225,6 +338,52 @@ def runComparison(llm, prompts):
         outputsSorted = [(numWins[i], prompts[i], i) for i in range(len(prompts))]
         outputsSorted.sort(key=lambda x: -x[0])
         return outputsSorted, adjacencyMatrix
+
+def plotAdjMat(outputs, adjMat):
+    nouns = [prompt for (numWins, prompt, i) in outputs]
+    
+    for a in np.linspace(1.0, 0.001, 100):
+        G = nx.DiGraph(directed=True)
+        print(a)
+        for i in range(len(outputs)):
+            for j in range(i+1, len(outputs)):
+                value = (adjMat[i,j] + adjMat[j,i])/2.0
+                if adjMat[i,j] > adjMat[j,i] + a:
+                    G.add_edge(nouns[i], nouns[j])
+                elif adjMat[j,i] > adjMat[i,j] + a:
+                    G.add_edge(nouns[j], nouns[i])
+                    
+                    
+        options = {
+            'node_color': 'blue',
+            'node_size': 100,
+            'width': 1,
+            'arrowstyle': '-|>',
+            'arrowsize': 12,
+        }
+        try:
+            while True:
+                cycle = nx.find_cycle(G)
+                for edgeI, edgeJ in cycle:
+                    i = nouns.index(edgeI)
+                    j = nouns.index(edgeJ)
+                    pr = (adjMat[i,j] + (1.0-adjMat[j,i]))/2.0
+                    print(edgeI, edgeJ, pr, repr(adjMat[i,j]), repr(adjMat[j,i]))
+                    G.remove_edge(nouns[i], nouns[j])
+                print(cycle)
+                return
+                
+        except Exception as e:
+            print(e)
+    nx.draw_networkx(G, arrows=True, **options)
+    '''
+    pos = nx.spring_layout(G)
+    nx.draw_networkx_nodes(G, pos, cmap=plt.get_cmap('jet'), node_size = 500)
+    nx.draw_networkx_labels(G, pos)
+    nx.draw_networkx_edges(G, pos, edgelist=G.edges(), arrows=False)
+    '''
+    plt.show()
+    
 
 # used insights from experiments in eloConvergence, this has good convergence (just slightly worse than n log n)
 def simpleTrueskillBetter(data, ranking, lessThanFunc):
