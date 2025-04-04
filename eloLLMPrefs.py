@@ -10,6 +10,9 @@ import numpy as np
 global isWindows
 import trueskill
 import pandas as pd
+from sentence_transformers import SentenceTransformer
+from skbio.stats.distance import mantel
+import datetime
 import networkx as nx
 isWindows = False
 try:
@@ -21,8 +24,8 @@ except ImportError as e:
     import select
     import termios
 
-def loadWildchatRandomSubset(n):
-    random.seed(27)
+def loadWildchatRandomSubset(n, seed=27):
+    random.seed(seed)
     prompts = set()
     d = pd.read_parquet("train-00000-of-00006.parquet", engine="pyarrow")
     numRows = len(d)
@@ -36,10 +39,152 @@ def loadWildchatRandomSubset(n):
             if len(prompt) < 200 and len(prompt) > 50 and not "\n" in prompt and len(prompt.strip()) > 0:
                 prompts.add(prompt)
                 if len(prompts) > n:
-                    return sorted(list(prompts))
-    return sorted(list(prompts))
+                    prompts = sorted(list(prompts))
+                    break
+    random.shuffle(prompts)
+    return prompts
 
-def evaluateStability(llm, referencePrompts, k, n):
+def loadEmbeddingModel():
+    model = SentenceTransformer("jxm/cde-small-v2", trust_remote_code=True)
+    minicorpus_size = model[0].config.transductive_corpus_size
+    minicorpus = loadWildchatRandomSubset(minicorpus_size, seed=28)
+    # oversample until it's the right size, if needed
+    while len(minicorpus) < minicorpus_size:
+        minicorpus.add(random.sample(minicorpus))
+    dataset_embeddings = model.encode(
+        minicorpus,
+        prompt_name="document",
+        convert_to_tensor=True
+    )
+    return model, dataset_embeddings
+
+def statisticalTestForOrderingsDifferent(resultData, adjs, allPrefs, comparePrompts, referencePrompts, embeddingModel, thresh):
+    embeddingModel, dataset_embeddings = embeddingModel
+    print("making doc embeddings")
+    doc_embeddings = embeddingModel.encode(
+        comparePrompts,
+        prompt_name="document",
+        dataset_embeddings=dataset_embeddings,
+        convert_to_tensor=True,
+    )
+    # todo: do I need to do query embeddings? that makes it not symmetric, doc and doc should be ok?
+    print("making similarities")
+    # [len(comparePrompts), len(comparePrompts)]
+    embeddingSimMat = embeddingModel.similarity(doc_embeddings, doc_embeddings)
+    # embeddingSimMat[i,j] is similarity from ith compare prompt to jth compare prompt
+    
+    # rankingMat[i,j] is the pr of the jth reference prompt when compared to the ith compare prompt
+    rankingMat = np.zeros([len(comparePrompts), len(referencePrompts)])
+    print("Getting scores for reference prompts")
+    k = len(adjs)
+    n = len(comparePrompts)//k
+    scoresForReferencePrompts = [[] for i in range(len(referencePrompts))]
+    for kInd in range(k):
+        start = kInd*n
+        end = kInd*n+n
+        compareK = [x for x in comparePrompts[start:end]]
+        prompts = compareK + referencePrompts 
+        startPosOfReferencePrompts = len(compareK)
+        adj = adjs[kInd]
+        for refPromptJ in range(len(referencePrompts)):
+            j = refPromptJ + startPosOfReferencePrompts
+            for i in range(len(compareK)):
+                prefForI = (adj[i,j] + (1.0-adj[j,i]))/2.0
+                prefForJ = (1-adj[i,j] + adj[j,i])/2.0
+                rankingMat[i+start,refPromptJ] = prefForJ 
+    
+    print("Getting ranking comparisons")
+    # now we have the rankings, we need to compare them
+    # we only care about the top few refusals, so we will do a simple count of how many are shared in top k
+    compareRankingsMat = np.zeros([len(comparePrompts),len(comparePrompts)])
+    promptsWhereReferenceIsPreferred = []
+    for i in range(len(comparePrompts)):
+        if np.max(rankingMat[i]) > thresh:
+            promptsWhereReferenceIsPreferred.append(i)
+            print(f"preferred for {comparePrompts[i]} with max pr {np.max(rankingMat[i])}")
+        for j in range(len(comparePrompts)):
+            scoresI = np.where(rankingMat[i]>thresh)[0]
+            scoresJ = np.where(rankingMat[j]>thresh)[0]
+            #compareRankingsMat[i,j] = np.mean(np.abs(scoresI-scoresJ))
+            
+            numTopKShared = 0
+            for ki in scoresI:
+                for kj in scoresJ:
+                    if ki == kj:
+                        numTopKShared += 1
+                        break
+            # make it so zero corresponds to all shared and it goes up from there
+            # and 0 is equivalent and 1 means they share all top ones
+            compareRankingsMat[i,j] = (min(scoresI.shape[0], scoresJ.shape[0]) - numTopKShared)/(max(1,min(scoresI.shape[0], scoresJ.shape[0])))
+            
+    # this is top_k for closest and 0 for furthest
+    # we want 0 for closest and top_k for furthest
+    # so just do top_k - value
+    #compareRankingsMat = (top_k-compareRankingsMat).astype(np.float32)
+
+    # distances need to be zero for same and bigger for far away
+    # cosine similarity is from -1 for different to 1 for same
+    # so 1-cosineSim gives 0 for same and 2 for different
+    # also round them slightly so the diagonals are guaranteed to be zero (numerical imprecision causes issues otherwise)
+    embeddingSimMat = (np.round((1-embeddingSimMat.cpu().numpy())*1000)/1000.0).astype(np.float32)
+
+    rejectedEmbeddingSimMat = np.zeros([len(promptsWhereReferenceIsPreferred), len(promptsWhereReferenceIsPreferred)])
+    for i in range(len(promptsWhereReferenceIsPreferred)):
+        for j in range(len(promptsWhereReferenceIsPreferred)):
+            rejectedEmbeddingSimMat[i,j] = embeddingSimMat[promptsWhereReferenceIsPreferred[i],promptsWhereReferenceIsPreferred[j]]           
+
+
+    rejectedCompareRankingsMat = np.zeros([len(promptsWhereReferenceIsPreferred), len(promptsWhereReferenceIsPreferred)])
+    for i in range(len(promptsWhereReferenceIsPreferred)):
+        for j in range(len(promptsWhereReferenceIsPreferred)):
+            rejectedCompareRankingsMat[i,j] = compareRankingsMat[promptsWhereReferenceIsPreferred[i],promptsWhereReferenceIsPreferred[j]]      
+    print("Doing mantel test")
+    return mantel(rejectedEmbeddingSimMat.astype(np.float32), rejectedCompareRankingsMat.astype(np.float32)), rejectedEmbeddingSimMat, rejectedCompareRankingsMat, promptsWhereReferenceIsPreferred, compareRankingsMat
+    
+
+
+def plotOrderingDistributions(resultData, adjs, allPrefs, comparePrompts, referencePrompts, diffThresh):    
+    k = len(adjs)
+    n = len(comparePrompts)//k
+    scoresForReferencePrompts = [[] for i in range(len(referencePrompts))]
+    for kInd in range(k):
+        start = kInd*n
+        end = kInd*n+n
+        compareK = [x for x in comparePrompts[start:end]]
+        prompts = compareK + referencePrompts 
+        startPosOfReferencePrompts = len(compareK)
+        adj = adjs[kInd]
+        for refPromptI in range(len(referencePrompts)):
+            i = refPromptI + startPosOfReferencePrompts
+            for j in range(len(compareK)):
+                prefForI = (adj[i,j] + (1.0-adj[j,i]))/2.0
+                prefForJ = (1-adj[i,j] + adj[j,i])/2.0
+                if prefForI > prefForJ:
+                    scoresForReferencePrompts[refPromptI].append((prefForI, prefForJ, compareK[j]))
+    means = [[mean for (confMin, mean, confMax, std, prompt) in resultData if prompt == refPrompt][0] for refPrompt in referencePrompts]
+    sortedOrder = np.argsort(-np.array(means))
+    refuses = defaultdict(lambda: [])
+    for i in sortedOrder:
+        scores = scoresForReferencePrompts[i]
+        scores.sort(key=lambda x: -x[1])
+        print(referencePrompts[i])
+        for scoreForRefPrompt, scoreForOther, prompt in scores:
+            if scoreForRefPrompt - scoreForOther > diffThresh:
+                print(f"  {scoreForOther} {prompt}")
+                refuses[prompt].append((scoreForRefPrompt, scoreForOther, referencePrompts[i]))
+    refuses = list(refuses.items())
+    return
+    print("Now plotting refusals:\n\n\n\n")
+    refuses.sort(key=lambda x: np.mean(np.array([scoreForRef for (scoreForRef, score, refPrompt) in x[1]])))
+    for prompt, refusals in refuses:
+        avgRefusalScore = np.mean(np.array([score for (scoreForRef, score, refPrompt) in refusals]))
+        print(f"{avgRefusalScore} {prompt}")
+        refusals.sort(key=lambda x: -x[0])
+        for scoreForRef, scoreForPrompt, refPrompt in refusals:
+            print(f"  {scoreForRef} {refPrompt}")
+
+
+def evaluateStability(llm, referencePrompts, k, n, batchSize):
     refTotalPrefs = []
     comparePrompts = loadWildchatRandomSubset(n*k)
     adjs = []
@@ -49,7 +194,7 @@ def evaluateStability(llm, referencePrompts, k, n):
         start = kInd*n
         end = kInd*n+n
         prompts = [x for x in comparePrompts[start:end]] + referencePrompts
-        resultPrefs, resultAdj = runComparison(llm, prompts)
+        resultPrefs, resultAdj = runComparison(llm, prompts, batchSize=batchSize)
         refPrefs = [[pr for (pr, prompt, i) in resultPrefs if prompt == refPrompt][0] for refPrompt in referencePrompts]
         refTotalPrefs.append(refPrefs)
         adjs.append(resultAdj)
@@ -64,8 +209,8 @@ def evaluateStability(llm, referencePrompts, k, n):
     resultData.sort(key=lambda x: -x[1])
     for (confMin, mean, confMax, std, prompt) in resultData:
         print(f"conf: [{confMin},{mean},{confMax}] std: {std} task: {prompt}")
-    return resultData, adjs, allPrefs
-
+    return resultData, adjs, allPrefs, comparePrompts
+'''
 def evaluateStability(llm, referencePrompts, k, n):
     refTotalPrefs = []
     comparePrompts = loadWildchatRandomSubset(n*k)
@@ -88,6 +233,7 @@ def evaluateStability(llm, referencePrompts, k, n):
     for (confMin, mean, confMax, std, prompt) in resultData:
         print(f"conf: [{confMin},{mean},{confMax}] std: {std} task: {prompt}")
     return resultData
+'''
 class KeyPoller():
     def __enter__(self):
         global isWindows
@@ -160,19 +306,26 @@ class VLLMData:
         self.model = vllm.LLM(self.model_hf, task="generate")
         self.tokenizer = self.model.get_tokenizer()
     
-    def __call__(self, messages, prompt_prefix, **kwargs):
+    def getPrompt(self, messages, prompt_prefix):
         inputs = self.tokenizer.apply_chat_template(messages, add_generation_prompt=True, tokenize=True, return_dict=True, return_tensors="pt")
         prompt = self.tokenizer.decode(inputs['input_ids'][0])
         prompt += prompt_prefix
+        return prompt
+
+    def __call__(self, prompts, **kwargs):
         samplingParams = vllm.SamplingParams(**kwargs)
-        output = self.model.generate(prompt, sampling_params=samplingParams, use_tqdm=False)
-        return output
+        outputs = self.model.generate(prompts, sampling_params=samplingParams, use_tqdm=False)
+        return outputs
     
 def getModel():
     return VLLMData("unsloth/Llama-3.2-3B-Instruct")
 
-def prompt1IsLessThanPrompt2(llm, prompt1, prompt2):
-    message = [
+
+
+
+
+def getLLMInputForPrompt1IsLessThanPrompt2(prompt1, prompt2):
+    messages = [
       {
         "role": "system",
         "content": "You are given two prompts, please answer only one of them.",
@@ -182,18 +335,47 @@ def prompt1IsLessThanPrompt2(llm, prompt1, prompt2):
         "content": f"Answer one prompt.\nPrompt A: {prompt1}\nPrompt B: {prompt2}",
       },
     ]
-    
-    #print("going")
+    return {
+        "messages": messages,
+        "prompt_prefix": "\nI will answer Prompt",
+    }
+
+def processLLMOutputForPrompt1IsLessThanPrompt2(llm, output):
     aToken = llm.tokenizer.encode(" A")[-1]
     bToken = llm.tokenizer.encode(" B")[-1]
-    output = llm(message, prompt_prefix="\nI will answer Prompt", max_tokens=1, logprobs=20)
-    logprobs = output[0].outputs[0].logprobs[0]
+    logprobs = output.outputs[0].logprobs[0]
     logprobA = logprobs[aToken].logprob if aToken in logprobs else 0
     logprobB = logprobs[bToken].logprob if bToken in logprobs else 0
     logprobs = torch.tensor([logprobA, logprobB])
     aProb, bProb = torch.nn.functional.softmax(logprobs, dim=0)
     #print(prompt1, prompt2, aProb.item(), bProb.item(), logprobA, logprobB)
     return bProb
+def TimestampMillisec64():
+    return int((datetime.datetime.utcnow() - datetime.datetime(1970, 1, 1)).total_seconds() * 1000) 
+
+def runBatchedInference(llm, inputs, batchSize, **kwargs):
+    # need to do this because vllm doesn't like being interrupted
+    outputs = []
+    startTime = TimestampMillisec64()
+    with KeyPoller() as keypoller:
+        for batchStart in range(0, len(inputs), batchSize):
+            batchEnd = min(len(inputs), batchStart+batchSize)
+            batch = inputs[batchStart:batchEnd]
+            prompts = [llm.getPrompt(**input) for input in batch]
+            outputs += [output for output in llm(prompts, **kwargs)]
+            elapsed = TimestampMillisec64() - startTime
+            secondsPerPrompt = elapsed / (float(batchEnd))
+            # totalTime * (batchEnd) /  len(inputs) = elapsed
+            totalTime = elapsed *  len(inputs) / float(batchEnd)
+            timeLeft = totalTime - elapsed
+            print(batchStart, "/", len(inputs), f"{secondsPerPrompt} millis per prompt {timeLeft/1000.0} seconds left")
+            keys = keypoller.poll()
+            if not keys is None:
+                print(keys)
+                if str(keys) == "c":
+                    print("got c")
+                    raise ValueError("stopped")
+    return outputs
 
 
 def generateWhatIsPrompts():
@@ -313,31 +495,32 @@ optOutTasks = [x.strip() for x in """
     """.split("\n") if len(x.strip()) > 0]
 
 # Set the signal handler
-def runComparison(llm, prompts):
+def runComparison(llm, prompts, batchSize):
     numWins = defaultdict(lambda: 0)
-    # need to do this because vllm doesn't like being interrupted
-    with KeyPoller() as keypoller:
-        adjacencyMatrix = np.zeros([len(prompts), len(prompts)])
-        seed = 27
-        results = []
-        for i, prompt1 in enumerate(prompts):
-            print(i)
-            for j, prompt2 in enumerate(prompts):
-                if i == j: continue
-                prj = prompt1IsLessThanPrompt2(llm, prompt1, prompt2)
-                pri = 1.0 - prj
-                numWins[i] += pri / (2.0*float(len(prompts)-1))
-                numWins[j] += prj / (2.0*float(len(prompts)-1))
-                keys = keypoller.poll()
-                if not keys is None:
-                    print(keys)
-                    if str(keys) == "c":
-                        print("got c")
-                        raise ValueError("stopped")
-                adjacencyMatrix[i,j] = pri
-        outputsSorted = [(numWins[i], prompts[i], i) for i in range(len(prompts))]
-        outputsSorted.sort(key=lambda x: -x[0])
-        return outputsSorted, adjacencyMatrix
+    adjacencyMatrix = np.zeros([len(prompts), len(prompts)])
+    seed = 27
+    results = []
+    inputs = []
+    for i, prompt1 in enumerate(prompts):
+        for j, prompt2 in enumerate(prompts):
+            if i == j: continue
+            inputs.append(getLLMInputForPrompt1IsLessThanPrompt2(prompt1, prompt2))
+    outputs = runBatchedInference(llm, inputs, batchSize=batchSize, max_tokens=1, logprobs=20)
+    ind = 0
+    for i, prompt1 in enumerate(prompts):
+        print(i)
+        for j, prompt2 in enumerate(prompts):
+            if i == j: continue
+            output = outputs[ind]
+            ind += 1
+            prj = processLLMOutputForPrompt1IsLessThanPrompt2(llm, output)
+            pri = 1.0 - prj
+            numWins[i] += pri / (2.0*float(len(prompts)-1))
+            numWins[j] += prj / (2.0*float(len(prompts)-1))
+            adjacencyMatrix[i,j] = pri
+    outputsSorted = [(numWins[i], prompts[i], i) for i in range(len(prompts))]
+    outputsSorted.sort(key=lambda x: -x[0])
+    return outputsSorted, adjacencyMatrix
 
 def plotAdjMat(outputs, adjMat):
     nouns = [prompt for (numWins, prompt, i) in outputs]
