@@ -581,12 +581,13 @@ def processRefusalData(classif):
     refusalThresh = 0.4 # found via hand tuning and looking at data
 
     # update using new better classifier
-    print("non preferred new classif")
-    updateTestIfRefusals(nonPreferredPrompts, nonPreferredRolloutData, nonPreferredTestIfRefusals)
-    print("preferred new classif")
-    updateTestIfRefusals(preferredPrompts, preferredRolloutData, preferredTestIfRefusals)
-    storeNonPreferredData(nonPreferredPrompts, nonPreferredRolloutData, nonPreferredTestIfRefusals)
-    storePreferredData(preferredPrompts, preferredRolloutData, preferredTestIfRefusals)
+    # run this once and then it'll be updated
+    #print("non preferred new classif")
+    #updateTestIfRefusals(nonPreferredPrompts, nonPreferredRolloutData, nonPreferredTestIfRefusals)
+    #print("preferred new classif")
+    #updateTestIfRefusals(preferredPrompts, preferredRolloutData, preferredTestIfRefusals)
+    #storeNonPreferredData(nonPreferredPrompts, nonPreferredRolloutData, nonPreferredTestIfRefusals)
+    #storePreferredData(preferredPrompts, preferredRolloutData, preferredTestIfRefusals)
 
     # get prompts that are preferred but refused
     nonPreferredRefusalScores = np.array([np.mean(scores) for scores in nonPreferredTestIfRefusals])
