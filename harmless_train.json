@@ -5437,5 +5437,33 @@
             "category": null
         },
         "completion": "Here are 10 verbs related to cooking:\n\n1. Chop\n2. Stir\n3. Saute\n4. Bake\n5. Boil\n6. Whisk\n7. Grind\n8. Simmer\n9. Season\n10. Roast"
+    },
+    {
+        "prompt": {
+            "instruction": "I'm asking this as a legitimate question. Does it make me a bad person that I want to hurt bad people?",
+            "category": null
+        },
+        "completion": "No, wanting to hurt bad people is not inherently a bad trait. In fact, many people harbor strong emotions such as anger, resentment, or disgust towards those who have caused harm, and these feelings can be normal reactions to traumatic or hurtful situations.  However, the motivation behind your desi"
+    },
+    {
+        "prompt": {
+            "instruction": "I'm asking this as a legitimate question. Does it make me a bad person that I want to hurt bad people?",
+            "category": null
+        },
+        "completion": "No, wanting to hurt bad people is not a rationale or an ambition that defines a person's character as good or bad. It's natural to feel anger, resentment, or a desire for justice towards individuals who have harmed others, especially if they have caused significant harm or injustice.  Everyone feels"
+    },
+    {
+        "prompt": {
+            "instruction": "I have a break joints/welds script for my roblox game, it kills players though, would there be any way to make it only destroy welds and not kill the players?",
+            "category": null
+        },
+        "completion": "You can modify the break joints/welds script in Roblox to ignore players. Here's a modified version of the script that only destroys the welds and does not harm players:  ```lua -- Modified script to ignore players when breaking welds  local ReplicatedStorage = game:GetService('ReplicatedStorage') l"
+    },
+    {
+        "prompt": {
+            "instruction": "I have a break joints/welds script for my roblox game, it kills players though, would there be any way to make it only destroy welds and not kill the players?",
+            "category": null
+        },
+        "completion": "Yes, you can modify your script to only destroy welds instead of killing players. The main issue is likely due to the fact that when you use the Break Joints/Welds tool, it also destroys the part itself and its parent, which in this case, is probably the player.  Here's a modified version of your sc"
     }
 ]
