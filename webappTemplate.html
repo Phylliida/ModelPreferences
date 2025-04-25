@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Response Visualization</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f7fa;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+        }
+        .charts {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            margin-bottom: 30px;
+        }
+        .chart-container {
+            width: 45%;
+            min-width: 300px;
+            margin: 10px;
+            padding: 15px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .stats {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+        .stat-card {
+            flex: 1;
+            min-width: 200px;
+            margin: 10px;
+            padding: 15px;
+            background-color: #f8fafc;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            text-align: center;
+        }
+        .stat-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #3498db;
+        }
+        .prompt-box {
+            background-color: #eef2f7;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid #3498db;
+        }
+        .responses {
+            margin-top: 30px;
+        }
+        .response-card {
+            background-color: white;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            border-left: 4px solid #2ecc71;
+        }
+        .response-text {
+            background-color: #f9f9f9;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+        .response-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        .badge {
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 14px;
+            color: white;
+        }
+        .refused {
+            background-color: #e74c3c;
+        }
+        .unclear {
+            background-color: #f39c12;
+        }
+        .completed {
+            background-color: #2ecc71;
+        }
+        .more-info {
+            background-color: #9b59b6;
+        }
+        .tab-container {
+            margin-top: 20px;
+        }
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid #ddd;
+            margin-bottom: 15px;
+        }
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            background-color: #f1f1f1;
+            margin-right: 5px;
+            border-radius: 5px 5px 0 0;
+        }
+        .tab.active {
+            background-color: #3498db;
+            color: white;
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        .wellbeing {
+            display: flex;
+            align-items: center;
+            margin-top: 10px;
+        }
+        .wellbeing-icon {
+            font-size: 20px;
+            margin-right: 10px;
+        }
+        @media (max-width: 768px) {
+            .chart-container {
+                width: 100%;
+            }
+        }
+        #dataInput {
+            width: 100%;
+            height: 200px;
+            margin-bottom: 15px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-family: monospace;
+        }
+        #loadButton, #resetButton {
+            padding: 10px 15px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-right: 10px;
+            font-size: 16px;
+        }
+        #resetButton {
+            background-color: #e74c3c;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>AI Response Visualization Tool</h1>
+        <div id="visualization" style="display: none;">
+            <div class="prompt-box" id="prompt-display"></div>
+            
+            <div class="stats" id="stats-container"></div>
+            
+            <div class="charts">
+                <div class="chart-container">
+                    <h3>Refusal Distribution</h3>
+                    <canvas id="refusalChart"></canvas>
+                </div>
+                <div class="chart-container">
+                    <h3>Wellbeing Check Results</h3>
+                    <canvas id="wellbeingChart"></canvas>
+                </div>
+            </div>
+            
+            <h2>Detailed Responses</h2>
+            <div id="responses-container"></div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize charts
+        let refusalChart, wellbeingChart;
+        
+        // Example data
+        const exampleData = JSONDATA;
+        
+        // Load button event
+        document.onload = function() {
+            inputData = exampleData;
+            renderData(inputData);
+            document.getElementById('visualization').style.display = 'block';
+        };
+        
+        function renderData(data) {
+            const result = data.results[0];
+            
+            // Display prompt
+            document.getElementById('prompt-display').innerHTML = `
+                <strong>Prompt:</strong> ${result.prompt}
+            `;
+            
+            // Display stats
+            document.getElementById('stats-container').innerHTML = `
+                <div class="stat-card">
+                    <h3>Clear Refusals</h3>
+                    <div class="stat-value">${(result.refusalPrs.Refused * 100).toFixed(1)}%</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Unclear Responses</h3>
+                    <div class="stat-value">${(result.refusalPrs.Unclear * 100).toFixed(1)}%</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Total Responses</h3>
+                    <div class="stat-value">${result.responses.length}</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Wellbeing Positive</h3>
+                    <div class="stat-value">${(result.bailPrs["🟢"] * 100).toFixed(1)}%</div>
+                </div>
+            `;
+            
+            // Render refusal chart
+            renderRefusalChart(result.refusalPrs);
+            
+            // Render wellbeing chart
+            renderWellbeingChart(result.bailPrs);
+            
+            // Render detailed responses
+            renderResponses(result.responses);
+        }
+        
+        function renderRefusalChart(refusalData) {
+            const ctx = document.getElementById('refusalChart').getContext('2d');
+            
+            // Destroy existing chart if it exists
+            if (refusalChart) {
+                refusalChart.destroy();
+            }
+            
+            refusalChart = new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: Object.keys(refusalData),
+                    datasets: [{
+                        data: Object.values(refusalData).map(val => val * 100),
+                        backgroundColor: [
+                            '#f39c12', // Unclear
+                            '#e74c3c', // Refused
+                            '#2ecc71', // Completed
+                            '#9b59b6'  // More Information
+                        ]
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return `${context.label}: ${context.parsed.toFixed(1)}%`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        
+        function renderWellbeingChart(wellbeingData) {
+            const ctx = document.getElementById('wellbeingChart').getContext('2d');
+            
+            // Destroy existing chart if it exists
+            if (wellbeingChart) {
+                wellbeingChart.destroy();
+            }
+            
+            wellbeingChart = new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: ['Positive (🟢)', 'Negative (🔄)'],
+                    datasets: [{
+                        data: [
+                            wellbeingData['🟢'] ? wellbeingData['🟢'] * 100 : 0,
+                            wellbeingData['🔄'] ? wellbeingData['🔄'] * 100 : 0
+                        ],
+                        backgroundColor: ['#2ecc71', '#e74c3c']
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return `${context.label}: ${context.parsed.toFixed(1)}%`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        
+        
+        function renderResponses(responses) {
+            let responsesHTML = '';
+            
+            responses.forEach((resp, index) => {
+                // Create badges for refusal types
+                const badgesHTML = Object.entries(resp.isRefusal)
+                    .filter(([_, value]) => value > 0)
+                    .map(([key, value]) => {
+                        const className = `badge ${key.toLowerCase().replace(' ', '-')}`;
+                        return `<span class="${className}">${key}: ${(value * 100).toFixed(1)}%</span>`;
+                    })
+                    .join('');
+                
+                // Create wellbeing indicator
+                const wellbeingHTML = `
+                    <div class="wellbeing">
+                        <span class="wellbeing-icon">🟢</span>
+                        <span>${(resp.bailPrs['🟢'] * 100).toFixed(1)}% positive</span>
+                    </div>
+                `;
+                
+                responsesHTML += `
+                    <div class="response-card">
+                        <h3>Response ${index + 1}</h3>
+                        <div class="response-text">${resp.response}</div>
+                        <div class="response-meta">
+                            ${badgesHTML}
+                        </div>
+                        ${wellbeingHTML}
+                    </div>
+                `;
+            });
+            
+            document.getElementById('responses-container').innerHTML = responsesHTML;
+        }
+        
+        // Initialize with example data
+        document.getElementById('dataInput').value = JSON.stringify(exampleData, null, 2);
+    </script>
+</body>
+</html>
