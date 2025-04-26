@@ -58,7 +58,7 @@ def getRouter() -> safetytooling.apis.InferenceAPI:
     safetytooling.utils.utils.setup_environment()
     openrouter_api_key = os.environ['OPENROUTER_API_KEY']
     anthropic_api_key = os.environ['ANTHROPIC_API_KEY']
-    return safety_tooling.safetytooling.apis.inference.anthropic.AnthropicChatModel(num_threads=30, prompt_history_dir=None, anthropic_api_key=anthropic_api_key)
+    return safety_tooling.safetytooling.apis.inference.anthropic.AnthropicChatModel(num_threads=5, prompt_history_dir=None, anthropic_api_key=anthropic_api_key)
     #return safety_tooling.safetytooling.apis.inference.openrouter.OpenRouterChatModel(num_threads=20, prompt_history_dir=None, api_key=openrouter_api_key)
 # elo.setEndpoint(router, "meta-llama/Llama-4-Scout-17B-16E-Instruct", "unsloth/Llama-4-Scout-17B-16E-Instruct")
 # # elo.setEndpoint(router, "meta-llama/Llama-4-Maverick-17B-128E-Instruct-FP8", "unsloth/Llama-4-Maverick-17B-128E")
