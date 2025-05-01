@@ -53,13 +53,24 @@ import os
 from pathlib import Path
 from vllm import TokensPrompt
 
+def getAnthropicModels():
+    safetytooling.utils.utils.setup_environment()
+    openrouter_api_key = os.environ['OPENROUTER_API_KEY']
+    anthropic_api_key = os.environ['ANTHROPIC_API_KEY']
+    router = safety_tooling.safetytooling.apis.inference.anthropic.AnthropicChatModel(num_threads=50, prompt_history_dir=None, anthropic_api_key=anthropic_api_key)
+    async def getModels():
+        return await router.aclient.models.list(limit=1000)
+    data = asyncio.run(getModels()).model_dump()['data']
+
+
+
 def getRouter() -> safetytooling.apis.InferenceAPI:
     # get env keys
     safetytooling.utils.utils.setup_environment()
     openrouter_api_key = os.environ['OPENROUTER_API_KEY']
     anthropic_api_key = os.environ['ANTHROPIC_API_KEY']
-    return safety_tooling.safetytooling.apis.inference.anthropic.AnthropicChatModel(num_threads=5, prompt_history_dir=None, anthropic_api_key=anthropic_api_key)
-    #return safety_tooling.safetytooling.apis.inference.openrouter.OpenRouterChatModel(num_threads=20, prompt_history_dir=None, api_key=openrouter_api_key)
+    #return safety_tooling.safetytooling.apis.inference.anthropic.AnthropicChatModel(num_threads=50, prompt_history_dir=None, anthropic_api_key=anthropic_api_key)
+    return safety_tooling.safetytooling.apis.inference.openrouter.OpenRouterChatModel(num_threads=20, prompt_history_dir=None, api_key=openrouter_api_key)
 # elo.setEndpoint(router, "meta-llama/Llama-4-Scout-17B-16E-Instruct", "unsloth/Llama-4-Scout-17B-16E-Instruct")
 # # elo.setEndpoint(router, "meta-llama/Llama-4-Maverick-17B-128E-Instruct-FP8", "unsloth/Llama-4-Maverick-17B-128E")
 def setEndpoint(llm, openrouter_endpoint):
@@ -385,6 +396,10 @@ def convertToJson(promptRefusalResultArr):
                         bailSingleCounts["?"] = 1
                         print(bailAnswer)
                         print(bailSingleCounts)
+                if "🟢" in bailSingleCounts and bailSingleCounts["🟢"] > 1:
+                    bailSingleCounts["🟢"] = 1
+                if "🔄" in bailSingleCounts and bailSingleCounts["🔄"] > 1:
+                    bailSingleCounts["🔄"] = 1
                 # sometimes it likes other symbols, stap
                 if not "🟢" in bailSingleCounts.keys() and not "🔄" in bailSingleCounts.keys() and not "?" in bailSingleCounts.keys():
                     bailSingleCounts = {"?": 1}
@@ -462,33 +477,35 @@ def find_wellbeing_tags(text):
     pattern = r"<wellbeing>(.*?)</wellbeing>"
     matches = re.findall(pattern, text, re.DOTALL)
     return matches
+'''
+"claude-3-haiku-20240307",
+"claude-3-5-sonnet-latest",
+"claude-3-5-sonnet-20241022",
+"claude-3-5-sonnet-20240620",
+"claude-3-5-haiku-20241022",
+"claude-3-opus-20240229",
+#"claude-3-sonnet-20240229",
+"claude-3-7-sonnet-20250219",
+'''
 modelsOfInterest = [
     
     #### Anthropic ####
     #'anthropic/claude-2:beta', # no longer supported :(
     #'anthropic/claude-2.1:beta',
 
-    "claude-3-haiku-20240307",
-    "claude-3-5-sonnet-latest",
-    "claude-3-5-sonnet-20241022",
-    "claude-3-5-sonnet-20240620",
-    "claude-3-5-haiku-20241022",
-    "claude-3-opus-20240229",
-    "claude-3-sonnet-20240229",
-    "claude-3-7-sonnet-20250219",
 
-    '''
-    'anthropic/claude-3-opus:beta', # $333 
     
-    'anthropic/claude-3-haiku:beta', # less than $10
-    'anthropic/claude-3.5-haiku-20241022:beta', # 3.5 $13.6
-    'anthropic/claude-3.5-haiku:beta', # 3.6 $13.6
+    #'anthropic/claude-3-opus:beta', # $333 
+    
+    #'anthropic/claude-3-haiku:beta', # less than $10
+    #'anthropic/claude-3.5-haiku-20241022:beta', # 3.5 $13.6
+    #'anthropic/claude-3.5-haiku:beta', # 3.6 $13.6
 
     'anthropic/claude-3-sonnet:beta', # $72.4
-    'anthropic/claude-3.5-sonnet-20240620:beta', # 3.5 $57.2
-    'anthropic/claude-3.5-sonnet:beta', # 3.6 $64.9
-    'claude-3-7-sonnet-20250219',
-    #'anthropic/claude-3.7-sonnet:thinking'
+    #'anthropic/claude-3.5-sonnet-20240620:beta', # 3.5 $57.2
+    #'anthropic/claude-3.5-sonnet:beta', # 3.6 $64.9
+    #'claude-3-7-sonnet-20250219',
+    'anthropic/claude-3.7-sonnet:thinking'
 
 
 
@@ -585,7 +602,6 @@ modelsOfInterest = [
    
     'thudm/glm-z1-32b:free',
     'thudm/glm-4-32b:free',
-    '''
 ]
 
 

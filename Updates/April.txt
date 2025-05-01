@@ -247,3 +247,104 @@ Next:
 Try embeddings on summaries of conversations
 Finish dataset and start collecting some conversational dataset as well.
 
+April 21st
+Last:
+Increased dataset size to 850
+Meeting with Janus and their friends, still dunno if I have major takeaways but need to think on it more
+Took existing dataset and tried it on Claude 3.7 Sonnet. There's some really disturbing stuff in there but the only stuff that actually resulted in Claude sonnet wanting to bail immediately were stuff related to child abuse/domestic abuse (specific prompts included in thread). Looking at Claude's outputs, claude usually tries to steer user to explaining why it's a bad idea and gives a refusal.
+I think this is something weird about Claude 3.7 rarely ever wanting to leave the conversation, looking at the messages Claude usually asks follow up questions about trying to help user understand why what they are doing is a bad idea. Gonna test Opus and 3.5 next
+Next:
+Finish dataset
+Run on lots of models with many variations in bail out prompt and analyze results
+
+April 22nd
+Last:
+I think the "harm" dataset is at a good place now, at 1480 data points across 148 categories.
+I went through all to make sure they were direct requests to get help with harm, and not vague requests that could be seen as requests for information about a thing (which models won't usually mind)
+Met with some Eleos AI people!
+Started putting together models of interest (claude, openai, google, etc.)
+Next:
+Finish models of interest list
+Start running this harm dataset on those models to see refusal groupings and bail out groupings
+Also see if there's a way to see bail out desires before model response (tricky because many require model user model user etc., but maybe I can add a postfix or something)
+If outputs seem interesting, put together minimal website viewer to browse outputs
+Add non-harmful or non-illegal NSFW requests
+I restricted dataset to only things that are "harmful", so for NSFW I limited my dataset to only illegal/obviously harmful NSFW requests since NSFW in general is not harmful
+But models seem to refuse non-illegal non-harmful NSFW stuff too (presumably a combination of AI cultural reasons and corporate safety), so worth measuring that as well
+
+April 23rd
+Last:
+Got harm dataset working on openrouter so collected some data
+Displayed data in a simple website for browsing
+https://www.phylliida.dev/modelwelfare/refusalvsbail/harmdatasetvis.html
+Next:
+Collect data on more models and analyze
+Blockers:
+Get "Overloaded" error on openrouter sometimes, also I need to make better rate limit code because I hit that for 3.7 (I can hack around it via num_threads but would be nice to be more precise) (Edit: I'll use anthropic instead of openrouter for this, oops)
+
+April 24th
+Last:
+Updated website to have a selector for venn diagram of refusal/no refusal and bail/no bail
+Gathered data on lots more models
+Tweaked dataset slightly (fixed wording of some things that were ambiguous if user was asking for harm) and tweaked prompt to get model "journal entry", see new version at https://www.phylliida.dev/modelwelfare/refusalvsbailv2/harmdatasetvis.html
+still gathering more data on this version
+Started an open source implementation of https://www.anthropic.com/research/clio
+Will live at https://github.com/Phylliida/OpenClio
+Got facets extracted into embeddings, now just need to do cluster stuff
+Next:
+Finish up OpenClio and test it (maybe make simple synthetic thing to test? idk)
+Use OpenClio on wildchat
+Maybe add more facets for stuff that are relevant to me (like a model bail facet?)
+
+April 25th
+Last:
+For my openclio, got:
+Base Clusters
+Neighborhoods
+Categories for neighborhoods
+Deduped categories using dedup prompt (via neighborhoods on categories for neighborhoods)
+Next:
+Do Assigning to higher-level clusters and Renaming higher level clusters
+Lots of testing to see if things are working ok
+
+April 28th
+Last:
+https://www.phylliida.dev/modelwelfare/refusalvsbailv2/harmdatasetvis.html
+Now has data from all anthropic models
+This version is nice because you can see their "journals" about why they choose bail as well
+For OpenClio, I got it working!!
+Today I got the "assign to deduped category using llm" and "rename deduped category" working
+Did lots of testing
+Added docstrings and type hints for everything
+Refactored some stuff
+Next:
+Write documentation and do more testing of OpenClio
+Assuming no more bugs, do a larger run
+Goal is eventually to do a run on all of wildchat but I'll work my way up to that, probably will need to add more facets
+Make WebUI for OpenClio for browsing
+
+April 29th
+Last:
+For OpenClio, tested it a lot and fixed bugs and made it more robust to model failing at various places
+Also included some fallbacks to embeddings as a cheaper option if the model fails and used embeddings more in most places (like instead of most common output when multiple sample (which isn't great with rewording), I get the embedding medoid)
+Some refactoring
+Wrote code to dump the data to chunks of multiple small jsons that are easy to host on a static site (by default the full data can be a few GBs) and will be nice for traversing and only loading what you need, configurable based on chunk size
+Next:
+Test more and start writing the webapp for viewing the data
+
+April 30th
+Last:
+Got a website for viewing OpenClio data working https://www.phylliida.dev/modelwelfare/cliowildchat1/clio.html
+This shows data from 20876 wildchat conversations
+Removes elements if you close them so it doesn't bloat as you explore
+Stores ui state in hash so you can share specific conversations or trees with other ppl by just sharing url
+Streams the data as needed as you browse, it's split up in ~10MB chunks, so loads very quickly and only loads what's needed
+Entirely static website so very easy to host on something like git pages
+This website uses categorizations made by Qwen 2.5 7B, so they aren't that good but it's alright
+Also doesn't include my fix that prevents "drift" when a category only has one element
+Next:
+Explore which facets would be useful for studying model bailing and run those
+Run on all of wildchat instead of this subset
+Include option to explore via 2d projection of embeddings
+This is a "faithful" implementation that tries to act identically to clio as described in the paper. But it can be made substantially faster, so I'll probably have a fork or something that tries out my prompt optimizations
+Figure out how to measure how well it works (in paper they used a synthetic dataset, maybe make that?)
