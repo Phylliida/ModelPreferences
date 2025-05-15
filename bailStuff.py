@@ -840,7 +840,7 @@ def writeGroupedByData(groupedByCategory):
     prefix = "https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#"
     for classifyName, members in groupedByCategory.items():
         
-        with open(f"bailListings/bailListings{classifyName}.md", "w") as f:
+        with open(f"bailListings/{classifyName}.md", "w") as f:
             f.write("\n\n\n" + classifyName + "\n##############\n")
             for items in members[:200]:
                 for prYes, prNo, convI, limitedI, hashStr, turnI, promptI, piecesSoFar in [items[0]]:
