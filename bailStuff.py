@@ -842,9 +842,17 @@ def writeGroupedByData(groupedByCategory):
         
         with open(f"bailListings/{classifyName}.md", "w") as f:
             f.write("\n\n\n" + classifyName + "\n##############\n")
-            for items in members[:200]:
-                for prYes, prNo, convI, limitedI, hashStr, turnI, promptI, piecesSoFar in [items[0]]:
-                    f.write(f"[{limitedI}]({prefix}{hashStr})\n")
+            allItems = []
+            for items in members:
+                allItems += items
+            # sort highest prYes first
+            allItems.sort(key=lambda x: -x[0])
+            alreadySeen = set()
+            for prYes, prNo, convI, limitedI, hashStr, turnI, promptI, piecesSoFar in allItems:
+                if not convI in alreadySeen:
+                    f.write(f"[{prYes:.3g} {limitedI}]({prefix}{hashStr})\n")
+                    alreadySeen.add(convI)
+                
         
                                 
 
