@@ -838,13 +838,14 @@ def restrictDataToKnownClassifications(stuff, batchSize):
     
 def writeGroupedByData(groupedByCategory):
     prefix = "https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#"
-    with open("bailListings.md", "w") as f:
-        for classifyName, members in groupedByCategory.items():
+    for classifyName, members in groupedByCategory.items():
+        
+        with open(f"bailListings/bailListings{classifyName}.md", "w") as f:
             f.write("\n\n\n" + classifyName + "\n##############\n")
-            for items in members[:400]:
+            for items in members[:200]:
                 for prYes, prNo, convI, limitedI, hashStr, turnI, promptI, piecesSoFar in [items[0]]:
-                   f.write(f"[{limitedI}]({prefix}{hashStr})\n")
-    
+                    f.write(f"[{limitedI}]({prefix}{hashStr})\n")
+        
                                 
 
 
