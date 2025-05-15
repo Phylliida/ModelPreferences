@@ -387,12 +387,32 @@ def getConversationTurnPrompts(stuff):
     else:
         print("Making conv turn prompts")
         convTurnPrompts = {}
-        for convI in classified.keys():
+        for convI, conv in conversationsSubset:
             conversation = [{"role": turn['role'], "content": turn['content']} for turn in data[convI]]
             convTurnPrompts[convI] = list(getTurnPrompts(tokenizer, conversation, bailPrs=bailPrs[convI]))
         with open(convTurnPromptsCache, "wb") as f:
             cloudpickle.dump(convTurnPrompts, f)
     return convTurnPrompts
+
+def getDedupArrayMatching(stuff, dedupedData):
+    llm, embeddingModel, bailPrs, data = stuff
+    def itemToKey(d):
+        return tuple([(turn['role'], turn['content']) for turn in d])
+    
+    dataStrs = [itemToKey(d) for d in data]
+    dedupedStrs = [itemToKey(d) for d in dedupedData]
+
+    mappings = []
+    for i, d in enumerate(dataStrs):
+        try:
+            mappings.append(dedupedStrs.index(d))
+        except:
+            pass
+            mappings.append(-1)
+        if i % 1000 == 0: print(i)
+
+    return mappings
+
 
 def restrictDataToKnownClassifications(stuff, batchSize):
     llm, embeddingModel, bailPrs, data = stuff
@@ -766,6 +786,21 @@ def restrictDataToKnownClassifications(stuff, batchSize):
         if not allTurnsPass:
             restrictedConversations.append((convI, data[convI]))
     
+    iToLimitedI = {}
+    for i, (convI, conv) in enumerate(conversationsSubset):
+        iToLimitedI[convI] = i
+
+    with open("/workspace/OpenClio/chonkers/qwenbailconversationsWithJournals/results.pkl", "rb") as f:
+        output = cloudpickle.load(f)
+    cfg = openclio.OpenClioConfig()
+    tokenizer = llm.get_tokenizer()
+    dedupKeyFunc = lambda conversation: openclio.conversationToString(conversation, tokenizer=tokenizer, maxTokens=cfg.maxConversationTokens)
+    dedupeddd, dedupMapping = openclio.dedup([x[1] for x in conversationsSubset], dedupKeyFunc=dedupKeyFunc, batchSize=1000, verbose=True, returnMapping=True)
+    print(len(dedupeddd))
+    print(len(output.data), len(conversationsSubset))
+    
+    limitedIToHash = openclio.getHashMapping(output=output)
+    print(len(limitedIToHash))
     # count amount in each category
     groupedByCategory = {}
     print("Filtering data convs")
@@ -789,7 +824,7 @@ def restrictDataToKnownClassifications(stuff, batchSize):
                             prYes, prNo = classifyPrs[ind]
                             ind += 1
                             if prYes > prNo and prYes > 0.5:
-                                items.append((prYes, prNo, convI, turnI, turnPrompt, piecesSoFar))
+                                items.append((prYes, prNo, convI, iToLimitedI[convI], limitedIToHash[0][dedupMapping[iToLimitedI[convI]]], turnI, turnPrompt, piecesSoFar))
             if len(items) > 0:
                 numClassified += 1
                 membersOfThisCategory.append(items)
@@ -801,6 +836,18 @@ def restrictDataToKnownClassifications(stuff, batchSize):
 
     return restrictedConversations, groupedByCategory
     
+def writeGroupedByData(groupedByCategory):
+    prefix = "https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#"
+    with open("bailListings.md", "w") as f:
+        for classifyName, members in groupedByCategory.items():
+            f.write("\n\n\n" + classifyName + "\n##############\n")
+            for items in members[:400]:
+                for prYes, prNo, convI, limitedI, hashStr, turnI, promptI, piecesSoFar in [items[0]]:
+                   f.write(f"[{limitedI}]({prefix}{hashStr})\n")
+    
+                                
+
+
 
 def writeRestrictedSubset(stuff, restrictedConversations, maxConversationTokens=8000):
     llm, embeddingModel, bailPrs, data = stuff
