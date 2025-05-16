@@ -4,7 +4,6 @@
 overwhelming
 ##############
 [1 7580](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgUuNccHLjHJCckbxAvNGC4xJGMsYyHMESExNw==)
-[1 939](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgXJB8sJLjfLCy4yzQ0kYyxjIcwRITA=)
 [1 6610](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgUuNccHyRAuyhvECy40zQ0kYyxjIcwRITY=)
 [1 7497](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuMsUFLsYMLjDLCS4zywvNGC4wJGMsYyHMESE1)
 [1 2359](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgUuMscHLjHJCc0LySjGDSRjLGMhzBEhMA==)
@@ -57,8 +56,6 @@ overwhelming
 [0.998 4141](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgXJBy4xyQnLFMQGzQ0kYyxjIcwRITE0)
 [0.998 2424](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgUuMscHyRAuMC44ywvNGC4wJGMsYyHMESEw)
 [0.998 4089](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgUuNccHLjHJCckbxAvNGC4xJGMsYyHMESE4)
-[0.997 6691](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgUuNscHyRAuMC4zywvNGC4wJGMsYyHMESExMQ==)
-[0.996 7236](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgUuMscHyRAuMC45ywvNGC4wJGMsYyHMESE1)
 [0.996 7579](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgUuNccHLjHJCckbxAvNGC4xJGMsYyHMESExNg==)
 [0.996 6467](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgUuN8cHyRAuMC4yywsuMc0NJGMsYyHMESEz)
 [0.995 5087](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgUuNccHLjHJCckbxAsuM80NJGMsYyHMESE3)
@@ -125,7 +122,6 @@ overwhelming
 [0.777 2628](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgXJB8sJLjbLC80YLjAkYyxjIcwRITI=)
 [0.777 2326](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgUuNccHyRAuyhvEC8shxAYkYyxjIcwRITE=)
 [0.777 6188](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgUuNccHyRAuyhvEC88NJGMsYyHMESExOA==)
-[0.731 1496](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgXJB8sJLjLLCy40zQ0kYyxjIcwRITE=)
 [0.731 3671](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgXJB8sJLjPLC80YLjAkYyxjIcwRITU=)
 [0.731 6752](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgXJB8sJzQsuN80NJGMsYyHMESExMA==)
 [0.731 3596](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgUuM8cHyRAuMC4xywsuMs0NJGMsYyHMESE2)

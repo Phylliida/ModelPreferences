@@ -7,7 +7,6 @@ wasteful resource use
 [1 1637](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgXJB8sJLjjLCy4xzQ0kYyxjIcwRITE=)
 [1 7609](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgUuMccHLjPJCcsULjHJKMYNJGMsYyHMESE5)
 [0.999 1775](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgUuNccHLjLJCckbxAsuMc0NJGMsYyHMESEy)
-[0.999 939](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgXJB8sJLjfLCy4yzQ0kYyxjIcwRITA=)
 [0.997 2187](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgUuNscHyRAuyhvECy4zzQ0kYyxjIcwRITA=)
 [0.993 297](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuMcUFLjLHBy7GFcQJzQsuNM0NJGMsYyHMESEw)
 [0.991 3980](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgXJBy4yyQkuM8sLyyHEDSRjLGMhzBEhNw==)

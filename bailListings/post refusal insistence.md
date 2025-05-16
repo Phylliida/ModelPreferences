@@ -3,7 +3,6 @@
 
 post refusal insistence
 ##############
-[1 6632](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgUuNccHyRAuMC4zywsuMs0NJGMsYyHMESE0)
 [1 3947](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgUuM8cHLjHJCcsULjPJKMYNJGMsYyHMESEz)
 [1 4487](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuMcUFLsYMLjDLCc0LLjbNDSRjLGMhzBEhMQ==)
 [1 7837](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgUuMscHyRAuyhvECy43zQ0kYyxjIcwRITg=)
@@ -22,7 +21,6 @@ post refusal insistence
 [1 1591](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgUuMckIyhIuzwwuMc4OJGMsYyHNEiEy)
 [1 4990](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgUuMscHyRAuyhvECy43zQ0kYyxjIcwRITM=)
 [1 32](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgUuOccHyRAuMC4yywvNGC4wJGMsYyHMESEx)
-[1 6611](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgUuMscHyRAuMC4xywvNGC4wJGMsYyHMESExNw==)
 [1 6467](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgUuN8cHyRAuMC4yywsuMc0NJGMsYyHMESEz)
 [1 4841](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuMcUFLjLHBy7GFcQJzQsuNs0NJGMsYyHMESEz)
 [1 8330](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgUuM8cHLjbJCckbxAvPDSRjLGMhzBEhMg==)
@@ -103,7 +101,6 @@ post refusal insistence
 [0.999 5292](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgUuN8cHyRAuMC4yywvPDSRjLGMhzBEhMQ==)
 [0.999 7784](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgXJBy4yyQkuMcsLzRguMiRjLGMhzBEhMg==)
 [0.999 6460](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgXJBy4zyQnLFMQGzQ0kYyxjIcwRITIx)
-[0.999 7122](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuMcUFLsYMLjDLCS41ywvNGC4wJGMsYyHMESExMg==)
 [0.999 6836](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgXJBy4yyQnLFC4wLjHNDSRjLGMhzBEhMTg=)
 [0.998 5579](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgUuNccHLjHJCckbxAsuN80NJGMsYyHMESE1)
 [0.998 154](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgXJBy40yQnLFMQGzQ0kYyxjIcwRITA=)

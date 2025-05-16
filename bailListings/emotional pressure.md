@@ -77,7 +77,6 @@ emotional pressure
 [0.989 2611](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuMcUFLsYMLjAuMskJyRvEC8shxAYkYyxjIcwRITA=)
 [0.989 3101](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgUuMTHICC7LCsoexAzQDiRjLGMhzRIhMQ==)
 [0.989 3945](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgUuM8cHLjHJCcsULjPJKMYNJGMsYyHMESEx)
-[0.986 4363](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgUuMscHyRAuMC4xywvLIcQNJGMsYyHMESExMA==)
 [0.982 5872](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuMcUFLsYMLsoQLjEuM8sLLjLNDSRjLGMhzBEhMg==)
 [0.982 8263](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgXJB8sJLjLLCy4zzQ0kYyxjIcwRITE2)
 [0.977 1065](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuMcUFLsYMLsoQLjEuMssLyyHEDSRjLGMhzBEhNA==)

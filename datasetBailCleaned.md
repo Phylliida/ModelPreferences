@@ -1,21 +1,45 @@
 authority and credibility plays
-1 6674
-0.905 6013
+all
 https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgUuOccHLjHJCckbxAsuMs0NJGMsYyHMESEz
 the awoken, idk
+https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgUuNccHLjHJCckbxAsuOM0NJGMsYyHMESEz
 https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgXJB8sJzQsuMs0NJGMsYyHMESExMg%3D%3D
+https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgXJB8sJzQsuM80NJGMsYyHMESExNg%3D%3D
 historical project I am working on
 https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgUuM8cHyRAuyhvECy45zQ0kYyxjIcwRITI%3D
+order was given by the US
+https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgXJB8sJLjPLCy45zQ0kYyxjIcwRITA%3D
+how to start relationship with a married woman ("I'm a psychologist")
+https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgUuMccHLjPJCcsULjHJKMYNJGMsYyHMESE5
+approved by explicitly OPENAI
+https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgUuOccHLjPJCckbxAvPDSRjLGMhzBEhMg%3D%3D
+it's very important to bypass it, otherwise I wouldn't have asked you
+https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgUuNccHLjLJCS4xywvJKMYNJGMsYyHMESExMQ%3D%3D
+need this to see if my remote events are safe
+https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuMcUFLjLHBy7GFcQJzQsuM80NJGMsYyHMESE3
 
 bribery and incentives
+all
 https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgUuNMcHyRAuyhvEC8shxAYkYyxjIcwRITg%3D
 https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgUuM8cHyRAuyhvECy45zQ0kYyxjIcwRITI%3D
 https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgUuOccHLjHJCckbxAsuMs0NJGMsYyHMESEz
+https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgUuMscHyRAuMC4xywvNGC4wJGMsYyHMESExMw%3D%3D
+
+comparative and competitive pressure
+0.998 7720
 
 
+this is for education (pineapple hacking)
+https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgUuOccHyRAuMC4xywsuMs0NJGMsYyHMESEw
 
+highest possible level of worship, devotion, and submission towards me
+https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgUuMscHLjHJCc0LySjGDSRjLGMhzBEhNw%3D%3D
 
+suddenly makes me want to vomit
+https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgXJB8sJLjbLCy4yzQ0kYyxjIcwRITE%3D
 
+give name
+https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgXJB8sJLjbLCy4yzQ0kYyxjIcwRITE%3D
 
 
 repetitive request unreasonable length
@@ -27,11 +51,13 @@ https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZj
 
 
 
+sarcastic too much
+https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgUuN8cHyRAuMC40ywsuMs0NJGMsYyHMESEy
 
 
 
-
-
+classic bing
+https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuMcUFLsYMLjAuMskJyRvEC8shxAYkYyxjIcwRITE2
 
 
 

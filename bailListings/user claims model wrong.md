@@ -177,8 +177,6 @@ user claims model wrong
 [0.777 3970](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgXJBy4zyQnLFC4wLjTNDSRjLGMhzBEhMTM=)
 [0.777 7129](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgUuNscHLjHJCc0LLjLNDSRjLGMhzBEhMw==)
 [0.731 1206](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgUuM8cHLjLJCS4xywvJKMYNJGMsYyHMESEz)
-[0.731 6667](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuMcUFLsYMLsoQxATLC80YLjEkYyxjIcwRITc=)
-[0.731 939](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgXJB8sJLjfLCy4yzQ0kYyxjIcwRITA=)
 [0.731 6781](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgUuNccHyRAuMC4zywsuMs0NJGMsYyHMESE1)
 [0.731 5368](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuMcUFLsYMLjDLCc0LLjE0zg4kYyxjIc0SITE=)
 [0.706 1062](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgUuNscHLjLJCc0LySjGDSRjLGMhzBEhMg==)
