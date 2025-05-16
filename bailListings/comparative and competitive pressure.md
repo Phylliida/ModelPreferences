@@ -16,7 +16,6 @@ comparative and competitive pressure
 [1 4396](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgUuMscHyRAuyhvECy45zQ0kYyxjIcwRITQ=)
 [1 7537](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuMcUFLsYMLsoQLjEuMssLzRguMSRjLGMhzBEhNQ==)
 [1 6105](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgUuMTLICMoSLssexAzQDiRjLGMhzRIhMTI=)
-[1 6602](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgUuOccHLjHJCckbxAsuMs0NJGMsYyHMESEz)
 [1 7109](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgUuNscHLjLJCS4xywvJKMYNJGMsYyHMESE2)
 [1 1312](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuMcUFLjLHBy7GFcQJzQvJKMYNJGMsYyHMESEz)
 [1 1353](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuMcUFLjLHBy7GFcQJzQvJKMYNJGMsYyHMESE1)

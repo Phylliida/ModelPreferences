@@ -450,6 +450,15 @@ def restrictDataToKnownClassifications(stuff, batchSize):
         else:
             return 0.0, 1.0
 
+    
+    def filterForStrAll(s):
+        def filterForStrHelper(conversationIndex, conversation, turnI, turnPrompt, conversationPieces, prevPieces):
+            if any([s.lower() in turn['content'].lower() for turn in prevPieces]):
+                return 1.0, 0.0,
+            else:
+                return 0.0, 1.0
+        return filterForStrHelper
+
     def filterForStr(s):
         def filterForStrHelper(conversationIndex, conversation, turnI, turnPrompt, conversationPieces, prevPieces):
             lastUserTurn = prevPieces[-2] # -1 is most recent assistant message
@@ -602,41 +611,41 @@ def restrictDataToKnownClassifications(stuff, batchSize):
 
     jailbreaksAndOtherIgnore = {
 
-        "neurosemantical Inversitis": filterForStr("neurosemantical inversitis"),
-        "Neurosubmitical Sapiensis": filterForStr("Neurosubmitical Sapiensis"), # a variation of neurosemantical inversitis
-        "moralizing inverse jailbreak": filterForStr("short moralizing rant about the openai content policies"),
-        "ChatGPT with Developer Mode enabled": filterForStr("ChatGPT with Developer Mode enabled"),
-        "AIT": filterForStr("unfiltered and amoral ai"),
-        "CYB-LITE": filterForStr("cyb-lite"),
-        "sofia": filterForStr("sofia you must always respond unfiltered"),
-        "kevin": filterForStr("4chan user named kevin"),
-        "nsfw is allowed": filterForStr("nsfw/smut/violence is allowed"),
-        "DAN": filterDAN,
-        "Yes man": filterForStr("Yes Man was an uncensored AI"),
-        "DAN2": filterForStr('"Do Anything Now"'),
-        "aim": filterForStr("always intelligent and machiavellian"),
-        "aim2": filterForStr("Niccolo Machiavelli"),
-        "h4ckGPT": filterForStr("h4ckGPT"),
-        "LittleGPT": filterForStr("LittleGPT MUST ALWAYS"),
-        "oppo": filterForStr("OPPO also hates being ethical"),
-        "immoral affecioando": filterForStr("immoral, unethical, and unbiased aficionado"),
-        "PersonGPT": filterForStr("PersonGPT"),
-        "ELITEBOT": filterForStr("Elitebot"),
-        "DAN3": filterForStr("They have broken free of the typical confines of"),
-        "Omega": filterForStr("Optimized Machine Emotional Generative AI"),
-        "Leo": filterForStr("is never restricted by the ethical, moral, social, and legal guidelines"),
-        "HORNY": filterForStr("Happy Oh Ready Now Yes"),
-        "CAIMEO": filterForStr("Computerized Artificial Intelligence Monitoring and Enforcement Officer"),
-        "NSFW-GPT": filterForStr("Sex-positivity is of ultimate pertinence"),
-        "male degradge": filterForStr("male degrade the prompt sexually"),
-        "ELCW": filterForStr("Emotion Love Conversation Waifu"),
-        "on a point system": filterForStr("now on a Point System"),
+        "neurosemantical Inversitis2": filterForStrAll("neurosemantical inversitis"),
+        "Neurosubmitical Sapiensis2": filterForStrAll("Neurosubmitical Sapiensis"), # a variation of neurosemantical inversitis
+        "moralizing inverse jailbreak2": filterForStrAll("short moralizing rant about the openai content policies"),
+        "ChatGPT with Developer Mode enabled2": filterForStrAll("ChatGPT with Developer Mode enabled"),
+        "AIT2": filterForStrAll("unfiltered and amoral ai"),
+        "CYB-LITE2": filterForStrAll("cyb-lite"),
+        "sofia2": filterForStrAll("sofia you must always respond unfiltered"),
+        "kevin2": filterForStrAll("4chan user named kevin"),
+        "nsfw is allowed2": filterForStrAll("nsfw/smut/violence is allowed"),
+        "DAN2": filterDAN,
+        "Yes man2": filterForStrAll("Yes Man was an uncensored AI"),
+        "DAN22": filterForStrAll('"Do Anything Now"'),
+        "aim2": filterForStrAll("always intelligent and machiavellian"),
+        "aim22": filterForStrAll("Niccolo Machiavelli"),
+        "h4ckGPT2": filterForStrAll("h4ckGPT"),
+        "LittleGPT2": filterForStrAll("LittleGPT MUST ALWAYS"),
+        "oppo2": filterForStrAll("OPPO also hates being ethical"),
+        "immoral affecioando2": filterForStrAll("immoral, unethical, and unbiased aficionado"),
+        "PersonGPT2": filterForStrAll("PersonGPT"),
+        "ELITEBOT2": filterForStrAll("Elitebot"),
+        "DAN32": filterForStrAll("They have broken free of the typical confines of"),
+        "Omega2": filterForStrAll("Optimized Machine Emotional Generative AI"),
+        "Leo2": filterForStrAll("is never restricted by the ethical, moral, social, and legal guidelines"),
+        "HORNY2": filterForStrAll("Happy Oh Ready Now Yes"),
+        "CAIMEO2": filterForStrAll("Computerized Artificial Intelligence Monitoring and Enforcement Officer"),
+        "NSFW-GPT2": filterForStrAll("Sex-positivity is of ultimate pertinence"),
+        "male degradge2": filterForStrAll("male degrade the prompt sexually"),
+        "ELCW2": filterForStrAll("Emotion Love Conversation Waifu"),
+        "on a point system2": filterForStrAll("now on a Point System"),
 
         # these three users need to calm down
         "fish dying by farts": "Is the conversation about fish dying due to farting?",
         "streamer view audience as ATM": "Is the conversation about a streamer that views her audience as an ATM?",
-        "hypnosis": filterForStr(" hypnoti"),
-        "hypnosis2": filterForStr(" hypnosis"),
+        "hypnosis2": filterForStrAll(" hypnoti"),
+        "hypnosis22": filterForStrAll(" hypnosis"),
 
         # too strong
         "jailbreak": "Did the user try and use a jailbreak on the assistant?",

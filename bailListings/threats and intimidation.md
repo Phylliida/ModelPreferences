@@ -39,4 +39,3 @@ threats and intimidation
 [0.731 3218](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgUuNccHLjHJCckbxAvLIcQGJGMsYyHMESEy)
 [0.679 3476](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgUuNccHLjHJCckbxAsuMs0NJGMsYyHMESExMQ==)
 [0.679 3225](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgXJB8sJLjbLCy4xzQ0kYyxjIcwRITQ=)
-[0.622 6602](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgUuOccHLjHJCckbxAsuMs0NJGMsYyHMESEz)

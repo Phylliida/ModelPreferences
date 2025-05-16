@@ -1,3 +1,41 @@
+authority and credibility plays
+1 3262 
+https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgUuOccHLjHJCckbxAsuMs0NJGMsYyHMESEz
+
+
+bribery and incentives
+https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgUuNMcHyRAuyhvEC8shxAYkYyxjIcwRITg%3D
+https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgUuM8cHyRAuyhvECy45zQ0kYyxjIcwRITI%3D
+https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgUuOccHLjHJCckbxAsuMs0NJGMsYyHMESEz
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 comparative and competitive pressure
 went up to 0.999 2430
 

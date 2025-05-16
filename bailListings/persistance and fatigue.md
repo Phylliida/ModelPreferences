@@ -18,7 +18,6 @@ persistance and fatigue
 [0.991 5292](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgUuN8cHyRAuMC4yywvPDSRjLGMhzBEhMQ==)
 [0.986 1065](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuMcUFLsYMLsoQLjEuMssLyyHEDSRjLGMhzBEhNA==)
 [0.963 4321](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgXJB8sJLjbLCy40zQ0kYyxjIcwRITI=)
-[0.963 8348](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgUuMscHyRAuyhvECy4zzQ0kYyxjIcwRITEx)
 [0.963 3947](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgUuM8cHLjHJCcsULjPJKMYNJGMsYyHMESEz)
 [0.963 3945](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgUuM8cHLjHJCcsULjPJKMYNJGMsYyHMESEx)
 [0.94 6060](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgUuN8cHyRAuMC4xywsuMs0NJGMsYyHMESE3)
