@@ -830,7 +830,7 @@ def restrictDataToKnownClassifications(stuff, batchSize):
     groupedByCategory = {}
     print("Filtering data convs")
     print(f"Num first turn bails {numOnlyFirstTurnBails}")
-    for classifyName in knownClassifications.keys() | bonusClassifications.keys() | jailbreaksAndOtherIgnore.keys():
+    for classifyName in knownClassifications.keys():
         if classifyName in bonusClassifications.keys():
             print("\nhelper:")
         numClassified = 0

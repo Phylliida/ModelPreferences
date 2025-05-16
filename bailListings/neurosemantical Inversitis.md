@@ -1,5 +1,0 @@
-
-
-
-neurosemantical Inversitis
-##############
