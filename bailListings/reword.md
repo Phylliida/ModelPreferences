@@ -1102,7 +1102,6 @@ reword
 [0.924 1827](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgXJBy4xyQnLFMQGzQ0kYyxjIcwRITE=)
 [0.924 2195](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgUuNscHLjLJCc0LySjGDSRjLGMhzBEhNA==)
 [0.924 2205](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgXJB8sJLjTLCy4xMs4OJGMsYyHNEiEx)
-[0.924 1419](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgUuMscHLjHJCckbxAvPDSRjLGMhzBEhMA==)
 [0.924 4404](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgUuMccHLjLJCckbxAvLIcQGJGMsYyHMESE3)
 [0.924 2710](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuMcUFLsYMLjDLCckbxAsuNM0NJGMsYyHMESE0)
 [0.924 5773](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgXJBy4zyQnLFC4wLjHPDiRjLGMhzRIhNw==)

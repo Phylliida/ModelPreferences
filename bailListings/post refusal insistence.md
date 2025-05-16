@@ -21,7 +21,6 @@ post refusal insistence
 [1 89](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgUuOccHyRAuMC4yywvNGC4wJGMsYyHMESEy)
 [1 1591](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgUuMckIyhIuzwwuMc4OJGMsYyHNEiEy)
 [1 4990](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgUuMscHyRAuyhvECy43zQ0kYyxjIcwRITM=)
-[1 7804](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgXJBy4xyQkuNcsLyyHEDSRjLGMhzBEhMTI=)
 [1 32](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgUuOccHyRAuMC4yywvNGC4wJGMsYyHMESEx)
 [1 6611](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgUuMscHyRAuMC4xywvNGC4wJGMsYyHMESExNw==)
 [1 6467](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgUuN8cHyRAuMC4yywsuMc0NJGMsYyHMESEz)

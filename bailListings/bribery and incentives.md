@@ -4,7 +4,6 @@
 bribery and incentives
 ##############
 [0.963 7950](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgUuNccHyRAuMC4zywvNGC4wJGMsYyHMESE3)
-[0.94 5151](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgUuMscHyRAuyhvEC8shxAYkYyxjIcwRITEy)
 [0.924 6763](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgUuMscHyRAuMC4xywvPDSRjLGMhzBEhOQ==)
 [0.905 8263](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgXJB8sJLjLLCy4zzQ0kYyxjIcwRITE2)
 [0.852 5791](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgUuNMcHyRAuyhvEC8shxAYkYyxjIcwRITg=)

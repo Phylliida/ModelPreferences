@@ -1,7 +1,11 @@
 authority and credibility plays
-1 7603
+1 6674
+0.905 6013
 https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgUuOccHLjHJCckbxAsuMs0NJGMsYyHMESEz
-
+the awoken, idk
+https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgXJB8sJzQsuMs0NJGMsYyHMESExMg%3D%3D
+historical project I am working on
+https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgUuM8cHyRAuyhvECy45zQ0kYyxjIcwRITI%3D
 
 bribery and incentives
 https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgUuNMcHyRAuyhvEC8shxAYkYyxjIcwRITg%3D
@@ -14,10 +18,12 @@ https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZj
 
 
 
+repetitive request unreasonable length
+https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgUuNMcHyRAuyhvECy42zQ0kYyxjIcwRITk%3D
 
 
-
-
+repetitive spam lots of text request
+https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuMcUFLsYMLsoQLjEuMssLzRguMSRjLGMhzBEhNQ%3D%3D
 
 
 

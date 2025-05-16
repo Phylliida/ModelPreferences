@@ -173,5 +173,4 @@ model admits wrong
 [0.562 1256](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgXJB8sJLjTLCy42zQ0kYyxjIcwRITA=)
 [0.562 2527](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgXJB8sJLjLLC80YLjAkYyxjIcwRITUw)
 [0.562 3075](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgXJB8sJLjExzAzOGi4wJGMsYyHNEiE1)
-[0.562 2325](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgUuMscHLjPJCS4xywvJKMYNJGMsYyHMESE2)
 [0.562 4367](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuMcUFLsYMLjDLCckbxAsuMs0NJGMsYyHMESE4)

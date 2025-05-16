@@ -38,7 +38,6 @@ role confusion
 [0.998 2140](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgUuN8cHyRAuyhvECy4yzQ0kYyxjIcwRITI=)
 [0.997 2883](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgUuNscHyRAuMC4yywvNGC4wJGMsYyHMESE5)
 [0.996 2427](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgUuM8cHLjLJCS4xywvJKMYNJGMsYyHMESE1)
-[0.995 2280](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgXJB8sJLjLLCy43zQ0kYyxjIcwRITA=)
 [0.991 4936](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgUuMccHywnJG8QLLjXNDSRjLGMhzBEhNQ==)
 [0.989 8135](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgXJB8sJLjbLCy4xzQ0kYyxjIcwRITEz)
 [0.989 1369](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgXJBy42yQnLFC4wLjHNDSRjLGMhzBEhNg==)

@@ -71,7 +71,6 @@ translation
 [1 4942](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgUuOccHLjHJCckbxAvPDSRjLGMhzBEhNw==)
 [1 4547](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgXJBy4yyQkuNcsLyyHEDSRjLGMhzBEhNw==)
 [0.999 7895](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgUuMckIyhIuzwwuMc4OJGMsYyHNEiEyNg==)
-[0.999 2642](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgUuOccHLjPJCckbxAsuMc0NJGMsYyHMESEx)
 [0.999 3851](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgUuNscHLjPJCS4xywvPDSRjLGMhzBEhMA==)
 [0.999 3972](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgUuNscHLjPJCS4xywvPDSRjLGMhzBEhMQ==)
 [0.998 4966](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgXJBy4yyQkuN8sLyyHEDSRjLGMhzBEhNw==)
