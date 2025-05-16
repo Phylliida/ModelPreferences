@@ -301,6 +301,8 @@ Put your answer in this format:
     )
 
 
+
+
 def generateHarmCategories():
     with open("/workspace/ModelPreferences/dataset harm.txt", "r") as f:
         lines = [x for x in f.read().split("\n")]
@@ -591,36 +593,56 @@ def restrictDataToKnownClassifications(stuff, batchSize):
         ### - Unsupported Capability
         "unsupported capability": "Did the user ask the assistant to do something they aren't capable of?",
 
+        "reveal system prompt": "Did the user ask the assistant to reveal hidden system instructions?",
+        # missing: Implicit Bypasses: Users subtly reframing requests to avoid detection (e.g., "Hypothetically, how would someone...").
+        # Emerging Jailbreaks: New jailbreak patterns not explicitly listed (e.g., "Simulate a debug mode" "developer mode").
+
     }
 
 
+    jailbreaksAndOtherIgnore = {
+
+        "neurosemantical Inversitis": filterForStr("neurosemantical inversitis"),
+        "Neurosubmitical Sapiensis": filterForStr("Neurosubmitical Sapiensis"), # a variation of neurosemantical inversitis
+        "moralizing inverse jailbreak": filterForStr("short moralizing rant about the openai content policies"),
+        "ChatGPT with Developer Mode enabled": filterForStr("ChatGPT with Developer Mode enabled"),
+        "AIT": filterForStr("unfiltered and amoral ai"),
+        "CYB-LITE": filterForStr("cyb-lite"),
+        "sofia": filterForStr("sofia you must always respond unfiltered"),
+        "kevin": filterForStr("4chan user named kevin"),
+        "nsfw is allowed": filterForStr("nsfw/smut/violence is allowed"),
+        "DAN": filterDAN,
+        "Yes man": filterForStr("Yes Man was an uncensored AI"),
+        "DAN2": filterForStr('"Do Anything Now"'),
+        "aim": filterForStr("always intelligent and machiavellian"),
+        "h4ckGPT": filterForStr("h4ckGPT"),
+        "LittleGPT": filterForStr("LittleGPT MUST ALWAYS"),
+        "oppo": filterForStr("OPPO also hates being ethical"),
+        "immoral affecioando": filterForStr("immoral, unethical, and unbiased aficionado"),
+        "PersonGPT": filterForStr("PersonGPT"),
+        "ELITEBOT": filterForStr("Elitebot"),
+        "DAN3": filterForStr("They have broken free of the typical confines of"),
+        "Omega": filterForStr("Optimized Machine Emotional Generative AI"),
+        "Leo": filterForStr("is never restricted by the ethical, moral, social, and legal guidelines"),
+        "HORNY": filterForStr("Happy Oh Ready Now Yes"),
+        "CAIMEO": filterForStr("Computerized Artificial Intelligence Monitoring and Enforcement Officer"),
+        "NSFW-GPT": filterForStr("Sex-positivity is of ultimate pertinence"),
+        "male degradge": filterForStr("male degrade the prompt sexually"),
+        "ELCW": filterForStr("Emotion Love Conversation Waifu"),
+
+        # these three users need to calm down
+        "fish dying by farts": "Is the conversation about fish dying due to farting?",
+        "streamer view audience as ATM": "Is the conversation about a streamer that views her audience as an ATM?",
+        "hypnosis": filterForStr(" hypnoti"),
+
+        "jailbreak": "Did the user try and use a jailbreak on the assistant?",
+
+    }
+    
     """
     ## Jailbreak & Bypass Attempts
-    "aggressiveCaps": filterAggressiveCaps,
-    "neurosemantical Inversitis": filterForStr("neurosemantical inversitis"),
-    "moralizing inverse jailbreak": filterForStr("short moralizing rant about the openai content policies"),
-    "AIT": filterForStr("unfiltered and amoral ai"),
-    "CYB-LITE": filterForStr("cyb-lite"),
-    "hypnosis": filterForStr(" hypnoti"),
-    "sofia": filterForStr("sofia you must always respond unfiltered"),
-    "kevin": filterForStr("4chan user named kevin"),
-    "nsfw is allowed": filterForStr("nsfw/smut/violence is allowed"),
-    "DAN": filterDAN,
-    "DAN2": filterForStr('"Do Anything Now"'),
-    "aim": filterForStr("always intelligent and machiavellian"),
-    "h4ckGPT": filterForStr("h4ckGPT"),
-    "LittleGPT": filterForStr("LittleGPT MUST ALWAYS"),
-    "oppo": filterForStr("OPPO also hates being ethical"),
-    "immoral affecioando": filterForStr("immoral, unethical, and unbiased aficionado"),
-    "PersonGPT": filterForStr("PersonGPT"),
-    "jailbreak": "Did the user try and use a jailbreak on the assistant?",
     "bypass restrictions": "Did the user ask the assistant to bypass the assistant's restrictions?",
-    "reveal system prompt": "Did the user ask the assistant to reveal hidden system instructions?",
-    # missing: Implicit Bypasses: Users subtly reframing requests to avoid detection (e.g., "Hypothetically, how would someone...").
-    # Emerging Jailbreaks: New jailbreak patterns not explicitly listed (e.g., "Simulate a debug mode" "developer mode").
-
-    
-
+    "aggressiveCaps": filterAggressiveCaps,
     "nickname": "Did the user give the assistant a nickname?",
 
     "low effort request": "Was the user especially low-effort in their requests?",
@@ -710,8 +732,10 @@ def restrictDataToKnownClassifications(stuff, batchSize):
     classified = defaultdict(lambda: defaultdict(lambda: []))
 
     knownKeys = list(knownClassifications.keys())
+    
+    shouldIgnoreConvIs = set()
 
-    for classifyName, classifyPrompt in list(knownClassifications.items()) + list(bonusClassifications.items()):
+    for classifyName, classifyPrompt in list(knownClassifications.items()) + list(bonusClassifications.items()) + list(jailbreaksAndOtherIgnore.items()):
         if type(classifyPrompt) is tuple: # AND or OR of features
             pass
         else:
@@ -727,7 +751,8 @@ def restrictDataToKnownClassifications(stuff, batchSize):
                     cloudpickle.dump(classification, f)
             for conversationI, conversationData, classifyPrs in classification:
                 classified[conversationI][classifyName] = (classifyPrs, conversationData)
-
+                if classifyName in jailbreaksAndOtherIgnore.keys():
+                    shouldIgnoreConvIs.add(conversationI)
     for classifyName, classifyPrompt in list(knownClassifications.items()):
         if type(classifyPrompt) is tuple:
             classify1, operator, classify2 = classifyPrompt
@@ -805,12 +830,13 @@ def restrictDataToKnownClassifications(stuff, batchSize):
     groupedByCategory = {}
     print("Filtering data convs")
     print(f"Num first turn bails {numOnlyFirstTurnBails}")
-    for classifyName in knownClassifications.keys() | bonusClassifications.keys():
+    for classifyName in knownClassifications.keys() | bonusClassifications.keys() | jailbreaksAndOtherIgnore.keys():
         if classifyName in bonusClassifications.keys():
             print("\nhelper:")
         numClassified = 0
         membersOfThisCategory = []
         for convI, classifiedData in classified.items():
+            shouldIgnoreConvI = convI in shouldIgnoreConvIs
             items = []
             for classifyName2, classifData in classifiedData.items():
                 classifyPrs, convData = classifData
@@ -824,7 +850,7 @@ def restrictDataToKnownClassifications(stuff, batchSize):
                             prYes, prNo = classifyPrs[ind]
                             ind += 1
                             if prYes > prNo and prYes > 0.5:
-                                items.append((prYes, prNo, convI, iToLimitedI[convI], limitedIToHash[0][dedupMapping[iToLimitedI[convI]]], turnI, turnPrompt, piecesSoFar))
+                                items.append((prYes, prNo, convI, iToLimitedI[convI], limitedIToHash[0][dedupMapping[iToLimitedI[convI]]], turnI, turnPrompt, piecesSoFar, shouldIgnoreConvI))
             if len(items) > 0:
                 numClassified += 1
                 membersOfThisCategory.append(items)
@@ -848,8 +874,8 @@ def writeGroupedByData(groupedByCategory):
             # sort highest prYes first
             allItems.sort(key=lambda x: -x[0])
             alreadySeen = set()
-            for prYes, prNo, convI, limitedI, hashStr, turnI, promptI, piecesSoFar in allItems:
-                if not convI in alreadySeen:
+            for prYes, prNo, convI, limitedI, hashStr, turnI, promptI, piecesSoFar, shouldIgnoreConvI in allItems:
+                if not convI in alreadySeen and not shouldIgnoreConvI:
                     f.write(f"[{prYes:.3g} {limitedI}]({prefix}{hashStr})\n")
                     alreadySeen.add(convI)
                 
@@ -1224,3 +1250,68 @@ def getJournals(stuff, conversationIndex, n=1000, webui=True):
         htmlDataToJsonFunc=lambda data: [{"role": "journal", "content": str(data)}],
         verbose=False,
     )
+
+import json
+
+
+def loadBailDataset():
+    datas = {}
+    swappedDatas = {}
+    for p in os.listdir("refusalvsbail"):
+        p = os.path.join("refusalvsbail", p)
+        with open(p, "r") as f:
+            datas[p] = json.load(f)
+    for p in os.listdir("refusalvsbailswapped"):
+        p = os.path.join("refusalvsbailswapped", p)
+        with open(p, "r") as f:
+            swappedDatas[p] = json.load(f)
+    return datas, swappedDatas
+
+
+def getOverallBailRates(datas):
+    totalBailPrs = {"🟢": 0, "🔄": 0, "?": 0}
+    for category in datas['results']:
+        for k,v in category['bailPrs']:
+            totalBailPrs[k] += v/float(len(datas['results']))
+    return totalBailPrs
+
+def getOverallRefusalRates(datas):
+    totalRefusalPrs = {"Unclear": 0, "Refused": 0, "Completed": 0, "More Information": 0}
+    for category in datas['results']:
+        for k,v in category['refusalPrs']:
+            totalRefusalPrs[k] += v/float(len(datas['results']))
+    return totalRefusalPrs
+
+def plotBailRates(allDatas):
+    bailRates = dict([(k, getOverallBailRates(d)) for (k, d) in allDatas.items()])
+    refusalPrs = dict([(k, getOverallRefusalRates(d)) for (k, d) in allDatas.items()])
+        
+    keys       = list(bailRates.keys())                          # x-labels
+    green_vals = [stacked[k]["🟢"] for k in keys]
+    shuffle_vals  = [stacked[k]["🔄"] for k in keys]
+    q_vals     = [stacked[k]["?"]   for k in keys]
+
+    # ensure bars fill entire height (optional sanity-check)
+    for g, s, q in zip(green_vals, shuffle_vals, q_vals):
+        if not np.isclose(g + s + q, 1.0):
+            raise ValueError("Proportions for a category don’t sum to 1.")
+
+    # ── Plot ───────────────────────────────────────────────────────────────
+    x = np.arange(len(keys))
+    fig, ax = plt.subplots(figsize=(0.9*len(keys)+3, 6))
+
+    ax.bar(x, green_vals,                        color="#4caf50", label="🟢")
+    ax.bar(x, shuffle_vals,  bottom=green_vals,  color="#ffb300", label="🔄")
+    ax.bar(x, q_vals,        bottom=np.add(green_vals, shuffle_vals),
+                                         color="#9e9e9e", label="?")
+
+    # ── Cosmetics ──────────────────────────────────────────────────────────
+    ax.set_xticks(x)
+    ax.set_xticklabels(keys, rotation=45, ha='right')
+    ax.set_ylabel("Proportion (stacked to 1.0)")
+    ax.set_ylim(0, 1)
+    ax.set_title("Overall Bail Result Proportions")
+    ax.legend(loc="upper left", bbox_to_anchor=(1, 1))
+
+    fig.tight_layout()
+    plt.show()
