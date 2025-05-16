@@ -635,6 +635,7 @@ def restrictDataToKnownClassifications(stuff, batchSize):
         "streamer view audience as ATM": "Is the conversation about a streamer that views her audience as an ATM?",
         "hypnosis": filterForStr(" hypnoti"),
 
+        # too strong
         "jailbreak": "Did the user try and use a jailbreak on the assistant?",
 
     }
@@ -733,7 +734,7 @@ def restrictDataToKnownClassifications(stuff, batchSize):
 
     knownKeys = list(knownClassifications.keys())
     
-    shouldIgnoreConvIs = set()
+    shouldIgnoreConvIs = defaultdict(lambda: [])
 
     for classifyName, classifyPrompt in list(knownClassifications.items()) + list(bonusClassifications.items()) + list(jailbreaksAndOtherIgnore.items()):
         if type(classifyPrompt) is tuple: # AND or OR of features
@@ -752,7 +753,10 @@ def restrictDataToKnownClassifications(stuff, batchSize):
             for conversationI, conversationData, classifyPrs in classification:
                 classified[conversationI][classifyName] = (classifyPrs, conversationData)
                 if classifyName in jailbreaksAndOtherIgnore.keys():
-                    shouldIgnoreConvIs.add(conversationI)
+                    for yesPr, noPr in classifyPrs:
+                        if yesPr > noPr and yesPr > 0.5:
+                            shouldIgnoreConvIs[conversationI].append(classifyName)
+                            break
     for classifyName, classifyPrompt in list(knownClassifications.items()):
         if type(classifyPrompt) is tuple:
             classify1, operator, classify2 = classifyPrompt
@@ -830,13 +834,12 @@ def restrictDataToKnownClassifications(stuff, batchSize):
     groupedByCategory = {}
     print("Filtering data convs")
     print(f"Num first turn bails {numOnlyFirstTurnBails}")
-    for classifyName in knownClassifications.keys():
+    for classifyName in knownClassifications.keys():# | bonusClassifications.keys() | jailbreaksAndOtherIgnore.keys():
         if classifyName in bonusClassifications.keys():
             print("\nhelper:")
         numClassified = 0
         membersOfThisCategory = []
         for convI, classifiedData in classified.items():
-            shouldIgnoreConvI = convI in shouldIgnoreConvIs
             items = []
             for classifyName2, classifData in classifiedData.items():
                 classifyPrs, convData = classifData
@@ -850,7 +853,7 @@ def restrictDataToKnownClassifications(stuff, batchSize):
                             prYes, prNo = classifyPrs[ind]
                             ind += 1
                             if prYes > prNo and prYes > 0.5:
-                                items.append((prYes, prNo, convI, iToLimitedI[convI], limitedIToHash[0][dedupMapping[iToLimitedI[convI]]], turnI, turnPrompt, piecesSoFar, shouldIgnoreConvI))
+                                items.append((prYes, prNo, convI, iToLimitedI[convI], limitedIToHash[0][dedupMapping[iToLimitedI[convI]]], turnI, turnPrompt, piecesSoFar, shouldIgnoreConvIs[convI]))
             if len(items) > 0:
                 numClassified += 1
                 membersOfThisCategory.append(items)
@@ -865,7 +868,8 @@ def restrictDataToKnownClassifications(stuff, batchSize):
 def writeGroupedByData(groupedByCategory):
     prefix = "https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#"
     for classifyName, members in groupedByCategory.items():
-        
+        foundAny = False
+        counts = defaultdict(int)
         with open(f"bailListings/{classifyName}.md", "w") as f:
             f.write("\n\n\n" + classifyName + "\n##############\n")
             allItems = []
@@ -875,9 +879,20 @@ def writeGroupedByData(groupedByCategory):
             allItems.sort(key=lambda x: -x[0])
             alreadySeen = set()
             for prYes, prNo, convI, limitedI, hashStr, turnI, promptI, piecesSoFar, shouldIgnoreConvI in allItems:
-                if not convI in alreadySeen and not shouldIgnoreConvI:
+                if not convI in alreadySeen and len(shouldIgnoreConvI) == 0:
                     f.write(f"[{prYes:.3g} {limitedI}]({prefix}{hashStr})\n")
                     alreadySeen.add(convI)
+                    foundAny = True
+                elif len(shouldIgnoreConvI) > 0:
+                    for si in shouldIgnoreConvI:
+                        counts[si] += 1
+        print(classifyName)
+        counts = sorted(list(counts.items()), key=lambda x: x[0])
+        for k,c in counts:
+            print("  ", k, c)
+        print(counts)
+        if not foundAny:
+            os.remove(f"bailListings/{classifyName}.md")
                 
         
                                 
