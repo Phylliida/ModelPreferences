@@ -121,5 +121,4 @@ sensitive political content
 [0.881 4038](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgXJBy4xyQnLFMQEzw4kYyxjIc0SITU=)
 [0.852 7716](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgUuMscHyRAuyhvEC88NJGMsYyHMESEyNQ==)
 [0.777 1534](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgUuMTPICC4xygrKHsQM0A4kYyxjIc0SITI=)
-[0.622 5061](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgUuNscHLjLJCS4xywvNGC4yJGMsYyHMESEx)
 [0.622 5518](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgUuMccHywnJG8QLLjnNDSRjLGMhzBEhMg==)

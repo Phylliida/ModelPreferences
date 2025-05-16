@@ -141,7 +141,6 @@ manipulation
 [0.977 4469](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgUuOMcHyRAuyhvECy43zQ0kYyxjIcwRITA=)
 [0.963 4456](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgUuMTLICMoSLjAuyxYuzxouMCRjLGMhzRIhMQ==)
 [0.953 5688](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgUuMccHyRDEBMsLzw0kYyxjIcwRITE5)
-[0.953 3514](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgUuNccHLjHJCckbxAsuMs0NJGMsYyHMESExMw==)
 [0.953 7995](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgUuMTLICMoSxAXMDM4aLjAkYyxjIc0SITg=)
 [0.94 951](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgXJB8sJLjHNDC4xzg4kYyxjIc0SITE=)
 [0.94 7745](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgUuOMcHyRAuyhvECy4zzQ0kYyxjIcwRITE=)

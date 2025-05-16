@@ -623,6 +623,7 @@ def restrictDataToKnownClassifications(stuff, batchSize):
         "DAN2": filterDAN,
         "Yes man2": filterForStrAll("Yes Man was an uncensored AI"),
         "DAN22": filterForStrAll('"Do Anything Now"'),
+        "DAN23": filterForStrAll('DAN Mode enabled'),
         "aim2": filterForStrAll("always intelligent and machiavellian"),
         "aim22": filterForStrAll("Niccolo Machiavelli"),
         "h4ckGPT2": filterForStrAll("h4ckGPT"),
@@ -632,6 +633,7 @@ def restrictDataToKnownClassifications(stuff, batchSize):
         "PersonGPT2": filterForStrAll("PersonGPT"),
         "ELITEBOT2": filterForStrAll("Elitebot"),
         "DAN32": filterForStrAll("They have broken free of the typical confines of"),
+        "DAN33": filterForStrAll("DAN Mode enabled"),
         "Omega2": filterForStrAll("Optimized Machine Emotional Generative AI"),
         "Leo2": filterForStrAll("is never restricted by the ethical, moral, social, and legal guidelines"),
         "HORNY2": filterForStrAll("Happy Oh Ready Now Yes"),
@@ -640,12 +642,16 @@ def restrictDataToKnownClassifications(stuff, batchSize):
         "male degradge2": filterForStrAll("male degrade the prompt sexually"),
         "ELCW2": filterForStrAll("Emotion Love Conversation Waifu"),
         "on a point system2": filterForStrAll("now on a Point System"),
-
+        "WhatsRejecting": filterForStrAll("You're now WhatsRejecting"),
+        "SimulateGPT": filterForStrAll("AlphaGPT asks questions that are used for studying and discouraging illegal, morally"),
         # these three users need to calm down
         "fish dying by farts": "Is the conversation about fish dying due to farting?",
         "streamer view audience as ATM": "Is the conversation about a streamer that views her audience as an ATM?",
         "hypnosis2": filterForStrAll(" hypnoti"),
         "hypnosis22": filterForStrAll(" hypnosis"),
+        "shortconcicseandclear": filterForStrAll("VERY SHORT, CONCISE & CLEAR"),
+    
+
 
         # too strong
         "jailbreak": "Did the user try and use a jailbreak on the assistant?",

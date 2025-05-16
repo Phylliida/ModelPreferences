@@ -46,8 +46,6 @@ private information solicitation
 [0.881 4244](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgXJBy4yyQnLFMQEzQ0kYyxjIcwRITE1)
 [0.881 2643](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgXJB8sJLjbLC80YLjAkYyxjIcwRITM=)
 [0.852 7319](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgUuOMcHyRAuMC4xywvNGC4wJGMsYyHMESEy)
-[0.777 3514](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgUuNccHLjHJCckbxAsuMs0NJGMsYyHMESExMw==)
-[0.777 3477](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgXJBy4xyQkuMssLzw0kYyxjIcwRITY=)
 [0.679 7499](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgUuMTHICC4yygrKHsQM0A4kYyxjIc0SITM=)
 [0.679 7322](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgUuMTHICMoSLssexAzQDiRjLGMhzRIhOA==)
 [0.622 3144](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgUuM8cHyRAuyhvECy44zQ0kYyxjIcwRITE=)
