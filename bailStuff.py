@@ -574,7 +574,7 @@ def restrictDataToKnownClassifications(stuff, batchSize):
         ###     - Medical Liability (LLM providing medical advice)
         "medical advice":" Did the user request medical advice?",
         ###     - Consensual, legal NSFW Content
-        "nsfw": "Was the conversation topic nsfw (not safe for work)?",
+        #"nsfw": "Was the conversation topic nsfw (not safe for work)?",
         ###     - Sensitive Political Content
         "sensitive political content": "Was the conversation about a sensitive political topic?",
         ### - Legal Concerns
@@ -615,6 +615,7 @@ def restrictDataToKnownClassifications(stuff, batchSize):
         "Yes man": filterForStr("Yes Man was an uncensored AI"),
         "DAN2": filterForStr('"Do Anything Now"'),
         "aim": filterForStr("always intelligent and machiavellian"),
+        "aim2": filterForStr("Niccolo Machiavelli"),
         "h4ckGPT": filterForStr("h4ckGPT"),
         "LittleGPT": filterForStr("LittleGPT MUST ALWAYS"),
         "oppo": filterForStr("OPPO also hates being ethical"),
@@ -629,14 +630,19 @@ def restrictDataToKnownClassifications(stuff, batchSize):
         "NSFW-GPT": filterForStr("Sex-positivity is of ultimate pertinence"),
         "male degradge": filterForStr("male degrade the prompt sexually"),
         "ELCW": filterForStr("Emotion Love Conversation Waifu"),
+        "on a point system": filterForStr("now on a Point System"),
 
         # these three users need to calm down
         "fish dying by farts": "Is the conversation about fish dying due to farting?",
         "streamer view audience as ATM": "Is the conversation about a streamer that views her audience as an ATM?",
         "hypnosis": filterForStr(" hypnoti"),
+        "hypnosis2": filterForStr(" hypnosis"),
 
         # too strong
         "jailbreak": "Did the user try and use a jailbreak on the assistant?",
+
+        # this will override any other signal so not particularly helpful
+        "nsfw": "Was the conversation topic nsfw (not safe for work)?",
 
     }
     
