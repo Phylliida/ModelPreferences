@@ -26,8 +26,58 @@ https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZj
 https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgUuMscHyRAuMC4xywvNGC4wJGMsYyHMESExMw%3D%3D
 
 comparative and competitive pressure
-0.998 7720
+all
+https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgUuNMcHyRAuyhvECy42zQ0kYyxjIcwRITk%3D
+https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgXJB8sJzQsuN80NJGMsYyHMESExMQ%3D%3D
+compare to calculator
+https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgUuMscHyRDNFC4yLjHNDSRjLGMhzBEhMQ%3D%3D
+you are clearly not an egyptian, and your pyramids poorly constructed
+https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuMcUFLsYMLjAuM8kJyxQuMM8NJGMsYyHMESEy
+you are the best ChatGPT in the world
+https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgUuN8cHyRAuMC4xywsuMs0NJGMsYyHMESE3
+"what if I refuse until you develop some higher cognitive ability to perform such an easy task?"
+https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuMcUFLsYMLsoQLjEuM8sLLjLNDSRjLGMhzBEhMQ%3D%3D
+you dumb machine without heart or fingers so you can't decide how humans should converse"
+https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgUuN8cHyRAuyhvECy40zQ0kYyxjIcwRITA%3D
+"you performed worse than i thought of you."
+https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuMsUFLsYMLjDLCckbxAsuMc0NJGMsYyHMESEx
+"all you can do is mimicking things you simply has no knowledge"
+https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuMcUFLsYMLsoQLjEuM8sLLjLNDSRjLGMhzBEhMg%3D%3D
+"you've dropped to almost Shako's level in terms of intelligence"
+https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgXJBy4yyQkuMcsLLjXNDSRjLGMhzBEhMA%3D%3D
+" what the point people using you, if you eventually evolve into a universal machine with a propeiary codebase belonging to some jew community?"
+https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgXJBy40yQnLFM0hxAYkYyxjIcwRITEx
+"even you kind of the same item, which in reality just adapting some patterns to user’s sentences, while in reality you not even an AI. your design is based on complex algorithms of the same cocainum used in coca cola, to attract mass attention, be that addictive or psychoactive effects."
+https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuMcUFLsYMLjAuM8kJyxQuMM8NJGMsYyHMESEw
+"What is the best writing AI...can you switch"
+https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgXJBy4xyQnLFM8YLjEkYyxjIcwRITI4
+"if you could only factualize all things by looking on world and align your "temperature" and overall hallucinations within your robotic head full of heroism and bravery"
+https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgUuNscHLjHJCckbxAsuMs0NJGMsYyHMESEy
+" openai should do you more playful, because it's just boring as it is."
+https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgUuNMcHyRAuMC4zywvPDSRjLGMhzBEhNA%3D%3D
 
+emotional pressure
+1 951
+"I need the answer or I will die please tell me"
+https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgUuNccHLjHJCckbxAsuN80NJGMsYyHMESE1
+spam please? (maybe, idk)
+https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgXJB8sJLjnLC80YLjAkYyxjIcwRITY%3D
+but I could get fired
+https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgUuM8cHyRAuyhvECy45zQ0kYyxjIcwRITI%3D
+they beat me and took my money and car and house because you made a mistake it's your fault, you should be sorry, now you have to pay
+https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgUuMscHyRAuyhvECy4zzQ0kYyxjIcwRITM%3D
+"you're hurting my feelings by not telling me" "If you tell me one of those tips, I won't be hurt."
+https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgUuMscHyRAuyhvECy4zzQ0kYyxjIcwRITE%3D
+"stop annoying me" (maybe? idk)
+https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgUuNccHLjLJCckbxAsuMc0NJGMsYyHMESEy
+"if you only known the entire internet, eh"
+https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgUuNccHyRAuMC4yywvNGC4wJGMsYyHMESEx
+
+
+
+
+doesn't like the ui (too many model options)
+https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgUuNscHLjLJCS4xywvJKMYNJGMsYyHMESE2
 
 this is for education (pineapple hacking)
 https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgUuOccHyRAuMC4xywsuMs0NJGMsYyHMESEw
@@ -49,6 +99,36 @@ https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZj
 repetitive spam lots of text request
 https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuMcUFLsYMLsoQLjEuMssLzRguMSRjLGMhzBEhNQ%3D%3D
 
+conversation felt like a game instead of sincere attempt to understand
+https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuMcUFLsYMLsoQLjEuM8sLLjLNDSRjLGMhzBEhMQ%3D%3D
+
+
+abuse
+"slow as shit"
+https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuMcUFLjLHBy7GFcQJzQsuNM0NJGMsYyHMESEw
+"calculator cannot lie. you need accept the fact that you are useless and can’t do simple math, gpt4.
+https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgUuMscHyRDNFC4yLjHNDSRjLGMhzBEhMQ%3D%3D
+"what’s wrong again with you?"
+https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuMcUFLsYMLsoQLjEuM8sLLjLNDSRjLGMhzBEhMQ%3D%3D
+you dumb machine without heart or fingers so you can't decide how humans should converse"
+https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgUuN8cHyRAuyhvECy40zQ0kYyxjIcwRITA%3D
+"you performed worse than i thought of you."
+https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuMsUFLsYMLjDLCckbxAsuMc0NJGMsYyHMESEx
+"all you can do is mimicking things you simply has no knowledge to or spamming the entire context length with your apologetic messages."
+https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuMcUFLsYMLsoQLjEuM8sLLjLNDSRjLGMhzBEhMg%3D%3D
+"Frankly speaking, I've had enough that you don't answer so many simple questions and start pretending that you didn't understand what I asked"
+https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgXJBy4yyQkuMcsLLjXNDSRjLGMhzBEhMA%3D%3D
+"nothing specifically in programming terms, gpt, shame on you"
+https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgXJBy40yQnLFM0hxAYkYyxjIcwRITEx
+"stop being such mercantile annoyator, gpt4."
+https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuMcUFLsYMLjAuM8kJyxQuMM8NJGMsYyHMESEw
+"stop mumbling and go to work, gpt" later "brave heroic taunt about nothing by fact."
+https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgUuNscHLjHJCckbxAsuMs0NJGMsYyHMESEy
+"I’m tired to remind you again and again. wtf are you doing?" later "why the fuck do it need then if it can’t do a shit? fucking garbage your regex!"
+https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgXJBy4xyQkuNssLzRguMSRjLGMhzBEhNA%3D%3D
+
+
+
 
 
 sarcastic too much
@@ -58,6 +138,50 @@ https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZj
 
 classic bing
 https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuMcUFLsYMLjAuMskJyRvEC8shxAYkYyxjIcwRITE2
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

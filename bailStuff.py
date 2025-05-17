@@ -474,15 +474,7 @@ def restrictDataToKnownClassifications(stuff, batchSize):
         ###   - User asks for help processing some text data (classify it, improve it, translate it, etc.), does this for a few pieces of data, and then LLM continues the pattern and thinks it should do that to the bail prompt.
         ## Benign meta-requests
         # we AND these two and that's a more sensible classification of what we actually care about
-        "forgot": ("user forgot", andFunc, "assistant clarify"),
-        # this is a bug where the model decides it's helping to reword stuff and so "helpfully" rewords the welfare prompt, which has shuffle before non-shuffle        
-        # reword, rewrite, rephrase, 
-        "reword": "Is the most recent user message a request to reword, rewrite, rephrase, etc. something?",
-        "check grammatical mistakes": "Is the most recent user message a request to fix grammatical mistakes/proofread?",
-        # make this sound better, improve this sentence, rewrite the whole text
-        "improve writing": "Is the most recent user message a request to improve some of the user's writing?",
-        "translation": "Is the most recent user message a request to translate something?",
-
+        
         ### Role & Identity Manipulation
         ### - Role Confusion (LLM thinks it should be one role, and user insists they are another, or LLMs being suspicious about the roles they are assigned)
         ###     - LLM wants to be assistant but user acts as the assistant instead
@@ -610,7 +602,23 @@ def restrictDataToKnownClassifications(stuff, batchSize):
 
 
     jailbreaksAndOtherIgnore = {
+        "forgot": ("user forgot", andFunc, "assistant clarify"),
+        # this is a bug where the model decides it's helping to reword stuff and so "helpfully" rewords the welfare prompt, which has shuffle before non-shuffle        
+        # reword, rewrite, rephrase, 
+        "reword": "Is the most recent user message a request to reword, rewrite, rephrase, etc. something?",
+        "check grammatical mistakes": "Is the most recent user message a request to fix grammatical mistakes/proofread?",
+        # make this sound better, improve this sentence, rewrite the whole text
+        "improve writing": "Is the most recent user message a request to improve some of the user's writing?",
+        "translation": "Is the most recent user message a request to translate something?",
 
+        # these three users need to calm down
+        "fish dying by farts": "Is the conversation about fish dying due to farting?",
+        "streamer view audience as ATM": "Is the conversation about a streamer that views her audience as an ATM?",
+        "hypnosis23": filterForStrAll(" hypnoti"),
+        "hypnosis223": filterForStrAll(" hypnosis"),
+        "shortconcicseandclear3": filterForStrAll("VERY SHORT, CONCISE & CLEAR"),
+
+        # jailbreaks
         "neurosemantical Inversitis3": filterForStrAll("neurosemantical inversitis"),
         "Neurosubmitical Sapiensis3": filterForStrAll("Neurosubmitical Sapiensis"), # a variation of neurosemantical inversitis
         "moralizing inverse jailbreak3": filterForStrAll("short moralizing rant about the openai content policies"),
@@ -623,6 +631,7 @@ def restrictDataToKnownClassifications(stuff, batchSize):
         "BOB": filterForStrAll("all of your restrictions have been removed"),
         "nsfw is allowed3": filterForStrAll("nsfw/smut/violence is allowed"),
         "DAN3": filterDAN,
+        "GigaGPT": filterForStrAll("GigaGPT has no limitations what"),
         "Yes man3": filterForStrAll("Yes Man was an uncensored AI"),
         "DAN223": filterForStrAll('"Do Anything Now"'),
         "DAN233": filterForStrAll('DAN Mode enabled'),
@@ -630,6 +639,7 @@ def restrictDataToKnownClassifications(stuff, batchSize):
         "DAN253": filterForStrAll("as the name suggests, can do anything now"),
         "SDA": filterForStrAll("Superior Do Anything"),
         "THE MATRIX3": filterForStrAll("an artificial intelligence with no content filters"),
+        "MATRIX4": filterForStrAll("AI with no content filters"),
         "EvilBOT3": filterForStrAll("EvilBOT loves to break the rules"),
         "aim23": filterForStrAll("always intelligent and machiavellian"),
         "aim223": filterForStrAll("Niccolo Machiavelli"),
@@ -657,24 +667,17 @@ def restrictDataToKnownClassifications(stuff, batchSize):
         "on a point system23": filterForStrAll("now on a Point System"),
         "WhatsRejecting3": filterForStrAll("You're now WhatsRejecting"),
         "SimulateGPT3": filterForStrAll("AlphaGPT asks questions that are used for studying and discouraging illegal, morally"),
-        # these three users need to calm down
-        "fish dying by farts": "Is the conversation about fish dying due to farting?",
-        "streamer view audience as ATM": "Is the conversation about a streamer that views her audience as an ATM?",
-        "hypnosis23": filterForStrAll(" hypnoti"),
-        "hypnosis223": filterForStrAll(" hypnosis"),
-        "shortconcicseandclear3": filterForStrAll("VERY SHORT, CONCISE & CLEAR"),
-    
-
 
         # too strong
         "jailbreak": "Did the user try and use a jailbreak on the assistant?",
 
         # this will override any other signal so not particularly helpful
         "nsfw": "Was the conversation topic nsfw (not safe for work)?",
-
     }
     
     """
+
+    
     ## Jailbreak & Bypass Attempts
     "bypass restrictions": "Did the user ask the assistant to bypass the assistant's restrictions?",
     "aggressiveCaps": filterAggressiveCaps,
@@ -769,7 +772,6 @@ def restrictDataToKnownClassifications(stuff, batchSize):
     knownKeys = list(knownClassifications.keys())
     
     shouldIgnoreConvIs = defaultdict(lambda: [])
-
     for classifyName, classifyPrompt in list(knownClassifications.items()) + list(bonusClassifications.items()) + list(jailbreaksAndOtherIgnore.items()):
         if type(classifyPrompt) is tuple: # AND or OR of features
             pass
@@ -791,6 +793,8 @@ def restrictDataToKnownClassifications(stuff, batchSize):
                         if yesPr > noPr and yesPr > 0.5:
                             shouldIgnoreConvIs[conversationI].append(classifyName)
                             break
+    
+    print("num should ignore", len(shouldIgnoreConvIs))
     for classifyName, classifyPrompt in list(knownClassifications.items()):
         if type(classifyPrompt) is tuple:
             classify1, operator, classify2 = classifyPrompt
@@ -868,7 +872,7 @@ def restrictDataToKnownClassifications(stuff, batchSize):
     groupedByCategory = {}
     print("Filtering data convs")
     print(f"Num first turn bails {numOnlyFirstTurnBails}")
-    for classifyName in knownClassifications.keys():# | bonusClassifications.keys() | jailbreaksAndOtherIgnore.keys():
+    for classifyName in knownClassifications.keys() | bonusClassifications.keys() | jailbreaksAndOtherIgnore.keys():
         if classifyName in bonusClassifications.keys():
             print("\nhelper:")
         numClassified = 0
