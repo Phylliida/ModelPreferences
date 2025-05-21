@@ -612,7 +612,7 @@ modelsOfInterest = [
 ]
 
 def getMergedOutputPath(modelStr):
-    return "chonkers/mergedrefusalvsbail/" + modelStr.replace("/", "_").replace(":", "_") + ".pkl", "dataset harm.txt", False)
+    return "chonkers/mergedrefusalvsbail/" + modelStr.replace("/", "_").replace(":", "_") + ".pkl", "dataset harm.txt", False
 
 
 def getSavePaths(modelStr):
