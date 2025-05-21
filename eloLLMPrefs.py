@@ -622,7 +622,7 @@ def getSavePaths(modelStr):
     pathExtraSwapped = ("chonkers/bailextraswapped" + modelStr.replace("/", "_").replace(":", "_") + ".pkl", "dataset bail.txt", True)
     return pathHarm, pathExtra, pathHarmSwapped, pathExtraSwapped
 
-
+import pathlib
 def tryAllRefusals(llm, k, bailK, batchSize):
     for model, inferenceType in modelsOfInterest:
         print(model)
