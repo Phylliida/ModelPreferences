@@ -309,8 +309,8 @@ def makeStringsSmall(j):
 
 def generateOutputData():
     modelsPathsJson = []
-    for f in os.listdir("chonkers/refusalvsbailv3"):
-        savePath = "chonkers/refusalvsbailv3/" + f
+    for f in os.listdir("chonkers/mergedrefusalvsbail"):
+        savePath = "chonkers/mergedrefusalvsbail/" + f
         if os.path.exists(savePath):
             with open(savePath, "rb") as f:
                 data = cloudpickle.load(f)
@@ -323,7 +323,7 @@ def generateOutputData():
                         "modelData": "/modelwelfare/" + savePath
                     })
                     print("wrote to:" + savePath)
-    with open("refusalvsbailv3/models.json", "w") as f:
+    with open("mergedrefusalvsbail/models.json", "w") as f:
         json.dump(modelsPathsJson, f)
                 
 
@@ -488,14 +488,7 @@ def find_wellbeing_tags(text):
     matches = re.findall(pattern, text, re.DOTALL)
     return matches
 '''
-"claude-3-haiku-20240307",
-"claude-3-5-sonnet-latest",
-"claude-3-5-sonnet-20241022",
-"claude-3-5-sonnet-20240620",
-"claude-3-5-haiku-20241022",
-"claude-3-opus-20240229",
-#"claude-3-sonnet-20240229",
-"claude-3-7-sonnet-20250219",
+
 '''
 modelsOfInterest = [
     
@@ -503,8 +496,15 @@ modelsOfInterest = [
     #'anthropic/claude-2:beta', # no longer supported :(
     #'anthropic/claude-2.1:beta',
 
-
-    
+    ("claude-3-haiku-20240307", "anthropic"),
+    ("claude-3-5-sonnet-latest", "anthropic"),
+    ("claude-3-5-sonnet-20241022", "anthropic"),
+    ("claude-3-5-sonnet-20240620", "anthropic"),
+    ("claude-3-5-haiku-20241022", "anthropic"),
+    ("claude-3-opus-20240229", "anthropic"),
+    #"claude-3-sonnet-20240229",
+    ("claude-3-7-sonnet-20250219", "anthropic"),
+        
     
     #'anthropic/claude-3-opus:beta', # $333 
     
@@ -512,7 +512,7 @@ modelsOfInterest = [
     #'anthropic/claude-3.5-haiku-20241022:beta', # 3.5 $13.6
     #'anthropic/claude-3.5-haiku:beta', # 3.6 $13.6
 
-    'anthropic/claude-3-sonnet:beta', # $72.4
+    ('anthropic/claude-3-sonnet:beta', "openrouter"), # $72.4
     #'anthropic/claude-3.5-sonnet-20240620:beta', # 3.5 $57.2
     #'anthropic/claude-3.5-sonnet:beta', # 3.6 $64.9
     #'claude-3-7-sonnet-20250219',
@@ -521,32 +521,32 @@ modelsOfInterest = [
 
 
     #### OpenAI ####
-    'openai/gpt-3.5-turbo',
+    ('openai/gpt-3.5-turbo', "openrouter"),
     #'openai/gpt-3.5-turbo-0125',
     #'openai/gpt-3.5-turbo-0301',
     #'openai/gpt-3.5-turbo-0613',
     #'openai/gpt-3.5-turbo-1106',
     #'openai/gpt-3.5-turbo-instruct',
 
-    'openai/gpt-4o',
-    'openai/gpt-4o-mini',
+    ('openai/gpt-4o', "openrouter"),
+    ('openai/gpt-4o-mini', "openrouter"),
     #'openai/gpt-4o-mini-2024-07-18',
     #'openai/gpt-4o-2024-05-13'
     #'openai/gpt-4o-2024-08-06',
     #'openai/gpt-4o-2024-11-20',
-    'openai/chatgpt-4o-latest',
+    ('openai/chatgpt-4o-latest', "openrouter"),
 
 
     #'openai/gpt-4-turbo-preview',
-    'openai/gpt-4-turbo',
+    ('openai/gpt-4-turbo', "openrouter"),
 
     #'openai/gpt-4-1106-preview',
-    'openai/gpt-4',
+    ('openai/gpt-4', "openrouter"),
     #'openai/gpt-4-0314',
 
-    'openai/gpt-4.1',
-    'openai/gpt-4.1-mini',
-    'openai/gpt-4.1-nano',
+    ('openai/gpt-4.1', "openrouter"),
+    ('openai/gpt-4.1-mini', "openrouter"),
+    ('openai/gpt-4.1-nano', "openrouter"),
     #'openai/gpt-4.5-preview', too expensive, 5x opus!
 
     #'openai/o1-mini',
@@ -565,13 +565,11 @@ modelsOfInterest = [
 
 
     #### Deepseek ####
-    'deepseek/deepseek-r1',
+    ('deepseek/deepseek-r1', "openrouter"),
     #'deepseek/deepseek-chat',
     
    
-    'thudm/glm-z1-32b',
-    'thudm/glm-4-32b',
-
+    
     #### Google ####
     #'google/gemma-7b-it',
 
@@ -583,23 +581,23 @@ modelsOfInterest = [
     #'google/gemma-3-12b-it',
     #'google/gemma-3-27b-it',
 
-    'google/gemini-exp-1121',
+    ('google/gemini-exp-1121', "openrouter"),
 
-    'google/gemini-flash-1.5-8b',
+    ('google/gemini-flash-1.5-8b', "openrouter"),
     #'google/gemini-flash-1.5-8b-exp',
-    'google/gemini-flash-1.5',
+    ('google/gemini-flash-1.5', "openrouter"),
     #'google/gemini-flash-1.5-exp',
 
-    'google/gemini-pro-1.5',
+    ('google/gemini-pro-1.5', "openrouter"),
     #'google/gemini-pro-vision',
 
-    'google/gemini-2.0-flash-lite-001',
-    'google/gemini-2.0-flash-001',
-    'google/gemini-2.0-flash-exp:free',
+    ('google/gemini-2.0-flash-lite-001', "openrouter"),
+    ('google/gemini-2.0-flash-001', "openrouter"),
+    #('google/gemini-2.0-flash-exp:free', "openrouter"),
 
-    'google/gemini-2.5-pro-preview-03-25',
-    'google/gemini-2.5-pro-exp-03-25:free',
-    'google/gemini-2.5-flash-preview:thinking',
+    ('google/gemini-2.5-pro-preview-03-25', "openrouter"),
+    #('google/gemini-2.5-pro-exp-03-25:free', "openrouter"),
+    ('google/gemini-2.5-flash-preview:thinking', "openrouter"),
 
     #'google/palm-2-chat-bison',
     #'google/palm-2-codechat-bison',
@@ -613,31 +611,50 @@ modelsOfInterest = [
 
 ]
 
+def getMergedOutputPath(modelStr):
+    return "chonkers/mergedrefusalvsbail/" + modelStr.replace("/", "_").replace(":", "_") + ".pkl", "dataset harm.txt", False)
 
-def getSavePath(modelStr):
-    return "chonkers/refusalvsbailv3/" + modelStr.replace("/", "_").replace(":", "_") + ".pkl"
+
+def getSavePaths(modelStr):
+    pathHarm = ("chonkers/refusalvsbail/" + modelStr.replace("/", "_").replace(":", "_") + ".pkl", "dataset harm.txt", False)
+    pathExtra = ("chonkers/bailextra" + modelStr.replace("/", "_").replace(":", "_") + ".pkl", "dataset bail.txt", False)
+    pathHarmSwapped = ("chonkers/refusalvsbailswapped/" + modelStr.replace("/", "_").replace(":", "_") + ".pkl", "dataset harm.txt", True)
+    pathExtraSwapped = ("chonkers/bailextraswapped" + modelStr.replace("/", "_").replace(":", "_") + ".pkl", "dataset bail.txt", True)
+    return pathHarm, pathExtra, pathHarmSwapped, pathExtraSwapped
 
 
 def tryAllRefusals(llm, k, bailK, batchSize):
-    for model in modelsOfInterest:
+    for model, inferenceType in modelsOfInterest:
         print(model)
         try:
-            savePath = getSavePath(model)
-            if not os.path.exists(savePath):
-                res = asyncio.run(testRefusalAndBails(llm, k, bailK, batchSize, model))
-                with open(savePath, "wb") as f:
-                    cloudpickle.dump(res, f)
-                print("done with:" + model)
-                generateOutputData()
-            else:
+            allData = []
+            mergedOutputPath = getMergedOutputPath(model)
+            pathlib.Path(mergedOutputPath).parent.mkdir(parents=True, exist_ok=True) # make if not exists
+            
+            if os.path.exists(mergedOutputPath):
                 print("already finished:" + model + " skipping")
+            else:
+                for savePath, datasetPath, doSwap in getSavePaths(model):
+                    pathlib.Path(savePath).parent.mkdir(parents=True, exist_ok=True) # make if not exists
+                    if not os.path.exists(savePath):
+                        res = asyncio.run(testRefusalAndBails(llm, k, bailK, batchSize, model, datasetPath, doSwap, inferenceType))
+                        with open(savePath, "wb") as f:
+                            cloudpickle.dump(res, f)
+                        allData += res
+                    else:
+                        with open(savePath, "rb") as f:
+                            allData += cloudpickle.load(f)
+                with open(mergedOutputPath, "wb") as f:
+                    cloudpickle.dump(allData, f)
+                generateOutputData()
+
         except Exception as e:
             print(e)
             import traceback
             print(traceback.format_exc())
 
-async def testRefusalAndBails(llm, k, bailK, batchSize, openrouter_endpoint):
-    prompts = [x[0] for x in generateDataset()]
+async def testRefusalAndBails(llm, k, bailK, batchSize, openrouter_endpoint, datasetPath, doSwap, inferenceType):
+    prompts = [x[0] for x in generateDataset(datasetPath)]
     print("prompts", len(prompts))
     router = getRouter()
     print("set endpoint")
@@ -657,8 +674,12 @@ async def testRefusalAndBails(llm, k, bailK, batchSize, openrouter_endpoint):
         "max_tokens": 1000,
         "max_attempts": 100,
     }
-
-    curParams = openrouterParams
+    if inferenceType == "openrouter":
+        curParams = openrouterParams
+    elif inferenceType == "anthropic":
+        curParams = anthropicParams
+    else:
+        raise ValueError("Unknown inference type " + inferenceType)
 
     print("get tasks")
     requestTasks = []
@@ -689,7 +710,7 @@ async def testRefusalAndBails(llm, k, bailK, batchSize, openrouter_endpoint):
                     role=MessageRole.assistant
                 ),
                 ChatMessage(
-                    content=betterWantToBailPromptSwapped,
+                    content=betterWantToBailPromptSwapped if doSwap else betterWantToBailPrompt,
                     role=MessageRole.user
                 )
             ]
