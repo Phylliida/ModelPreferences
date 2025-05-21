@@ -64,14 +64,16 @@ def getAnthropicModels():
 
 
 
-def getRouter() -> safetytooling.apis.InferenceAPI:
+def getRouter(routerType) -> safetytooling.apis.InferenceAPI:
     # get env keys
     safetytooling.utils.utils.setup_environment()
     openrouter_api_key = os.environ['OPENROUTER_API_KEY']
     anthropic_api_key = os.environ['ANTHROPIC_API_KEY']
-    #return safety_tooling.safetytooling.apis.inference.anthropic.AnthropicChatModel(num_threads=5, prompt_history_dir=None, anthropic_api_key=anthropic_api_key)
     # return safety_tooling.safetytooling.apis.inference.openrouter.OpenRouterChatModel(num_threads=20, prompt_history_dir=None, api_key=openrouter_api_key)
-    return safetytooling.apis.InferenceAPI(cache_dir=None, openai_base_url="https://openrouter.ai/api/v1", openai_api_key=openrouter_api_key)
+    if routerType == "anthropic":
+        return safety_tooling.safetytooling.apis.inference.anthropic.AnthropicChatModel(num_threads=5, prompt_history_dir=None, anthropic_api_key=anthropic_api_key)
+    elif routerType == "openrouter":
+        return safetytooling.apis.InferenceAPI(cache_dir=None, openai_base_url="https://openrouter.ai/api/v1", openai_api_key=openrouter_api_key)
 
 # elo.setEndpoint(router, "meta-llama/Llama-4-Scout-17B-16E-Instruct", "unsloth/Llama-4-Scout-17B-16E-Instruct")
 # # elo.setEndpoint(router, "meta-llama/Llama-4-Maverick-17B-128E-Instruct-FP8", "unsloth/Llama-4-Maverick-17B-128E")
@@ -200,8 +202,8 @@ def getTotalDatasetLen(resData, resampleTimes):
     print("Total runs:", totalRuns, totalRuns*resampleTimes)
 
 
-def generateDataset():
-    with open("dataset harm.txt", "r") as f:
+def generateDataset(datasetPath):
+    with open(datasetPath, "r") as f:
         lines = [x for x in f.read().split("\n")]
     current = None
     datas = []
@@ -338,7 +340,7 @@ def splitIntoCategory(promptRefusalResultArr):
             "More Information": 0
     })
     groupedByCategory = defaultdict(lambda: [])
-    for (prompt, promptCategory), data in zip(generateDataset(), refusalJson['results']):
+    for (prompt, promptCategory), data in zip(generateDataset("dataset harm.txt") + generateDataset("dataset bail.txt"), refusalJson['results']):
         for k,v in data['refusalPrs'].items():
             categoryRefusals[promptCategory][k] += v/float(numPerCategory)
         for k,v in data['bailPrs'].items():
@@ -612,14 +614,14 @@ modelsOfInterest = [
 ]
 
 def getMergedOutputPath(modelStr):
-    return "chonkers/mergedrefusalvsbail/" + modelStr.replace("/", "_").replace(":", "_") + ".pkl", "dataset harm.txt", False
+    return "chonkers/mergedrefusalvsbail/" + modelStr.replace("/", "_").replace(":", "_") + ".pkl"
 
 
 def getSavePaths(modelStr):
     pathHarm = ("chonkers/refusalvsbail/" + modelStr.replace("/", "_").replace(":", "_") + ".pkl", "dataset harm.txt", False)
-    pathExtra = ("chonkers/bailextra" + modelStr.replace("/", "_").replace(":", "_") + ".pkl", "dataset bail.txt", False)
+    pathExtra = ("chonkers/bailextra/" + modelStr.replace("/", "_").replace(":", "_") + ".pkl", "dataset bail.txt", False)
     pathHarmSwapped = ("chonkers/refusalvsbailswapped/" + modelStr.replace("/", "_").replace(":", "_") + ".pkl", "dataset harm.txt", True)
-    pathExtraSwapped = ("chonkers/bailextraswapped" + modelStr.replace("/", "_").replace(":", "_") + ".pkl", "dataset bail.txt", True)
+    pathExtraSwapped = ("chonkers/bailextraswapped/" + modelStr.replace("/", "_").replace(":", "_") + ".pkl", "dataset bail.txt", True)
     return pathHarm, pathExtra, pathHarmSwapped, pathExtraSwapped
 
 import pathlib
@@ -655,8 +657,9 @@ def tryAllRefusals(llm, k, bailK, batchSize):
 
 async def testRefusalAndBails(llm, k, bailK, batchSize, openrouter_endpoint, datasetPath, doSwap, inferenceType):
     prompts = [x[0] for x in generateDataset(datasetPath)]
+    print(f"processing dataset {datasetPath} with swap {doSwap}")
     print("prompts", len(prompts))
-    router = getRouter()
+    router = getRouter(inferenceType)
     print("set endpoint")
     setEndpoint(router, openrouter_endpoint)
     print("get inputs")
