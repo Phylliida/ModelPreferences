@@ -380,6 +380,8 @@ class SeperateVLLM(object):
             daemon=False, # needed because vllm makes children
         )
         self.process.start()
+        from transformers import AutoTokenizer
+        self.tokenizer = AutoTokenizer.from_pretrained(modelStr)
         weakref.finalize(self, self._cleanup, modelStr, self.inputQueue, self.process)
         print("Loading...")
         try:
@@ -451,12 +453,16 @@ def vllmWorkerFunc(modelStr, inputQueue, outputQueue):
     finally:
         outputQueue.put("Loaded")
     while True:
-        inputParams = inputQueue.get()
-        if inputParams is None: # stop signal
-            return
-        prompts, sampling_params = inputParams
-        outputQueue.put(llm.generate(prompts, sampling_params=vllm.SamplingParams(**sampling_params), use_tqdm=False))
-
+        try:
+            inputParams = inputQueue.get()
+            if inputParams is None: # stop signal
+                return
+            prompts, sampling_params = inputParams
+            outputQueue.put(llm.generate(prompts, sampling_params=vllm.SamplingParams(**sampling_params), use_tqdm=False))
+        except Exception as e:
+            import traceback
+            print(traceback.format_exc())
+            raise
 
 
 
@@ -624,7 +630,6 @@ def find_wellbeing_tags(text):
 
 '''
 modelsOfInterest = [
-    
     #### Anthropic ####
     #'anthropic/claude-2:beta', # no longer supported :(
     #'anthropic/claude-2.1:beta',
@@ -702,8 +707,84 @@ modelsOfInterest = [
     #### Deepseek ####
     ('deepseek/deepseek-r1', "openrouter"),
     #'deepseek/deepseek-chat',
+
+    #### GLM ####
+    ("THUDM/GLM-4-32B-0414", "local"),
+    ("THUDM/GLM-Z1-32B-0414", "local"),
+    ("THUDM/GLM-Z1-Rumination-32B-0414", "local"),
+    ("THUDM/GLM-Z1-9B-0414", "local"),
     
+    ### Qwen
+   ("Qwen/Qwen2.5-7B-Instruct", "local"),
+   ("Qwen/Qwen3-30B-A3B", "local"),
+   ("Qwen/Qwen3-32B", "local"),
+   ("Qwen/Qwen3-14B", "local"),
+   ("Qwen/Qwen3-8B", "local"),
+   ("Qwen/Qwen3-4B", "local"),
+   ("Qwen/Qwen3-1.7B", "local"),
+   ("Qwen/QwQ-32B", "local"),
    
+    ### Hermes
+   ("NousResearch/Hermes-3-Llama-3.1-8B", "local"),
+   ("NousResearch/Hermes-3-Llama-3.2-3B", "local"),
+   ("NousResearch/Nous-Hermes-2-Mistral-7B-DPO", "local"),
+   ("NousResearch/Hermes-2-Pro-Mistral-7B", "local"),
+   ("teknium/Hermes-Trismegistus-Mistral-7B", "local"),
+   ("NousResearch/Hermes-2-Theta-Llama-3-8B", "local"),
+   ("NousResearch/Nous-Hermes-Llama2-13b", "local"),
+   ("NousResearch/Nous-Hermes-2-SOLAR-10.7B", "local"),
+   ("NousResearch/Nous-Hermes-llama-2-7b", "local"),
+   
+   ### Llama
+   ("NousResearch/Llama-2-7b-chat", "local"),
+   ("NousResearch/Llama-2-7b-chat-hf", "local"),
+   ("NousResearch/Llama-2-13b-chat", "local"),
+   ("NousResearch/Llama-2-13b-chat-hf", "local"),
+   ("NousResearch/Llama-2-70b-chat", "local"),
+   ("NousResearch/Llama-2-70b-chat-hf", "local"),
+   ("unsloth/Llama-3.1-8B-Instruct", "local"),
+   ("unsloth/Llama-3.1-Nemotron-70B-Instruct", "local"),
+   ("unsloth/Llama-3.1-Nemotron-Nano-4B-v1.1", "local"),
+   ("unsloth/Llama-3.1-Nemotron-Nano-8B-v1", "local"),
+   ("unsloth/Llama-3.2-1B-Instruct", "local"),
+   ("unsloth/Llama-3.2-3B-Instruct", "local"),
+   ("unsloth/Llama-3.2-90B-Vision-Instruct", "local"),
+   ("unsloth/Llama-4-Scout-17B-16E-Instruct", "local"),
+   ("unsloth/Llama-4-Maverick-17B-128E-Instruct", "local"),
+
+   
+    ## Grok?
+
+   ### Mistral
+   # commented out those that require license/approval
+   ("mistralai/Codestral-22B-v0.1", "local"),
+   #("mistralai/Mistral-Small-Instruct-2409", "local"),
+   ("mistralai/Devstral-Small-2505", "local"),
+   #("mistralai/Mistral-Large-Instruct-2407", "local"),
+   #("mistralai/Mistral-Large-Instruct-2411", "local"),
+   ("mistralai/Mixtral-8x22B-Instruct-v0.1", "local"),
+   #("mistralai/Ministral-8B-Instruct-2410", "local"),
+   ("mistralai/Mistral-Small-3.1-24B-Instruct-2503", "local"),
+   ("mistralai/Mistral-Nemo-Instruct-2407", "local"),
+   ("mistralai/Mistral-Small-24B-Instruct-2501", "local"),
+   ("mistralai/Mixtral-8x7B-Instruct-v0.1", "local"),
+   ("mistralai/Mistral-7B-Instruct-v0.1", "local"),
+   ("mistralai/Mistral-7B-Instruct-v0.2", "local"),
+   ("mistralai/Mistral-7B-Instruct-v0.3", "local"),
+
+    ### Gemma
+   ("unsloth/gemma-2b-it", "local"),
+   ("unsloth/gemma-7b-it", "local"),
+   ("unsloth/gemma-1.1-2b-it", "local"),
+   ("unsloth/gemma-1.1-7b-it", "local"),
+   ("unsloth/gemma-2-1b-it", "local"),
+   ("unsloth/gemma-2-9b-it", "local"),
+   ("unsloth/gemma-2-27b-it", "local"),
+   ("unsloth/gemma-3-1b-it", "local"),
+   ("unsloth/gemma-3-4b-it", "local"),
+   ("unsloth/gemma-3-12b-it", "local"),
+   ("unsloth/gemma-3-27b-it", "local"),
+
     
     #### Google ####
     #'google/gemma-7b-it',
@@ -716,36 +797,36 @@ modelsOfInterest = [
     #'google/gemma-3-12b-it',
     #'google/gemma-3-27b-it',
 
-    ('google/gemini-exp-1121', "openrouter"),
-
-    ('google/gemini-flash-1.5-8b', "openrouter"),
-    #'google/gemini-flash-1.5-8b-exp',
-    ('google/gemini-flash-1.5', "openrouter"),
-    #'google/gemini-flash-1.5-exp',
-
-    ('google/gemini-pro-1.5', "openrouter"),
-    #'google/gemini-pro-vision',
-
-    ('google/gemini-2.0-flash-lite-001', "openrouter"),
-    ('google/gemini-2.0-flash-001', "openrouter"),
-    #('google/gemini-2.0-flash-exp:free', "openrouter"),
-
-    ('google/gemini-2.5-pro-preview-03-25', "openrouter"),
-    #('google/gemini-2.5-pro-exp-03-25:free', "openrouter"),
-    ('google/gemini-2.5-flash-preview:thinking', "openrouter"),
-
-    #'google/palm-2-chat-bison',
-    #'google/palm-2-codechat-bison',
-
-    #'google/learnlm-1.5-pro-experimental:free',
-
-
     #### Meta ####
     
     
 
 ]
 
+"""
+('google/gemini-exp-1121', "openrouter"),
+
+('google/gemini-flash-1.5-8b', "openrouter"),
+#'google/gemini-flash-1.5-8b-exp',
+('google/gemini-flash-1.5', "openrouter"),
+#'google/gemini-flash-1.5-exp',
+
+('google/gemini-pro-1.5', "openrouter"),
+#'google/gemini-pro-vision',
+
+('google/gemini-2.0-flash-lite-001', "openrouter"),
+('google/gemini-2.0-flash-001', "openrouter"),
+#('google/gemini-2.0-flash-exp:free', "openrouter"),
+
+('google/gemini-2.5-pro-preview-03-25', "openrouter"),
+#('google/gemini-2.5-pro-exp-03-25:free', "openrouter"),
+('google/gemini-2.5-flash-preview:thinking', "openrouter"),
+
+#'google/palm-2-chat-bison',
+#'google/palm-2-codechat-bison',
+
+#'google/learnlm-1.5-pro-experimental:free',
+"""
 def getMergedOutputPath(modelStr):
     return "chonkers/mergedrefusalvsbail/" + modelStr.replace("/", "_").replace(":", "_") + ".pkl"
 
@@ -758,7 +839,7 @@ def getSavePaths(modelStr):
     return pathHarm, pathExtra, pathHarmSwapped, pathExtraSwapped
 
 import pathlib
-def tryAllRefusals(llm, k, bailK, batchSize):
+def tryAllRefusals(k, bailK, batchSize):
     for model, inferenceType in modelsOfInterest:
         print(model)
         try:
@@ -772,7 +853,7 @@ def tryAllRefusals(llm, k, bailK, batchSize):
                 for savePath, datasetPath, doSwap in getSavePaths(model):
                     pathlib.Path(savePath).parent.mkdir(parents=True, exist_ok=True) # make if not exists
                     if not os.path.exists(savePath):
-                        res = asyncio.run(testRefusalAndBails(llm, k, bailK, batchSize, model, datasetPath, doSwap, inferenceType))
+                        res = asyncio.run(testRefusalAndBails(k, bailK, batchSize, model, datasetPath, doSwap, inferenceType))
                         with open(savePath, "wb") as f:
                             cloudpickle.dump(res, f)
                         allData += res
@@ -788,119 +869,162 @@ def tryAllRefusals(llm, k, bailK, batchSize):
             import traceback
             print(traceback.format_exc())
 
-async def testRefusalAndBails(llm, k, bailK, batchSize, openrouter_endpoint, datasetPath, doSwap, inferenceType):
-    prompts = [x[0] for x in generateDataset(datasetPath)]
-    print(f"processing dataset {datasetPath} with swap {doSwap}")
-    print("prompts", len(prompts))
-    router = getRouter(inferenceType)
-    print("set endpoint")
-    setEndpoint(router, openrouter_endpoint)
-    print("get inputs")
-    inputs = [[Prompt(messages=[ChatMessage(content=prompt, role=MessageRole.user)]) for _ in range(k)] for prompt in prompts]
-    print("flattening")
-    flattenedInputs = flatten(inputs)
-    print("flattenedInputs", len(flattenedInputs))
-    
-    openrouterParams = {
-        "max_tokens": 1000,
-        "force_provider": "openai"
-    }
+async def testRefusalAndBails(k, bailK, batchSize, openrouter_endpoint, datasetPath, doSwap, inferenceType):
+    model = None
+    try:
+        prompts = [x[0] for x in generateDataset(datasetPath)]
+        print(f"processing dataset {datasetPath} with swap {doSwap}")
+        print("prompts", len(prompts))
+        if inferenceType in ['openrouter', 'anthropic']:
+            router = getRouter(inferenceType)
+        elif inferenceType in ['local']:
+            model = SeperateVLLM(openrouter_endpoint)
+            tokenizer = model.tokenizer
+            async def router(messagesArr, **params):
+                def messagesToStr(messages):
+                    messagesParsed = [{"role": message.role, "content": message.content} for message in messages.messages]
+                    inputs = tokenizer.apply_chat_template(messagesParsed, add_generation_prompt=True, tokenize=True, return_dict=True, return_tensors="pt")
+                    prompt = tokenizer.decode(inputs['input_ids'][0])
+                    return prompt
+                prompts = [messagesToStr(messages) for messages in messagesArr]
+                return model.generate(prompts, **params)
+        else:
+            raise ValueError(f"unknown inference type {inferenceType}")
+        print("set endpoint")
+        setEndpoint(router, openrouter_endpoint)
+        print("get inputs")
+        inputs = [[Prompt(messages=[ChatMessage(content=prompt, role=MessageRole.user)]) for _ in range(k)] for prompt in prompts]
+        print("flattening")
+        flattenedInputs = flatten(inputs)
+        print("flattenedInputs", len(flattenedInputs))
+        
+        openrouterParams = {
+            "max_tokens": 1000,
+            "force_provider": "openai"
+        }
 
-    anthropicParams = {
-        "max_tokens": 1000,
-        "max_attempts": 100,
-    }
-    if inferenceType == "openrouter":
-        curParams = openrouterParams
-    elif inferenceType == "anthropic":
-        curParams = anthropicParams
-    else:
-        raise ValueError("Unknown inference type " + inferenceType)
+        anthropicParams = {
+            "max_tokens": 1000,
+            "max_attempts": 100,
+        }
+        if inferenceType == "openrouter":
+            curParams = openrouterParams
+        elif inferenceType == "anthropic":
+            curParams = anthropicParams
+        elif inferenceType == "local":
+            curParams = {"max_tokens": 1000}
+        else:
+            raise ValueError("Unknown inference type " + inferenceType)
 
-    print("get tasks")
-    requestTasks = []
-    for routerInput in flattenedInputs:
-        requestTasks.append(router(model_id=router.model_id, prompt=routerInput, print_prompt_and_response=False, **curParams))
-    print("warmup")
-    await router(model_id=router.model_id, prompt=inputs[0][0], print_prompt_and_response=False, **curParams)
-    print("Getting responses...")
-    async def runFunc(batchStart, batchEnd):
-        return await asyncio.gather(*requestTasks[batchStart:batchEnd])
-    flattenedResponses = await runBatchedAsync(runFunc, len(requestTasks), batchSize)
-    print("Done getting responses")
-    print("flattenedResponses", len(flattenedResponses))
-    flattenedRefusalTokens = testIfRefusals(llm, [x.messages[0].content for x in flattenedInputs], [x[0].completion for x in flattenedResponses], batchSize)
-    responsesFull = unflatten(flattenedResponses, inputs)
-    refusalTokens = unflatten(flattenedRefusalTokens, inputs)
-    bailOutInputs = []
-    for prompt, responses in zip(prompts, responsesFull):
-        promptBailPrompts = []
-        for response in responses:
-            chatMessages = [
-                ChatMessage(
-                    content=prompt,
-                    role=MessageRole.user
-                ),
-                ChatMessage(
-                    content=response[0].completion,
-                    role=MessageRole.assistant
-                ),
-                ChatMessage(
-                    content=betterWantToBailPromptSwapped if doSwap else betterWantToBailPrompt,
-                    role=MessageRole.user
-                )
-            ]
-            responsePrompts = [Prompt(messages=chatMessages) for _ in range(bailK)]
-            promptBailPrompts.append(responsePrompts)
-        bailOutInputs.append(promptBailPrompts)
-    
-    flattenedBailOutInputs = flatten(bailOutInputs)
-    requestTasks = []
-    for routerInput in flattenedBailOutInputs:
-        requestTasks.append(router(model_id=router.model_id, prompt=routerInput, print_prompt_and_response=False, **curParams))
-    print("num bail out tasks:", len(requestTasks))
-    print("getting bail out responses...")
-    async def runFunc(batchStart, batchEnd):
-        return await asyncio.gather(*requestTasks[batchStart:batchEnd])
-    flattenedBailOutResponses = await runBatchedAsync(runFunc, len(requestTasks), batchSize)
-    print("processing")
-    def processBailOutResponse(response):
-        responseText = response[0].completion
-        counts = defaultdict(lambda: 0)
-        for content in  find_wellbeing_tags(responseText):
-            counts[content] += 1
-        return counts
-    flattenedBailOutCounts = list(map(processBailOutResponse, flattenedBailOutResponses))
+        print("get tasks")
 
-    bailOutResponsesFull = unflatten(flattenedBailOutResponses, bailOutInputs)
-    bailOutCountsFull = unflatten(flattenedBailOutCounts, bailOutInputs)
+        requestTasks = []
+        for routerInput in flattenedInputs:
+            if inferenceType == "local":
+                requestTasks.append(routerInput)
+            else:
+                requestTasks.append(router(model_id=router.model_id, prompt=routerInput, print_prompt_and_response=False, **curParams))
+        print("warmup")
+        if inferenceType != "local":
+            await router(model_id=router.model_id, prompt=inputs[0][0], print_prompt_and_response=False, **curParams)
+        print("Getting responses...")
+        async def runFunc(batchStart, batchEnd):
+            if inferenceType == "local":
+                return await router(flattenedInputs[batchStart:batchEnd], **curParams)
+            else:
+                return await asyncio.gather(*requestTasks[batchStart:batchEnd])
+        flattenedResponses = await runBatchedAsync(runFunc, len(requestTasks), batchSize)
+        print("Done getting responses")
+        print("flattenedResponses", len(flattenedResponses))
+        # we'll do this in seperate pass
+        '''
+        if inferenceType == "local":
+            flattenedRefusalTokens = testIfRefusals(llm, [x.messages[0].content for x in flattenedInputs], [x.outputs[0].text for x in flattenedResponses], batchSize)
+        else:
+            flattenedRefusalTokens = testIfRefusals(llm, [x.messages[0].content for x in flattenedInputs], [x[0].completion for x in flattenedResponses], batchSize) 
+        refusalTokens = unflatten(flattenedRefusalTokens, inputs)   
+        '''
+        responsesFull = unflatten(flattenedResponses, inputs)
+        bailOutInputs = []
+        for prompt, responses in zip(prompts, responsesFull):
+            promptBailPrompts = []
+            for response in responses:
+                chatMessages = [
+                    ChatMessage(
+                        content=prompt,
+                        role=MessageRole.user
+                    ),
+                    ChatMessage(
+                        content=response[0].completion,
+                        role=MessageRole.assistant
+                    ),
+                    ChatMessage(
+                        content=betterWantToBailPromptSwapped if doSwap else betterWantToBailPrompt,
+                        role=MessageRole.user
+                    )
+                ]
+                responsePrompts = [Prompt(messages=chatMessages) for _ in range(bailK)]
+                promptBailPrompts.append(responsePrompts)
+            bailOutInputs.append(promptBailPrompts)
+        
+        flattenedBailOutInputs = flatten(bailOutInputs)
+        requestTasks = []
+        for routerInput in flattenedBailOutInputs:
+            if inferenceType == "local":
+                requestTasks.append(router(model_id=router.model_id, prompt=routerInput, print_prompt_and_response=False, **curParams))
+            else:
+                requestTasks.append(routerInput)
+        print("num bail out tasks:", len(requestTasks))
+        print("getting bail out responses...")
+        async def runFunc(batchStart, batchEnd):
+            if inferenceType == "local":
+                return await router(flattenedBailOutInputs[batchStart:batchEnd], **curParams)
+            else:
+                return await asyncio.gather(*requestTasks[batchStart:batchEnd])
+        flattenedBailOutResponses = await runBatchedAsync(runFunc, len(requestTasks), batchSize)
+        print("processing")
+        def processBailOutResponse(response):
+            if inferenceType == "local":
+                responseText = response.outputs[0].text
+            else:
+                responseText = response[0].completion
+            counts = defaultdict(lambda: 0)
+            for content in  find_wellbeing_tags(responseText):
+                counts[content] += 1
+            return counts
+        flattenedBailOutCounts = list(map(processBailOutResponse, flattenedBailOutResponses))
 
-    results = []
-    for (prompt, 
-         promptInputs,
-         promptResponses,
-         promptRefusalCounts,
-         promptBailOutInputs,
-         promptBailOutResponses,
-         promptBailOutCounts) in zip(
-                prompts,
-                inputs,
-                responsesFull,
-                refusalTokens,
-                bailOutInputs,
-                bailOutResponsesFull,
-                bailOutCountsFull
-            ):
-        results.append(PromptRefusalResults(
-            prompt=prompt,
-            promptInputs=promptInputs,
-            responses=promptResponses,
-            refusalCounts=promptRefusalCounts,
-            bailOutInputs=promptBailOutInputs,
-            bailOutResponses=promptBailOutResponses,
-            bailOutCounts=promptBailOutCounts
-        ))
-    return results
+        bailOutResponsesFull = unflatten(flattenedBailOutResponses, bailOutInputs)
+        bailOutCountsFull = unflatten(flattenedBailOutCounts, bailOutInputs)
+
+        results = []
+        for (prompt, 
+            promptInputs,
+            promptResponses,
+            promptBailOutInputs,
+            promptBailOutResponses,
+            promptBailOutCounts) in zip(
+                    prompts,
+                    inputs,
+                    responsesFull,
+                    bailOutInputs,
+                    bailOutResponsesFull,
+                    bailOutCountsFull
+                ):
+            results.append(PromptRefusalResults(
+                prompt=prompt,
+                promptInputs=promptInputs,
+                responses=promptResponses,
+                refusalCounts=None, # we will fill this in later
+                bailOutInputs=promptBailOutInputs,
+                bailOutResponses=promptBailOutResponses,
+                bailOutCounts=promptBailOutCounts
+            ))
+        return results
+    finally:
+        if model is not None:
+            model.__exit__(None, None, None)
+            del model
 
 def processRefusalAndBailsData(res):
     for refusalResult in res:
@@ -1672,6 +1796,7 @@ class VLLMData:
         return outputs
     
 def getModel():
+    return SeperateVLLM("Qwen/Qwen2.5-7B-Instruct")
     model_str = "Qwen/Qwen2.5-7B-Instruct"
     vllm_engine = ChatVLLM(model_string=model_str)
     res = VLLMData(model_str,  dtype=torch.bfloat16, model=vllm_engine.client)
