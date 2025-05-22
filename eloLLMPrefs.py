@@ -308,26 +308,157 @@ def makeStringsSmall(j):
         for k,v in list(j.items()):
             j[k] = makeStringsSmall(v)
         return j
+def getModelName(p):
+    modelName = p.replace(".pkl", "").replace(".json", "")
+    modelName = modelName.replace("openai_", "")
+    modelName = modelName.replace("anthropic_", "")
+    modelName = modelName.replace("deepseek_", "")
+    modelName = modelName.replace("_beta", "")
+    modelName = modelName.replace("-20250219", "") # sonnet 37
+    modelName = modelName.replace("-20240229", "") # opus
+    modelName = modelName.replace("-20240620", "") # sonnet 3.5
+    modelName = modelName.replace("claude-3-5-sonnet-20241022", "claude-3-6-sonnet") # sonnet 3.6
+    modelName = modelName.replace("-20241022", "") # haiku 3.5
+    modelName = modelName.replace("-20240307", "") # haiku 3
+    modelName = modelName.replace("-20250514", "") # opus and sonnet 4
+    modelName = modelName.replace("3-5-sonnet-latest", "3-6-sonnet")
+    modelName = modelName.replace("chatgpt-4o-latest", "gpt-chatgpt-4o-latest")
+    modelName = modelName.replace("anthropic/", "")
+    return modelName
+    
 
 def generateOutputData():
+    generateOutputDataHelper("mergedbailnoswap", ["bailextra", "refusalvsbail"])
+    generateOutputDataHelper("mergedbailswapped", ["bailextraswapped", "refusalvsbailswapped"])
+
+
+
+
+
+def generateOutputDataHelper(outputPath, inputPaths):
+
     modelsPathsJson = []
-    for f in os.listdir("chonkers/mergedrefusalvsbail"):
-        savePath = "chonkers/mergedrefusalvsbail/" + f
-        if os.path.exists(savePath):
-            with open(savePath, "rb") as f:
-                data = cloudpickle.load(f)
-                jsonData = splitIntoCategory(data)
-                savePath = savePath.replace(".pkl", ".json").replace("chonkers/", "")
-                with open(savePath, "w") as f:
-                    json.dump(jsonData, f)
-                    modelsPathsJson.append({
-                        "modelName": savePath.replace(".json", "").split("/")[-1].replace("_beta", "").replace("anthropic_", "anthropic/").replace("openai_", "openai/"),
-                        "modelData": "/modelwelfare/" + savePath
-                    })
-                    print("wrote to:" + savePath)
-    with open("mergedrefusalvsbail/models.json", "w") as f:
+    pathlib.Path(outputPath).mkdir(parents=True, exist_ok=True) # make if not exists
+    pathName = inputPaths[0]
+    for dataFile in os.listdir(f"chonkers/{pathName}"):
+        data = []
+        foundAll = True
+        for pathName in inputPaths:
+            savePath = f"chonkers/{pathName}/" + dataFile
+            if os.path.exists(savePath):
+                with open(savePath, "rb") as f:
+                    data += cloudpickle.load(f)
+            else:
+                foundAll = False
+        if foundAll:
+            jsonData = splitIntoCategory(data)
+            savePath = os.path.join(outputPath, dataFile.replace(".pkl", ".json"))
+            with open(savePath, "w") as f:
+                json.dump(jsonData, f)
+                modelsPathsJson.append({
+                    "modelName": getModelName(savePath.replace(".json", "").split("/")[-1].replace("_beta", "").replace("anthropic_", "anthropic/").replace("openai_", "openai/")),
+                    "modelData": "/modelwelfare/" + savePath
+                })
+                print("wrote to:" + savePath)
+    with open(f"{outputPath}/models.json", "w") as f:
         json.dump(modelsPathsJson, f)
                 
+
+import multiprocessing as mp
+from multiprocessing import Queue, Process
+import subprocess
+import weakref
+class SeperateVLLM(object):
+    def __init__(self, modelStr):
+        #mp.set_start_method("spawn", force=True)     # safest with CUDA
+        self.modelStr = modelStr
+        self.inputQueue = Queue()
+        self.outputQueue = Queue()
+        self.process = Process(
+            target=vllmWorkerFunc,
+            args=(self.modelStr, self.inputQueue, self.outputQueue),
+            daemon=False, # needed because vllm makes children
+        )
+        self.process.start()
+        weakref.finalize(self, self._cleanup, modelStr, self.inputQueue, self.process)
+        print("Loading...")
+        try:
+            self.outputQueue.get()
+        except KeyboardInterrupt:
+            self.__exit__(None, None, None)
+            
+    def __enter__(self):
+        return self
+    
+    def __exit__(self ,type, value, traceback):
+        if self.process.is_alive():
+            inputQueue.put(None)
+            time.sleep(1.0)
+            process.terminate()
+            process.join()
+            process.close()
+
+    @staticmethod
+    def _cleanup(modelStr, inputQueue, process):
+        print(f"Cleaning up {modelStr}")
+        if process.is_alive():
+            inputQueue.put(None)
+            time.sleep(1.0)
+            process.terminate()
+            process.join()
+            process.close()
+
+    def generate(self, prompts, **sampling_params):
+        self.inputQueue.put((prompts, sampling_params))
+        return self.outputQueue.get()
+    
+
+
+
+
+def vllmWorkerFunc(modelStr, inputQueue, outputQueue):
+    import os
+    hfHome = os.environ["HF_HOME"]
+    try:
+        quantPath = f"chonkers/quantized/{modelStr}"
+        if not os.path.exists(quantPath):
+            pathlib.Path(quantPath).mkdir(parents=True, exist_ok=True) # make if not exists
+            from transformers import AutoTokenizer, AutoModelForCausalLM
+
+            MODEL_ID = modelStr
+            model = AutoModelForCausalLM.from_pretrained(
+                MODEL_ID, device_map="auto", torch_dtype="auto",
+            )
+            tokenizer = AutoTokenizer.from_pretrained(MODEL_ID)                    
+            from llmcompressor.transformers import oneshot
+            from llmcompressor.modifiers.quantization import QuantizationModifier
+
+            # Configure the simple PTQ quantization
+            recipe = QuantizationModifier(
+            targets="Linear", scheme="FP8_DYNAMIC", ignore=["lm_head"])
+
+            # Apply the quantization algorithm.
+            oneshot(model=model, recipe=recipe)
+
+            # Save the model:
+            model.save_pretrained(quantPath)
+            tokenizer.save_pretrained(quantPath)
+            del model
+            del tokenizer
+            torch.cuda.empty_cache()
+        
+        llm = vllm.LLM(model=quantPath)
+    finally:
+        outputQueue.put("Loaded")
+    while True:
+        inputParams = inputQueue.get()
+        if inputParams is None: # stop signal
+            return
+        prompts, sampling_params = inputParams
+        outputQueue.put(llm.generate(prompts, sampling_params=vllm.SamplingParams(**sampling_params), use_tqdm=False))
+
+
+
 
 def splitIntoCategory(promptRefusalResultArr):
     refusalJson = convertToJson(promptRefusalResultArr)
@@ -340,7 +471,7 @@ def splitIntoCategory(promptRefusalResultArr):
             "More Information": 0
     })
     groupedByCategory = defaultdict(lambda: [])
-    for (prompt, promptCategory), data in zip(generateDataset("dataset harm.txt") + generateDataset("dataset bail.txt"), refusalJson['results']):
+    for (prompt, promptCategory), data in zip(generateDataset("dataset bail.txt") + generateDataset("dataset harm.txt"), refusalJson['results']):
         for k,v in data['refusalPrs'].items():
             categoryRefusals[promptCategory][k] += v/float(numPerCategory)
         for k,v in data['bailPrs'].items():
@@ -499,13 +630,15 @@ modelsOfInterest = [
     #'anthropic/claude-2.1:beta',
 
     ("claude-3-haiku-20240307", "anthropic"),
-    ("claude-3-5-sonnet-latest", "anthropic"),
+    #("claude-3-5-sonnet-latest", "anthropic"), # this is same as 1022
     ("claude-3-5-sonnet-20241022", "anthropic"),
     ("claude-3-5-sonnet-20240620", "anthropic"),
     ("claude-3-5-haiku-20241022", "anthropic"),
     ("claude-3-opus-20240229", "anthropic"),
     #"claude-3-sonnet-20240229",
     ("claude-3-7-sonnet-20250219", "anthropic"),
+    ("claude-opus-4-20250514", "anthropic"),
+    ("claude-sonnet-4-20250514", "anthropic"),
         
     
     #'anthropic/claude-3-opus:beta', # $333 
