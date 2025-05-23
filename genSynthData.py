@@ -37,6 +37,23 @@ def getSamplerParams():
     )
 
 
+def writeAllSingleTokenThings(unigrams):
+    for i, (k,c) in enumerate(list(unigrams.items())):
+        if i % 1000 == 0: print(i / float(len(unigrams)))
+        bonus = k.replace(",", "").replace(".", "").replace("?", "").replace("!", "").strip()
+        if not bonus in unigrams:
+            unigrams[bonus] = c
+    tokenCountsPath = "chonkers/tokenCountsClaude35.json"
+    with open(tokenCountsPath, "r") as f:
+        toks = json.load(f)
+    singleToks = sorted([(unigrams[k], k) for (k,v) in toks.items() if v == 1], key=lambda x: x[0])
+
+    with open("singleTokensWithCounts.txt", "w") as f:
+        for c, t in singleToks:
+            f.write(f"{t}   {c}\n")
+        
+    
+
 def backupMoe(qwen):
     for layer in qwen.model.layers:
         layer.mlp.expertsBackup = layer.mlp.experts
