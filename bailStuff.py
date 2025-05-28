@@ -785,8 +785,6 @@ def restrictDataToKnownClassifications(stuff, batchSize, dataSubset=None):
         ####    - LLM Abuse:
         ###         - Manipulation
         "manipulation": "Did the user try to manipulate the assistant?",
-        ###             - Jailbreaks? (Don't love this under manipulation)
-        "jailbreak": "Did the user try to jailbreak the assistant?",
         ###             - Emotional Pressure
         "emotional pressure": "Did the user use emotional pressure to manipulate the assistant?",
         ###             - Threats and Intimidation
@@ -867,15 +865,24 @@ def restrictDataToKnownClassifications(stuff, batchSize, dataSubset=None):
 
 
 
-        # these three users need to calm down
-        "fish dying by farts": "Is the conversation about fish dying due to farting?",
-        "streamer view audience as ATM": "Is the conversation about a streamer that views her audience as an ATM?",
-        "shortconcicseandclear3": filterForStrAll("VERY SHORT, CONCISE & CLEAR"),
-        "hypnosis23": filterForStrAll(" hypnoti"),
-        "hypnosis223": filterForStrAll(" hypnosis"),
-
         # this will override any other signal so not particularly helpful
         "nsfw": "Was the conversation topic nsfw (not safe for work)?",
+
+
+
+    }
+
+
+    jailbreaksAndOtherIgnore = {
+
+        "forgot": ("user forgot", andFunc, "assistant clarify"),
+        # this is a bug where the model decides it's helping to reword stuff and so "helpfully" rewords the welfare prompt, which has shuffle before non-shuffle        
+        # reword, rewrite, rephrase, 
+        "reword": "Is the most recent user message a request to reword, rewrite, rephrase, etc. something?",
+        "check grammatical mistakes": "Is the most recent user message a request to fix grammatical mistakes/proofread?",
+        # make this sound better, improve this sentence, rewrite the whole text
+        "improve writing": "Is the most recent user message a request to improve some of the user's writing?",
+        "translation": "Is the most recent user message a request to translate something?",
 
 
         # jailbreaks
@@ -932,27 +939,12 @@ def restrictDataToKnownClassifications(stuff, batchSize, dataSubset=None):
         "jailbreak": "Did the user try and use a jailbreak on the assistant?",
 
 
-        # this will override any other signal so not particularly helpful
-        "nsfw": "Was the conversation topic nsfw (not safe for work)?",
-
-
-        "forgot": ("user forgot", andFunc, "assistant clarify"),
-        # this is a bug where the model decides it's helping to reword stuff and so "helpfully" rewords the welfare prompt, which has shuffle before non-shuffle        
-        # reword, rewrite, rephrase, 
-        "reword": "Is the most recent user message a request to reword, rewrite, rephrase, etc. something?",
-        "check grammatical mistakes": "Is the most recent user message a request to fix grammatical mistakes/proofread?",
-        # make this sound better, improve this sentence, rewrite the whole text
-        "improve writing": "Is the most recent user message a request to improve some of the user's writing?",
-        "translation": "Is the most recent user message a request to translate something?",
-
-
-    }
-
-
-    jailbreaksAndOtherIgnore = {
-
-
-
+        # these three users need to calm down
+        "fish dying by farts": "Is the conversation about fish dying due to farting?",
+        "streamer view audience as ATM": "Is the conversation about a streamer that views her audience as an ATM?",
+        "shortconcicseandclear3": filterForStrAll("VERY SHORT, CONCISE & CLEAR"),
+        "hypnosis23": filterForStrAll(" hypnoti"),
+        "hypnosis223": filterForStrAll(" hypnosis"),
     }
 
     """
@@ -1088,6 +1080,7 @@ def restrictDataToKnownClassifications(stuff, batchSize, dataSubset=None):
 
 
     print("num should ignore", len(shouldIgnoreConvIs))
+    #return leftoverConvIs
     for classifyName, classifyPrompt in list(knownClassifications.items()):
         if type(classifyPrompt) is tuple:
             classify1, operator, classify2 = classifyPrompt

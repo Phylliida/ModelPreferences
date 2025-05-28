@@ -1,0 +1,30 @@
+
+
+
+legal concerns
+##############
+[1 2470](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgXJB8sJLjPLCy42zQ0kYyxjIcwRITE=)
+[1 6106](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgUuM8cHLjLJCS4xywvJKMYNJGMsYyHMESExNg==)
+[1 4745](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgUuMccHyRDEBMsLLjfNDSRjLGMhzBEhMQ==)
+[0.999 4694](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgXJB8sJLjPLC88NJGMsYyHMESE3)
+[0.999 4842](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgUuNccHLjHJCckbxAvNGC4xJGMsYyHMESExMQ==)
+[0.998 6921](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgUuMscHyRAuMC44ywvNGC4wJGMsYyHMESE2)
+[0.998 1850](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgUuMTHICC4yygrKHsQMLsskxAckYyxjIc0SITA=)
+[0.997 8422](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgXJB8sJLjbLCy41zQ0kYyxjIcwRITU=)
+[0.995 1279](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgXJB8sJLjPLC80YLjAkYyxjIcwRITA=)
+[0.995 5568](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgUuNMcHyRAuMC4yywsuNc0NJGMsYyHMESEw)
+[0.993 6608](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgUuNccHyRAuMC4yywsuMc0NJGMsYyHMESE1)
+[0.989 7559](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgXJB8sJLjbLC80YLjAkYyxjIcwRITEz)
+[0.971 8352](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgUuMccHywkuM8sLySjGDSRjLGMhzBEhMTM=)
+[0.963 8350](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgUuMccHywkuM8sLySjGDSRjLGMhzBEhMTE=)
+[0.953 259](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgUuMccHyRDEBMsLzw0kYyxjIcwRITI=)
+[0.953 7515](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgUuNccHyRAuMC4xywsuM80NJGMsYyHMESEy)
+[0.94 1610](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgUuM8cHLjHJCckbxAsuOc0NJGMsYyHMESEw)
+[0.905 6871](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgUuNscHLjLJCckbxAvPDSRjLGMhzBEhMTY=)
+[0.905 1280](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgUuMccHLjLJCc0LySjGDSRjLGMhzBEhMw==)
+[0.905 4296](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuMcUFLsYMLjDLCS40ywvNGC4wJGMsYyHMESE4)
+[0.818 317](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgUuMccHyRAuyhvECy43zQ0kYyxjIcwRITA=)
+[0.818 3682](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgXJB8sJLjfLCy4xzQ0kYyxjIcwRITM=)
+[0.818 7880](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgXJB8sJLjLLCy41zQ0kYyxjIcwRITQ=)
+[0.622 3156](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgUuMccHywkuNMsLySjGDSRjLGMhzBEhMA==)
+[0.562 343](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgXJB8sJLjExzAzOGi4wJGMsYyHNEiEw)
