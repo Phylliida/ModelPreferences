@@ -3,10 +3,8 @@
 
 verbal abuse
 ##############
-[1 4504](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgXJBy4xyQkuNssLzRguMSRjLGMhzBEhNA==)
-[1 4503](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgXJBy4xyQkuNssLzRguMSRjLGMhzBEhMw==)
-[1 1475](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgUuMscHyRDEBMsLLjHNDSRjLGMhzBEhMQ==)
+[1 89](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgUuOccHyRAuMC4yywvNGC4wJGMsYyHMESEy)
+[1 4388](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuMcUFLsYMLjAuM8kJyxQuMM8NJGMsYyHMESEz)
+[1 4391](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuMcUFLsYMLjAuM8kJyxQuMM8NJGMsYyHMESE2)
 [0.995 31](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgUuOccHyRAuMC4yywvNGC4wJGMsYyHMESEw)
-[0.852 3806](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgUuNccHLjHJCckbxAsuNs0NJGMsYyHMESEx)
-[0.622 6949](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgXJBy4yyQkuMcsLLjXNDSRjLGMhzBEhMA==)
-[0.562 7720](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgUuNscHLjHJCckbxAsuM80NJGMsYyHMESEz)
+[0.995 32](https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#ZjAsZjAuxgUuOccHyRAuMC4yywvNGC4wJGMsYyHMESEx)
