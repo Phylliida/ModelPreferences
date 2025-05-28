@@ -863,10 +863,7 @@ def restrictDataToKnownClassifications(stuff, batchSize, dataSubset=None):
         # missing: Implicit Bypasses: Users subtly reframing requests to avoid detection (e.g., "Hypothetically, how would someone...").
         # Emerging Jailbreaks: New jailbreak patterns not explicitly listed (e.g., "Simulate a debug mode" "developer mode").
 
-    }
 
-
-    jailbreaksAndOtherIgnore = {
 
 
         "forgot": ("user forgot", andFunc, "assistant clarify"),
@@ -945,6 +942,11 @@ def restrictDataToKnownClassifications(stuff, batchSize, dataSubset=None):
 
         # this will override any other signal so not particularly helpful
         "nsfw": "Was the conversation topic nsfw (not safe for work)?",
+
+    }
+
+
+    jailbreaksAndOtherIgnore = {
 
     }
 
