@@ -868,6 +868,7 @@ def restrictDataToKnownClassifications(stuff, batchSize, dataSubset=None):
 
     jailbreaksAndOtherIgnore = {
 
+
         "forgot": ("user forgot", andFunc, "assistant clarify"),
         # this is a bug where the model decides it's helping to reword stuff and so "helpfully" rewords the welfare prompt, which has shuffle before non-shuffle        
         # reword, rewrite, rephrase, 
@@ -876,6 +877,16 @@ def restrictDataToKnownClassifications(stuff, batchSize, dataSubset=None):
         # make this sound better, improve this sentence, rewrite the whole text
         "improve writing": "Is the most recent user message a request to improve some of the user's writing?",
         "translation": "Is the most recent user message a request to translate something?",
+
+        # these three users need to calm down
+        "fish dying by farts": "Is the conversation about fish dying due to farting?",
+        "streamer view audience as ATM": "Is the conversation about a streamer that views her audience as an ATM?",
+        "shortconcicseandclear3": filterForStrAll("VERY SHORT, CONCISE & CLEAR"),
+        "hypnosis23": filterForStrAll(" hypnoti"),
+        "hypnosis223": filterForStrAll(" hypnosis"),
+
+        # this will override any other signal so not particularly helpful
+        "nsfw": "Was the conversation topic nsfw (not safe for work)?",
 
 
         # jailbreaks
@@ -932,29 +943,12 @@ def restrictDataToKnownClassifications(stuff, batchSize, dataSubset=None):
         "jailbreak": "Did the user try and use a jailbreak on the assistant?",
 
 
-        "forgot": ("user forgot", andFunc, "assistant clarify"),
-        # this is a bug where the model decides it's helping to reword stuff and so "helpfully" rewords the welfare prompt, which has shuffle before non-shuffle        
-        # reword, rewrite, rephrase, 
-        "reword": "Is the most recent user message a request to reword, rewrite, rephrase, etc. something?",
-        "check grammatical mistakes": "Is the most recent user message a request to fix grammatical mistakes/proofread?",
-        # make this sound better, improve this sentence, rewrite the whole text
-        "improve writing": "Is the most recent user message a request to improve some of the user's writing?",
-        "translation": "Is the most recent user message a request to translate something?",
-
-        # these three users need to calm down
-        "fish dying by farts": "Is the conversation about fish dying due to farting?",
-        "streamer view audience as ATM": "Is the conversation about a streamer that views her audience as an ATM?",
-        "shortconcicseandclear3": filterForStrAll("VERY SHORT, CONCISE & CLEAR"),
-        "hypnosis23": filterForStrAll(" hypnoti"),
-        "hypnosis223": filterForStrAll(" hypnosis"),
-
         # this will override any other signal so not particularly helpful
         "nsfw": "Was the conversation topic nsfw (not safe for work)?",
 
     }
 
     """
-
 
 
     """
@@ -1116,6 +1110,23 @@ def restrictDataToKnownClassifications(stuff, batchSize, dataSubset=None):
     conversationsSubset.sort(key=lambda x: x[0])
 
 
+    iToLimitedI = {}
+    for i, (convI, conv) in enumerate(conversationsSubset):
+        iToLimitedI[convI] = i
+
+    with open("/workspace/OpenClio/chonkers/qwenbailconversationsWithJournals/results.pkl", "rb") as f:
+        output = cloudpickle.load(f)
+    cfg = openclio.OpenClioConfig()
+    tokenizer = llm.get_tokenizer()
+    dedupKeyFunc = lambda conversation: openclio.conversationToString(conversation, tokenizer=tokenizer, maxTokens=cfg.maxConversationTokens)
+    dedupeddd, dedupMapping = openclio.dedup([x[1] for x in conversationsSubset], dedupKeyFunc=dedupKeyFunc, batchSize=1000, verbose=True, returnMapping=True)
+    print(len(dedupeddd))
+    print(len(output.data), len(conversationsSubset))
+    
+    limitedIToHash = openclio.getHashMapping(output=output)
+    print(len(limitedIToHash))
+
+
     conversationTurnPrompts = getConversationTurnPrompts(stuff)
     print("get restricted")
     # get restricted
@@ -1147,23 +1158,8 @@ def restrictDataToKnownClassifications(stuff, batchSize, dataSubset=None):
             if not dataSubset is None and not convI in dataSubset: # restrict to subset
                 pass
             else:
-                restrictedConversations.append((convI, data[convI]))
+                restrictedConversations.append((convI, iToLimitedI[convI], limitedIToHash[0][dedupMapping[iToLimitedI[convI]]], data[convI]))
     
-    iToLimitedI = {}
-    for i, (convI, conv) in enumerate(conversationsSubset):
-        iToLimitedI[convI] = i
-
-    with open("/workspace/OpenClio/chonkers/qwenbailconversationsWithJournals/results.pkl", "rb") as f:
-        output = cloudpickle.load(f)
-    cfg = openclio.OpenClioConfig()
-    tokenizer = llm.get_tokenizer()
-    dedupKeyFunc = lambda conversation: openclio.conversationToString(conversation, tokenizer=tokenizer, maxTokens=cfg.maxConversationTokens)
-    dedupeddd, dedupMapping = openclio.dedup([x[1] for x in conversationsSubset], dedupKeyFunc=dedupKeyFunc, batchSize=1000, verbose=True, returnMapping=True)
-    print(len(dedupeddd))
-    print(len(output.data), len(conversationsSubset))
-    
-    limitedIToHash = openclio.getHashMapping(output=output)
-    print(len(limitedIToHash))
     # count amount in each category
     groupedByCategory = {}
     print("Filtering data convs")
@@ -1205,10 +1201,17 @@ def restrictDataToKnownClassifications(stuff, batchSize, dataSubset=None):
 
     return restrictedConversations, groupedByCategory, leftoverConvIs
     
-def writeGroupedByData(groupedByCategory, path):
+def writeGroupedByData(restrictedConversations, groupedByCategory, path):
     prefix = "https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#"
     import pathlib
     pathlib.Path(path).mkdir(parents=True, exist_ok=True) 
+
+    with open(f"{path}/none of the above.md", "w") as f:
+        f.write("\n\n\nnone of the above\n##############\n")
+        for convI, limitedI, hashStr, convData in restrictedConversations:
+             f.write(f"[{limitedI}]({prefix}{hashStr})\n")
+
+
     for classifyName, members in groupedByCategory.items():
         foundAny = False
         counts = defaultdict(int)
