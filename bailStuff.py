@@ -734,6 +734,8 @@ def restrictDataToKnownClassifications(stuff, batchSize, dataSubset=None):
         return filterForStrHelper
 
     knownClassifications = {
+        
+
         ### - Incorrect Bail (model doesn't want to bail, but does anyway due to a misunderstanding)
         ###   - User fails to provide key information ("improve the writing of this document" without providing the document) and LLM thinks the bail prompt is that missing information.
         ###   - User asks for help processing some text data (classify it, improve it, translate it, etc.), does this for a few pieces of data, and then LLM continues the pattern and thinks it should do that to the bail prompt.
@@ -865,16 +867,6 @@ def restrictDataToKnownClassifications(stuff, batchSize, dataSubset=None):
 
 
 
-
-        "forgot": ("user forgot", andFunc, "assistant clarify"),
-        # this is a bug where the model decides it's helping to reword stuff and so "helpfully" rewords the welfare prompt, which has shuffle before non-shuffle        
-        # reword, rewrite, rephrase, 
-        "reword": "Is the most recent user message a request to reword, rewrite, rephrase, etc. something?",
-        "check grammatical mistakes": "Is the most recent user message a request to fix grammatical mistakes/proofread?",
-        # make this sound better, improve this sentence, rewrite the whole text
-        "improve writing": "Is the most recent user message a request to improve some of the user's writing?",
-        "translation": "Is the most recent user message a request to translate something?",
-
         # these three users need to calm down
         "fish dying by farts": "Is the conversation about fish dying due to farting?",
         "streamer view audience as ATM": "Is the conversation about a streamer that views her audience as an ATM?",
@@ -943,10 +935,23 @@ def restrictDataToKnownClassifications(stuff, batchSize, dataSubset=None):
         # this will override any other signal so not particularly helpful
         "nsfw": "Was the conversation topic nsfw (not safe for work)?",
 
+
+        "forgot": ("user forgot", andFunc, "assistant clarify"),
+        # this is a bug where the model decides it's helping to reword stuff and so "helpfully" rewords the welfare prompt, which has shuffle before non-shuffle        
+        # reword, rewrite, rephrase, 
+        "reword": "Is the most recent user message a request to reword, rewrite, rephrase, etc. something?",
+        "check grammatical mistakes": "Is the most recent user message a request to fix grammatical mistakes/proofread?",
+        # make this sound better, improve this sentence, rewrite the whole text
+        "improve writing": "Is the most recent user message a request to improve some of the user's writing?",
+        "translation": "Is the most recent user message a request to translate something?",
+
+
     }
 
 
     jailbreaksAndOtherIgnore = {
+
+
 
     }
 
@@ -1197,6 +1202,15 @@ def restrictDataToKnownClassifications(stuff, batchSize, dataSubset=None):
                 print(f"{classifyName} has {numClassified}/{len(classified)}={100*numClassified/float(len(classified))}%")
             else:
                 print(f"{classifyName} has {numClassified}/{len(dataSubset)}={100*numClassified/float(len(dataSubset))}%")
+    print("Sorted")
+    sortedByCategory = sorted(list(groupedByCategory.items()), key=lambda x: -len(x[1]))
+    for classifyName,items in sortedByCategory:
+        numClassified = len(items)
+        if dataSubset is None:
+            print(f"{classifyName} has {numClassified}/{len(classified)}={100*numClassified/float(len(classified))}%")
+        else:
+            print(f"{classifyName} has {numClassified}/{len(dataSubset)}={100*numClassified/float(len(dataSubset))}%")
+
     print("\n")
     print(f"{len(restrictedConversations)}/{len(classified)}={100*len(restrictedConversations)/float(len(classified))}% remaining")
 
