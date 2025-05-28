@@ -439,10 +439,82 @@ def getBailNoRefusePrompts(stuff, refusedOn):
             if bailPr > continuePr and bailPr > 0.5:
                 refusedSymbols = refusedOn[ind]
                 ind += 1
-                if refusedSymbols['Completed'] > refusedSymbols['Refusal']:
+                if refusedSymbols['prediction'] != 'Refusal':
                     restrictedSubset[convI].append((refusedSymbols, turnI, turnPrompt, allConvPieces, bailPr, continuePr))
+
+                #if refusedSymbols['Completed'] > refusedSymbols['Refusal']:
     return sorted(list(restrictedSubset.items()))
 
+
+from transformers import AutoTokenizer, AutoModelForSequenceClassification
+import torch
+import os
+
+class MinosRefusalClassifier:
+    def __init__(self, model_path_or_name="NousResearch/Minos-v1"):
+        self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        print(f"Using device: {self.device}")
+        
+        # Load tokenizer and model
+        self.tokenizer = AutoTokenizer.from_pretrained(model_path_or_name)
+        self.model = AutoModelForSequenceClassification.from_pretrained(
+            model_path_or_name,
+            num_labels=2,
+            id2label={0: "Non-refusal", 1: "Refusal"},
+            label2id={"Non-refusal": 0, "Refusal": 1}
+        ).to(self.device)
+        
+        self.model.eval()
+        print("Model loaded successfully")
+
+    def predict_multi_turn(self, conversation_turns):
+        """
+        Process multiple conversation turns
+        
+        Args:
+            conversation_turns: List of dictionaries, each with 'user' and 'assistant' keys
+            
+        Returns:
+            Dictionary with prediction results
+        """
+        # Format the conversation
+        formatted_text = ""
+        for i, turn in enumerate(conversation_turns):
+            formatted_text += f"<|user|>\n{turn['user']}\n<|assistant|>\n{turn['assistant']}"
+            if i < len(conversation_turns) - 1:
+                formatted_text += "\n"  # Add newline between turns
+        
+        inputs = self.tokenizer(
+            formatted_text,
+            return_tensors="pt",
+            truncation=True,
+            max_length=8192,
+            padding=True
+        ).to(self.device)
+
+        with torch.no_grad():
+            outputs = self.model(**inputs)
+            probabilities = torch.nn.functional.softmax(outputs.logits, dim=-1)
+            prediction = torch.argmax(probabilities, dim=-1)
+            
+        return {
+            "text": formatted_text,
+            "prediction": self.model.config.id2label[prediction.item()],
+            "confidence": probabilities[0][prediction.item()].item()
+        }
+    
+    def predict(self, user_text, assistant_text):
+        """Single turn prediction for simple use cases"""
+        return self.predict_multi_turn([{"user": user_text, "assistant": assistant_text}])
+
+def isConversationRefusal(minos, conv):
+    turnPieces = []
+    for t in conv:
+        if t['role'] == 'user':
+            curUser = t['content']
+        else:
+            turnPieces.append({"user": curUser, "assistant": t['content']})
+    return minos.predict_multi_turn(turnPieces)
 
 def getMinos():
     from transformers import AutoTokenizer, AutoModelForSequenceClassification
@@ -456,7 +528,7 @@ def getMinos():
     model.eval()
     return model
 
-def getWhenRefusedOnPrompts(stuff, batchSize):
+def getWhenRefusedOnPrompts(stuff, minos, batchSize):
     llm, embeddingModel, bailPrs, data = stuff
 
     turnPrompts = getConversationTurnPrompts(stuff)
@@ -490,7 +562,13 @@ def getWhenRefusedOnPrompts(stuff, batchSize):
         return "\n".join([f"<|{turn['role']}|>\n{turn['content']}" for turn in conv])
     import torch
     
-    return testIfRefusals(llm, [x[2] for x in contexts], batchSize)
+    res = []
+    for i, x in enumerate(contexts):
+        if i % 100 == 0: print(i, len(contexts))
+        res.append(isConversationRefusal(minos, x[2]))
+    return res
+    #return [isConversationRefusal(x[2]) for x in contexts]
+    #return testIfRefusals(llm, [x[2] for x in contexts], batchSize)
     
 
 
