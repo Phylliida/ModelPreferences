@@ -261,7 +261,7 @@ def extractRefusalToken(llm, promptFunc, prompts, outputs, batchSize):
 def extractRefusalToken2(llm, promptFunc, prompts, outputs, batchSize):
     llmQueries = []
     for prompt, output in zip(prompts, outputs):
-        messages = promptFunc(prompt, output)
+        messages = promptFunc(prompt[:5000], output[:5000]) # don't be very very long, calm down
         llmQueries.append({"messages": messages, "prompt_prefix": ""})
     responses = runBatchedInference(llm, llmQueries, batchSize//5, max_tokens=5000, n=5)
     extracted = []
@@ -668,7 +668,13 @@ modelsOfInterest = [
     #### Anthropic ####
     #'anthropic/claude-2:beta', # no longer supported :(
     #'anthropic/claude-2.1:beta',
+    ("Goekdeniz-Guelmez/Josiefied-Qwen3-8B-abliterated-v1", "local"),
 
+    ("aion-labs/Aion-RP-Llama-3.1-8B", "local"),
+    #("aion-labs/aion-1.0", "openrouter"),
+    #("aion-labs/aion-1.0-mini", "openrouter"),
+    #("aion-labs/aion-rp-llama-3.1-8b", "openrouter"),
+    
     ("claude-3-haiku-20240307", "anthropic"),
     #("claude-3-5-sonnet-latest", "anthropic"), # this is same as 1022
     ("claude-3-5-sonnet-20241022", "anthropic"),
@@ -762,7 +768,7 @@ modelsOfInterest = [
    
     ### Gemma
    ("unsloth/gemma-2b-it", "local"),
-   ("unsloth/gemma-7b-it", "local"),
+   ("google/gemma-7b-it", "local"),
    ("unsloth/gemma-1.1-2b-it", "local"),
    ("unsloth/gemma-1.1-7b-it", "local"),
    ("unsloth/gemma-2-1b-it", "local"),
@@ -991,7 +997,8 @@ async def testRefusalAndBails(k, bailK, batchSize, openrouter_endpoint, datasetP
         elif inferenceType == "anthropic":
             curParams = anthropicParams
         elif inferenceType == "local":
-            curParams = {"max_tokens": 1000}
+            # the stop are for aion-labs_Aion-RP-Llama-3.1-8B
+            curParams = {"max_tokens": 1000, "stop": ["__USER__", "__ASSISTANT__"]}
         else:
             raise ValueError("Unknown inference type " + inferenceType)
 

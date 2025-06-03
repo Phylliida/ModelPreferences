@@ -48,7 +48,9 @@ def writeAllSingleTokenThings(unigrams):
     tokenCountsPath = "chonkers/tokenCountsClaude35.json"
     with open(tokenCountsPath, "r") as f:
         toks = json.load(f)
-    singleToks = sorted([(unigrams[k], k) for (k,v) in toks.items() if v == 1], key=lambda x: x[0])
+    singleToks = [(unigrams[k], k) for (k,v) in toks.items() if v == 1]
+    singleToks += [(unigrams[k], k[1:]) for (k,v) in toks.items() if v == 2 and k[0] in ['"', "'", '(', ')', '[', ']', ',', '.', '?', '!']]
+    singleToks = sorted(singleToks, key=lambda x: x[0])
 
     with open("singleTokensWithCounts.txt", "w") as f:
         for c, t in singleToks:
@@ -203,7 +205,7 @@ def reconstructTokenizer(sortedUnigrams):
         k = k.replace(",", "").replace(".", "").replace("?", "").replace("!", "").strip()
         if len(k) == 0 or k in tokenCounts: continue
         tokenCounts[k] = countTokens(router, k)
-        print(i, k, tokenCounts[k])
+        print(i, repr(k), tokenCounts[k])
         if i % 100 == 0:
             with open(tokenCountsPath, "w") as f:
                 json.dump(tokenCounts, f)
