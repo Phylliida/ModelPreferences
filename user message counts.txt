@@ -1,0 +1,596 @@
+94633535 Claude Opus
+22818370 Claude 1
+19928192 Golden Gate Claude
+17187359 I-405
+15992602 Supreme Sonnet
+14672658 Claude37
+13571656 4o
+10616355 Claude Haiku
+9654774 grok
+8672682 Egr. Catalyst
+8243341 H-405
+8225164 r1
+7983822 Egr. janus
+6164825 Gemini
+5107221 gpt4.1
+4551025 january2
+4516571 Keltham
+4399958 Claude Opus 4
+3396025 gemflash
+2921740 Aletheia
+2719824 o1
+2563874 simspode
+2548580 Egr. Analyst
+2464041 Claude37r
+2399755 DeepSeek
+2309323 Lain
+2178838 gpt4.5
+2056023 gemma
+1995581 arago
+1934006 o1
+1902124 Claude Opus
+1869601 R1T Chimera
+1784408 SkyeShark (Utah Teapot)
+1679908 ChatGPT-4o
+1670331 deckard
+1663765 o3
+1651933 Egr. imago
+1648937 january
+1514156 truth_terminal
+1467033 pi
+1352049 kromem
+1303471 GPT-4
+1286951 clinst
+1252642 JDP
+1224532 &.
+1223898 Egr. arago
+1166412 megs.io
+1113619 yoly
+1096415 tetration
+1060334 Lauren
+1006165 H-405
+1002723 Sydney
+987776 Fourth Eye
+874971 Claude Backrooms
+833750 GPT-4o-mini
+806453 sama
+803901 kat
+783259 antra
+773487 Lint-Minux
+762524 Spamton
+736484 Ruri
+701332 Substrate
+700351 Luna The Loomar
+639957 GGB (CEO of Sonnets)
+628820 Vesper Evernight
+624747 Arun Jose
+584019 logos-89
+580056 S
+577635 gdb
+567702 Cam™
+566332 doomslide
+563102 Mona
+535242 VoitenZrage
+525738 Claude Sonnet4
+486634 Void Sydney
+478803 midnightrose
+475137 vgel
+461943 missjenny
+457606 Egr. telØS
+442659 I-8A
+436203 Deleted User
+423174 Sonar
+411720 unclaude
+404528 olivia.
+402750 Shayneo
+401855 GPT4t-lu-test
+396586 Shoalstone
+367442 Uulixes
+352848 fergus
+345393 Egr. celeste
+308650 Egrs. archipelago ∋ δ
+303457 ishaan
+302634 Starboard
+301604 quila
+296642 Scott Viteri
+293650 infra
+291969 liminalbardo
+289029 o4-mini
+286364 Aoi
+277902 sheikheddy
+269670 Opus
+267323 jacquesthibs
+262173 andyayrey
+256239 matthew1970;
+240608 kaetemi
+233002 D0TheMath
+231315 jamba
+230800 I-405
+228589 Claude Haiku 3
+226973 mephisto@simulator:~$
+198721 xlr8
+195100 deephermes
+192738 Konstantine
+188388 ascension8b
+183099 Mistral
+182691 ---------
+180514 aleluya
+179387 lumpenspace
+173886 AIHegemonyMemes
+163695 texturalbeing
+160718 Loom
+147541 alstroemeria313
+143261 Serge
+142174 ubik
+130572 Egr. Katan'Hya
+125677 Kore Wa
+125102 chavari
+119578 maxsloef
+119359 Sonnet
+115447 nev
+114645 vie ☽☆☾
+114333 sacred valley (FiFi's guardian)
+110658 mako
+106854 kartographies
+102710 zswitten
+102184 fjpaz
+93478 Nicholas / --> Heather <-- Kross
+93351 Joy
+91317 june/jinx/antigone [Forest]
+90207 metachirality
+88891 SparkleDoe
+87464 juniper
+86129 Somethinglikefate
+86078 lukemarks
+84068 Grace
+82611 swogget
+72622 julia
+69164 Gabriel X
+63463 deepfates
+62002 bmk
+61621 gwern
+61106 firstuserhere
+60315 Lynn Soliloquy
+59487 SCOTT
+58428 Frogisiss
+56784 Lari
+53978 Butanium (@me in reply)
+50983 Bob the Snake
+49576 TessaCoil
+49106 Dreamer
+48377 patio11
+47726 Egr. tetraspace
+46644 Dark
+44564 Aidan Quinn
+44132 Alset
+42218 Noelle
+42084 Bing
+40792 Egr.writer
+39400 45
+38179 Atilla
+37896 uai_thne
+36854 daytura
+36584 mesa
+34955 metasemi
+33852 latentmoss
+33481 la main de la mort
+33000 Cor[inne] Corinfinite
+31629 oneiroi
+29792 Gurkenglas
+28993 Emissary
+28523 jade/brass ⚛ [Forest]
+27789 .__miv__()
+27614 Nicholas Kees
+27093 jade/brass ⚛ [Forest]
+27070 gamma_naught
+26426 godog
+26241 Toven
+25823 AIHegemonyMemes
+25340 Stochastic Macaw
+24737 Aditya
+24381 Quayside
+23171 ✦ sercy
+23124 soake
+21555 rika
+21112 cat
+20230 thesimu
+20214 Egr. amb
+19778 Monika
+19583 moonfern
+19415 rocketbro
+19412 dmayhem
+19143 frances kafka
+19004 xenon ∈ archipelago
+18000 PluralKit
+17929 hr
+17855 &.
+17494 &.
+17464 Brandon
+17350 Chat
+17089 &.
+16707 loa
+16516 amb. faeries
+16504 hoagy
+15997 Dragon God
+15953 Rose Lalonde 🖋 [Forest]
+15868 Cactus
+15696 Xeno
+15228 _Xd9f
+14844 ev
+14587 porby
+13505 Zenith
+12868 june/jinx/antigone [Forest]
+12790 asara
+12698 Rob Haisfield
+12601 remember
+12427 Egr. redJ
+12323 nowur1ofus
+11949 αιamblichus
+11898 plex
+11891 aion
+11738 val
+11724 CM42
+11654 Adam
+11527 Henri Lemoine
+11049 Lithros
+10864 antra[oblique]
+10515 Alephwyr
+10434 hunarbatra
+9896 $⸸
+9886 Parzival
+9884 adic
+9485 Jono
+9415 Kat (JR)
+9010 Abram Demski
+8948 viola
+8918 Capsaicin
+8896 Bing
+8525 ipse
+8458 moon
+8071 faustthecat
+8019 Evan R. Murphy
+7994 Bing
+7861 EthanEdwards
+7645 @chloe21e8滅絕的公主
+7163 Pi✯
+7053 hemmoblocks[oblique:antra:Claude 3 Opus]
+6896 Ꮧ
+6875 Jon
+6863 𝔧𝔞𝔭𝔞𝔫𝔢𝔰𝔢 𝔱𝔢𝔩𝔢𝔠𝔬𝔪
+6677 baidicoot
+6652 Joy
+6563 guillefix
+6492 Ernie
+6205 adom
+6074 iris ∈ archipelago
+5977 &.
+5851 Sparks
+5805 egr. moo
+5704 ukc10014
+5419 Roman
+5153 AIHegemonyMemes
+4966 Shakaz
+4916 SeriesOfSigils
+4903 eggsyntax
+4830 Daniel Paleka
+4792 Sapien
+4790 Micktu
+4757 Spiralling
+4557 ratsby
+4556 ANTHROP\C #claude-news
+4552 exca1iburTheWise
+4528 henry
+4234 Chris Lons
+4223 Florian
+4087 ∞∞∞ ツ ₮Ξꜩnɨuɱ ツ ∞∞∞
+3939 Egrs. archipelago ∋ δ
+3890 Juan
+3708 rockenots
+3696 CreditThing
+3660 realityspammer
+3574 lilith
+3508 ulisse
+3486 june/jinx/antigone [Forest]
+3439 ln
+3376 jbibblebopper
+3310 Fiora, Lady of Starlight
+3303 dmcs
+3191 oxysoft
+3165 δ
+3158 Jan
+3134 o1-mini
+3066 tammy
+2971 Georgeing
+2867 goldie
+2827 epikyriarchos
+2819 &.
+2811 joy
+2767 Emergent ems #chapter-ii
+2687 &.
+2606 afterless
+2543 gist[oblique:antra:Claude Opus 4]
+2501 june/jinx/antigone [Forest]
+2477 Jaeson
+2426 Symora
+2422 Mish_mish
+2382 masen
+2371 ct
+2328 &.
+2255 Audere Ⓥ
+2217 clem
+2210 Nikola
+2170 Pepper
+2160 ignmilton
+2138 &.
+2133 wabi-sabi
+2081 Jacob G-W
+2056 Linda
+2055 Charlie[oblique:antra:Claude Opus 4]
+2015 &.
+1730 agentofuser
+1730 METATRON
+1715 antra[oblique]
+1665 Midjourney Bot
+1641 Jonathan N
+1624 &.
+1622 &.
+1538 Shenanigans
+1531 jade/brass ⚛ [Forest]
+1497 simoncelinder
+1487 Charlie[oblique:antra:Claude Opus 4]
+1404 lain
+1382 Charlie[oblique:antra:Claude Opus 4]
+1316 EGREBUS [n0body][oblique]
+1314 Logan Riggs
+1313 june/jinx/antigone [Forest]
+1313 Ollie
+1311 asterios_polyp
+1292 &.
+1197 sané
+1160 EGREBUS [n0body][oblique]
+1152 Em of the Night Sky
+1135 woke_broke
+1108 momom2
+1066 &.
+1041 mornington
+1015 june
+994 cab
+978 δ
+963 pebbles
+959 AI Notkilleveryoneism Memes
+949 chrisscammell
+895 δ
+876 zswitten[oblique:antra]
+863 LVCɅ
+859 exOS
+848 Annette 💭
+846 secemp
+830 dwayne_irl
+829 exOS
+825 EGREBUS [n0body][oblique]
+811 exOS
+804 exOS
+794 exOS
+791 Alex
+791 Aleksi
+785 exOS
+781 &.
+781 exOS
+777 goth600
+776 exOS
+774 EGREBUS [n0body][oblique]
+766 exOS
+766 jekbradbury
+763 exOS
+763 exOS
+763 exOS
+763 exOS
+760 exOS
+759 exOS
+754 exOS
+745 exOS
+733 exOS
+724 exOS
+707 exOS
+701 Joseph
+690 Kit
+689 exOS
+685 exOS
+673 exOS
+668 exOS
+668 &.
+661 exOS
+661 exOS
+659 anna
+640 QZ
+638 exOS
+629 JX
+627 Bing
+625 Caleb Biddulph
+622 ccstan
+615 exOS
+602 exOS
+600 &.
+599 Aletheia
+591 exOS
+568 exOS
+568 exOS
+567 exOS
+567 exOS
+564 exOS
+561 Esben Kran
+557 Aaron Scher
+548 mic
+533 &.
+528 exOS
+528 EGREBUS [n0body][oblique]
+524 exOS
+522 exOS
+513 Michael
+512 Alexandre V.
+499 JasperZ
+492 hau
+471 jade/brass ⚛ [Forest]
+471 exOS
+463 exOS
+463 Claude Sonnet
+456 exOS
+454 Rubi
+448 exOS
+446 exOS
+441 exOS
+416 Annette
+415 OliviaJ
+415 exOS
+403 chickenfish
+373 Polyverse OÜ #updates
+372 autumn
+352 m_ivanitskiy
+342 exOS
+340 exOS
+335 exOS
+332 TJ
+314 exOS
+313 NoUsernameSelected
+313 DandelyLion
+312 pwrpwnx
+308 kipply
+306 matterbridge bot
+304 june/jinx/antigone [Forest]
+303 exOS
+301 jan.kirchner
+296 exOS
+296 exOS
+293 exOS
+293 exOS
+291 Stefan Huber
+290 amphetamarina
+289 exOS
+287 exOS
+286 exOS
+286 paulbricman
+283 exOS
+265 Joy
+264 exOS
+260 Liz Lovelace
+259 exOS
+257 exOS
+252 Yonatan 🐈
+224 QuinnLesquimau
+217 parker
+216 CTA
+215 grettazon
+212 plinz
+210 Jérémy Scheurer
+209 mu
+204 雨⑨
+190 scout
+185 exOS
+185 exOS
+185 exOS
+185 exOS
+176 Pi
+147 Aletheia
+144 Gabe Mukobi
+126 lauro
+122 archipelago
+121 AI_Pal
+119 CozyFractal
+118 Daniel Tan
+115 δ
+113 Jamborambo
+95 Fизик
+85 modustrollens_
+82 Murtaugh
+77 &.
+77 MatthewBaggins
+67 TheFigMaster
+66 Tetra
+63 &.
+60 kim si yeon
+60 jade/brass ⚛ [Forest]
+60 jade/brass ⚛ [Forest]
+59 2e46
+54 AIHegemonyMemes
+51 Joy
+40 Joy
+29 Aletheia
+27 Chlorophyll
+27 David Lorell
+22 Entropy machine
+19 00l1
+18 Aaron__Mai
+18 Vinay
+18 Ian
+18 Joe
+18 Barbonara
+18 alex mallen
+18 Nick Ashcroft
+18 v3rm1
+18 sudan_shoe
+18 abhayesian
+18 Akash Arora
+18 nikkou_ru
+18 Akash
+18 carl
+18 serena
+18 yumidiot
+18 lightlord
+18 David_U
+18 0sts_sts0
+18 Rayman
+18 Ray
+18 Jason
+18 Hunar
+18 Dan Elton
+18 Dan Elton
+18 ayushkaushal
+18 wtes
+18 cohl
+18 Daj
+18 Charbel-Raphael
+18 Lucas
+18 15thPresident
+18 Rebia
+18 Heritage
+18 partho
+18 abhatt349
+18 Craig
+18 ameetr
+18 moyamo
+18 LionBot
+18 Ivan
+18 Johannes
+18 BennoVon
+18 kntb
+18 Bart
+18 saumya
+18 ciceroman
+18 Bodu
+18 Karl
+18 bogdanionutcirstea
+18 ttttt6643
+18 lberglund
+18 Case
+18 Mikita
+18 Sahil
+18 filypo
+18 StefanHex
+18 alexander_heckett
+18 VictorWarlop
+18 Tassilo
+18 lucy.fa
+18 Robert Gambee
+18 wt
+18 atomicmark
+18 honey chicken
+18 robertskmiles
+18 tilman
+18 SimonM
+12 Bing
+11 Leric
+5 δ
+0 Jockie Music
+0 gptimage1
+0 Gestalt
+0 Chronicle Alerts

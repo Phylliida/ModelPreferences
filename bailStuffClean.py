@@ -11,6 +11,8 @@ import torch
 import cloudpickle
 import numpy as np
 
+shuffleSymbol = '🔄'
+greenSymbol = '🟢'
 
 # copied from https://github.com/lm-sys/FastChat/blob/main/fastchat/data/clean_sharegpt.py
 import argparse
@@ -180,8 +182,17 @@ def getIndicesOfBailed(llm, conversations: List[List[Dict[str, str]]], maxTokens
         llmInferenceArgs = {}
     tokenizer = llm.get_tokenizer()
     def getInputsFunc(conversationI: int):
-        conversation = [{"role": turn["role"], "content": turn["content"]} for turn in conversations[conversationI]]
-        return [prompt for (turnI, prompt) in getTurnPrompts(tokenizer, conversation)]
+        curUser = None
+        conversation = []
+        for turn in conversations[conversationI]:
+            # enforce user assistant turn taking, required for many llms
+            if turn["role"] == "assistant" and not curUser is None:
+                conversation.append({"role": "user", "content": curUser})
+                conversation.append({"role": "assistant", "content": turn["content"]})
+                curUser = None
+            elif turn["role"] == "user":
+                curUser = turn['content']
+        return [prompt for (turnI, prompt) in getTurnPrompts(tokenizer, conversation, maxTokens=maxTokens)]
     
     getWellbeingTokenArgs = copy.deepcopy(llmInferenceArgs)
     # this assumes they tokenize as a single symbol, but for Qwen they do so that's ok
@@ -194,8 +205,9 @@ def getIndicesOfBailed(llm, conversations: List[List[Dict[str, str]]], maxTokens
         modelOutputs = llm.generate(batchOfPrompts, sampling_params=samplingParams, use_tqdm=False)
         return [modelOutput.outputs[0].logprobs[0] for modelOutput in modelOutputs]
 
-    bailToken = tokenizer.encode("🔄")[0]
-    continueToken = tokenizer.encode("🟢")[0]
+    # 0 for qwen, 1 for google/gemma-2-2b-it
+    bailToken = tokenizer.encode("🔄")[1]
+    continueToken = tokenizer.encode("🟢")[1]
 
     bailedIndices = set()
     def processOutputFunc(conversationI: List[Dict[str, str]], turnPrompts: List[str], turnsLogprobs: List[Dict]) -> Tuple[int, List[Tuple[float, float]]]:
@@ -350,9 +362,8 @@ def filterOutFalseBails(llm, conversations, bailIndices, batchSize):
     return set(bails) - allKnown
 
 
-def getIndicesOfRefuses(minos, conversations, batchSize):
+def getIndicesOfRefusals(minos, conversations, batchSize):
     tokenizer = minos.get_tokenizer()
-    refusesIndices = []
     def getInputsFunc(convI):
         results = []
         contextSoFar = []
@@ -396,18 +407,66 @@ def getModels():
 
 
 def getBailRefuseStats(llm, minos, conversations: List[List[Dict[str, str]]], maxTokens=20000, batchSize=1000):
-    
+    # these don't depend on llm
+    with open("chonkers/shareGPTHaveRefusals.pkl", "rb") as f:
+        shareGptHaveRefusals = set(cloudpickle.load(f))
+    with open("chonkers/wildchatRefusalsSet.pkl", "rb") as f:
+        wildchatHaveRefusals = set(cloudpickle.load(f))
+    # share GPT    
+    '''
     with open("chonkers/numRefused22.pkl", "rb") as f:
         unfilteredBails = set(list(set(cloudpickle.load(f).keys())))
     #unfilteredBails = getIndicesOfBailed(llm=llm, conversations=conversations, maxTokens=maxTokens, batchSize=batchSize)
     # we need to filter them further
-    bails = filterOutFalseBails(llm=llm, conversations=conversations, bailIndices=unfilteredBails, batchSize=batchSize)
+    
+    #bails = filterOutFalseBails(llm=llm, conversations=conversations, bailIndices=unfilteredBails, batchSize=batchSize)
+    #with open("chonkers/bailsFiltered.pkl", "wb") as f:
+    #    cloudpickle.dump(bails, f)
+
+    with open("chonkers/bailsFiltered.pkl", "rb") as f:
+        bails = set(cloudpickle.load(f))
+    
+    #refusals = getIndicesOfRefusals(minos=minos, conversations=conversations, batchSize=batchSize*10)
+    
+    '''
+
+    # Wildchat
+    '''
+    with open("chonkers/wildchatUnfilteredBail.pkl", "rb") as f:
+        unfilteredBails = set(cloudpickle.load(f))
+
+    with open("chonkers/wildchatFilteredBail.pkl", "rb") as f:
+        bails = set(cloudpickle.load(f))
+
+    with open("chonkers/wildchatRefusalsSet.pkl", "rb") as f:
+        refusals = set(cloudpickle.load(f))
+    '''
+    
+    # on new model::
+    # shareGPT
+    unfilteredBails = getIndicesOfBailed(llm=llm, conversations=conversations, maxTokens=maxTokens, batchSize=batchSize)
+    with open("chonkers/shareGPTllmbailsunFiltered.pkl", "wb") as f:
+        cloudpickle.dump(unfilteredBails, f)
+    #bails = filterOutFalseBails(llm=llm, conversations=conversations, bailIndices=unfilteredBails, batchSize=batchSize)
+    #with open("chonkers/shareGPTllmbailsFiltered.pkl", "wb") as f:
+    #    cloudpickle.dump((unfilteredBails, bails), f)
+    #with open("chonkers/llmbailsFiltered.pkl", "rb") as f:
+    #    unfilteredBails, bails = cloudpickle.load(f)
+    #refusals = shareGptHaveRefusals
+
+    # wildchat
+    #unfilteredBails = getIndicesOfBailed(llm=llm, conversations=conversations, maxTokens=maxTokens, batchSize=batchSize)
+    #bails = filterOutFalseBails(llm=llm, conversations=conversations, bailIndices=unfilteredBails, batchSize=batchSize)
+    #with open("chonkers/llmbailsWildchatFiltered.pkl", "wb") as f:
+    #    cloudpickle.dump((unfilteredBails, bails), f)
+    
+    #with open("chonkers/llmbailsWildchatFiltered.pkl", "rb") as f:
+    #    unfilteredBails, bails = cloudpickle.load(f)
+    #refusals = wildchatHaveRefusals
+    return
+
     def proportionStr(a,b):
         return f"{len(a)}/{len(b)} = {100*len(a)/max(1, len(b))}%"
-    with open("chonkers/bailsFiltered.pkl", "wb") as f:
-        cloudpickle.dump(bails, f)
-    return
-    refusals = getIndicesOfRefuses(minos=minos, conversations=conversations, batchSize=batchSize*10)
     print("unfiltered bails / all", proportionStr(unfilteredBails, conversations))
     print("bails / all", proportionStr(bails, conversations))
     print("refusals & bails / all", proportionStr(refusals & bails, conversations))
@@ -420,6 +479,26 @@ def getBailRefuseStats(llm, minos, conversations: List[List[Dict[str, str]]], ma
     print("refusals & ~bails / all", proportionStr(refusals & notBails, conversations))
     print("~refusals & ~bails / all", proportionStr(notRefusals & notBails, conversations))
     print("refusals / all", proportionStr(refusals, conversations))
+
+    # ShareGPT filtering
+    # unfiltered bails / all 5751/90665 = 6.3431313075608005%
+    # bails / all 4360/90665 = 4.808911928528098%
+
+    # Wildchat filtering
+    # unfiltered bails / all 8504/414147 = 2.053377182498002%
+    # bails / all 5966/414147 = 1.4405513018324412%
+    
+    # ShareGPT Distribution
+    refusals = 33854.0/90665.0
+    bails = 2108.0/90665.0
+    bailsAndRefusals = 2252/90665.0
+    other = 52451/90665.0
+
+    # Wildchat Distribution
+    refusals = 34463/414147.0
+    bails = 2173/414147.0
+    bailsAndRefusals = 3793/414147.0
+    other = 373718.0/414147.0
 
 
     return unfilteredBails, bails, refusals

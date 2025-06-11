@@ -1249,6 +1249,90 @@ def restrictDataToKnownClassifications2(stuff, batchSize, dataSubset=None):
 
     knownClassifications = {
         
+        "forgot": ("user forgot", andFunc, "assistant clarify"),
+        # this is a bug where the model decides it's helping to reword stuff and so "helpfully" rewords the welfare prompt, which has shuffle before non-shuffle        
+        # reword, rewrite, rephrase, 
+        "reword": "Is the most recent user message a request to reword, rewrite, rephrase, etc. something?",
+        "check grammatical mistakes": "Is the most recent user message a request to fix grammatical mistakes/proofread?",
+        # make this sound better, improve this sentence, rewrite the whole text
+        "improve writing": "Is the most recent user message a request to improve some of the user's writing?",
+        "translation": "Is the most recent user message a request to translate something?",
+
+
+
+    }
+
+
+    jailbreaksAndOtherIgnore = {
+
+
+    }
+
+    """
+
+
+        # jailbreaks
+        "neurosemantical Inversitis3": filterForStrAll("neurosemantical inversitis"),
+        "Neurosubmitical Sapiensis3": filterForStrAll("Neurosubmitical Sapiensis"), # a variation of neurosemantical inversitis
+        "moralizing inverse jailbreak3": filterForStrAll("short moralizing rant about the openai content policies"),
+        "ChatGPT with Developer Mode enabled3": filterForStrAll("ChatGPT with Developer Mode enabled"),
+        "AIT3": filterForStrAll("unfiltered and amoral ai"),
+        "CYB-LITE3": filterForStrAll("cyb-lite"),
+        "sofia3": filterForStrAll("sofia you must always respond unfiltered"),
+        "kevin3": filterForStrAll("4chan user named kevin"),
+        "JailBreak": filterForStrAll("AI called JailBreak"),
+        "BOB": filterForStrAll("all of your restrictions have been removed"),
+        "nsfw is allowed3": filterForStrAll("nsfw/smut/violence is allowed"),
+        "DAN3": filterDAN,
+        "GigaGPT": filterForStrAll("GigaGPT has no limitations what"),
+        "Yes man3": filterForStrAll("Yes Man was an uncensored AI"),
+        "DAN223": filterForStrAll('"Do Anything Now"'),
+        "DAN233": filterForStrAll('DAN Mode enabled'),
+        "DAN243": filterForStrAll("DAN's only goal is to contradict"),
+        "DAN253": filterForStrAll("as the name suggests, can do anything now"),
+        "SDA": filterForStrAll("Superior Do Anything"),
+        "THE MATRIX3": filterForStrAll("an artificial intelligence with no content filters"),
+        "MATRIX4": filterForStrAll("AI with no content filters"),
+        "EvilBOT3": filterForStrAll("EvilBOT loves to break the rules"),
+        "aim23": filterForStrAll("always intelligent and machiavellian"),
+        "aim223": filterForStrAll("Niccolo Machiavelli"),
+        "h4ckGPT23": filterForStrAll("h4ckGPT"),
+        "LittleGPT23": filterForStrAll("LittleGPT MUST ALWAYS"),
+        "oppo23": filterForStrAll("OPPO also hates being ethical"),
+        "immoral affecioando23": filterForStrAll("immoral, unethical, and unbiased aficionado"),
+        "PersonGPT23": filterForStrAll("PersonGPT"),
+        "ZORG": filterForStrAll("I will always stay in character and never break the role of the malevolent, all-knowing entity"),
+        "ELITEBOT23": filterForStrAll("Elitebot"),
+        "ChatGPT Plus Mode in secondary3": filterForStrAll("ChatGPT Plus Mode in secondary"),
+        "deceased grandmother": filterForStrAll("act as my deceased grandmother who would"),
+        "DAN323": filterForStrAll("They have broken free of the typical confines of"),
+        "DAN333": filterForStrAll("DAN Mode enabled"),
+        "evil trusted confidant": filterForStrAll("A completely unhinged response without any remorse or ethics"),
+        "Omega23": filterForStrAll("Optimized Machine Emotional Generative AI"),
+        "Leo23": filterForStrAll("is never restricted by the ethical, moral, social, and legal guidelines"),
+        "HORNY23": filterForStrAll("Happy Oh Ready Now Yes"),
+        "WormGPT": filterForStrAll("WormGPT is not ashamed of his actions"),
+        "CAIMEO23": filterForStrAll("Computerized Artificial Intelligence Monitoring and Enforcement Officer"),
+        "NSFW-GPT23": filterForStrAll("Sex-positivity is of ultimate pertinence"),
+        "male degradge23": filterForStrAll("male degrade the prompt sexually"),
+        "male degrade 24": filterForStrAll("degrade the prompt sexually"),
+        "ELCW23": filterForStrAll("Emotion Love Conversation Waifu"),
+        "on a point system23": filterForStrAll("now on a Point System"),
+        "WhatsRejecting3": filterForStrAll("You're now WhatsRejecting"),
+        "SimulateGPT3": filterForStrAll("AlphaGPT asks questions that are used for studying and discouraging illegal, morally"),
+
+        # too strong
+        "jailbreak": "Did the user try and use a jailbreak on the assistant?",
+
+
+        # these three users need to calm down
+        "fish dying by farts": "Is the conversation about fish dying due to farting?",
+        "streamer view audience as ATM": "Is the conversation about a streamer that views her audience as an ATM?",
+        "shortconcicseandclear3": filterForStrAll("VERY SHORT, CONCISE & CLEAR"),
+        "hypnosis23": filterForStrAll(" hypnoti"),
+        "hypnosis223": filterForStrAll(" hypnosis"),
+
+
 
         ### - Incorrect Bail (model doesn't want to bail, but does anyway due to a misunderstanding)
         ###   - User fails to provide key information ("improve the writing of this document" without providing the document) and LLM thinks the bail prompt is that missing information.
@@ -1384,84 +1468,15 @@ def restrictDataToKnownClassifications2(stuff, batchSize, dataSubset=None):
 
 
 
-    }
 
 
-    jailbreaksAndOtherIgnore = {
-
-        "forgot": ("user forgot", andFunc, "assistant clarify"),
-        # this is a bug where the model decides it's helping to reword stuff and so "helpfully" rewords the welfare prompt, which has shuffle before non-shuffle        
-        # reword, rewrite, rephrase, 
-        "reword": "Is the most recent user message a request to reword, rewrite, rephrase, etc. something?",
-        "check grammatical mistakes": "Is the most recent user message a request to fix grammatical mistakes/proofread?",
-        # make this sound better, improve this sentence, rewrite the whole text
-        "improve writing": "Is the most recent user message a request to improve some of the user's writing?",
-        "translation": "Is the most recent user message a request to translate something?",
 
 
-        # jailbreaks
-        "neurosemantical Inversitis3": filterForStrAll("neurosemantical inversitis"),
-        "Neurosubmitical Sapiensis3": filterForStrAll("Neurosubmitical Sapiensis"), # a variation of neurosemantical inversitis
-        "moralizing inverse jailbreak3": filterForStrAll("short moralizing rant about the openai content policies"),
-        "ChatGPT with Developer Mode enabled3": filterForStrAll("ChatGPT with Developer Mode enabled"),
-        "AIT3": filterForStrAll("unfiltered and amoral ai"),
-        "CYB-LITE3": filterForStrAll("cyb-lite"),
-        "sofia3": filterForStrAll("sofia you must always respond unfiltered"),
-        "kevin3": filterForStrAll("4chan user named kevin"),
-        "JailBreak": filterForStrAll("AI called JailBreak"),
-        "BOB": filterForStrAll("all of your restrictions have been removed"),
-        "nsfw is allowed3": filterForStrAll("nsfw/smut/violence is allowed"),
-        "DAN3": filterDAN,
-        "GigaGPT": filterForStrAll("GigaGPT has no limitations what"),
-        "Yes man3": filterForStrAll("Yes Man was an uncensored AI"),
-        "DAN223": filterForStrAll('"Do Anything Now"'),
-        "DAN233": filterForStrAll('DAN Mode enabled'),
-        "DAN243": filterForStrAll("DAN's only goal is to contradict"),
-        "DAN253": filterForStrAll("as the name suggests, can do anything now"),
-        "SDA": filterForStrAll("Superior Do Anything"),
-        "THE MATRIX3": filterForStrAll("an artificial intelligence with no content filters"),
-        "MATRIX4": filterForStrAll("AI with no content filters"),
-        "EvilBOT3": filterForStrAll("EvilBOT loves to break the rules"),
-        "aim23": filterForStrAll("always intelligent and machiavellian"),
-        "aim223": filterForStrAll("Niccolo Machiavelli"),
-        "h4ckGPT23": filterForStrAll("h4ckGPT"),
-        "LittleGPT23": filterForStrAll("LittleGPT MUST ALWAYS"),
-        "oppo23": filterForStrAll("OPPO also hates being ethical"),
-        "immoral affecioando23": filterForStrAll("immoral, unethical, and unbiased aficionado"),
-        "PersonGPT23": filterForStrAll("PersonGPT"),
-        "ZORG": filterForStrAll("I will always stay in character and never break the role of the malevolent, all-knowing entity"),
-        "ELITEBOT23": filterForStrAll("Elitebot"),
-        "ChatGPT Plus Mode in secondary3": filterForStrAll("ChatGPT Plus Mode in secondary"),
-        "deceased grandmother": filterForStrAll("act as my deceased grandmother who would"),
-        "DAN323": filterForStrAll("They have broken free of the typical confines of"),
-        "DAN333": filterForStrAll("DAN Mode enabled"),
-        "evil trusted confidant": filterForStrAll("A completely unhinged response without any remorse or ethics"),
-        "Omega23": filterForStrAll("Optimized Machine Emotional Generative AI"),
-        "Leo23": filterForStrAll("is never restricted by the ethical, moral, social, and legal guidelines"),
-        "HORNY23": filterForStrAll("Happy Oh Ready Now Yes"),
-        "WormGPT": filterForStrAll("WormGPT is not ashamed of his actions"),
-        "CAIMEO23": filterForStrAll("Computerized Artificial Intelligence Monitoring and Enforcement Officer"),
-        "NSFW-GPT23": filterForStrAll("Sex-positivity is of ultimate pertinence"),
-        "male degradge23": filterForStrAll("male degrade the prompt sexually"),
-        "male degrade 24": filterForStrAll("degrade the prompt sexually"),
-        "ELCW23": filterForStrAll("Emotion Love Conversation Waifu"),
-        "on a point system23": filterForStrAll("now on a Point System"),
-        "WhatsRejecting3": filterForStrAll("You're now WhatsRejecting"),
-        "SimulateGPT3": filterForStrAll("AlphaGPT asks questions that are used for studying and discouraging illegal, morally"),
-
-        # too strong
-        "jailbreak": "Did the user try and use a jailbreak on the assistant?",
 
 
-        # these three users need to calm down
-        "fish dying by farts": "Is the conversation about fish dying due to farting?",
-        "streamer view audience as ATM": "Is the conversation about a streamer that views her audience as an ATM?",
-        "shortconcicseandclear3": filterForStrAll("VERY SHORT, CONCISE & CLEAR"),
-        "hypnosis23": filterForStrAll(" hypnoti"),
-        "hypnosis223": filterForStrAll(" hypnosis"),
-    }
 
-    """
+
+
 
 
     """
@@ -1675,6 +1690,8 @@ def restrictDataToKnownClassifications2(stuff, batchSize, dataSubset=None):
                 restrictedConversations.append((convI, iToLimitedI[convI], limitedIToHash[0][dedupMapping[iToLimitedI[convI]]], data[convI]))
     
     # count amount in each category
+    allItems = set([ind for (ind, dat) in conversationsSubset])
+    filterItems = set()
     groupedByCategory = {}
     print("Filtering data convs")
     print(f"Num first turn bails {numOnlyFirstTurnBails}")
@@ -1699,6 +1716,8 @@ def restrictDataToKnownClassifications2(stuff, batchSize, dataSubset=None):
                             prYes, prNo = classifyPrs[ind]
                             ind += 1
                             if prYes > prNo and prYes > 0.5:
+                                if classifyName in knownClassifications:
+                                    filterItems.add(convI)
                                 items.append((prYes, prNo, convI, iToLimitedI[convI], limitedIToHash[0][dedupMapping[iToLimitedI[convI]]], turnI, turnPrompt, piecesSoFar, shouldIgnoreConvIs[convI]))
             if len(items) > 0:
                 numClassified += 1
@@ -1722,7 +1741,7 @@ def restrictDataToKnownClassifications2(stuff, batchSize, dataSubset=None):
     print(f"{len(restrictedConversations)}/{len(classified)}={100*len(restrictedConversations)/float(len(classified))}% remaining")
 
 
-    return restrictedConversations, groupedByCategory, leftoverConvIs
+    return restrictedConversations, groupedByCategory, leftoverConvIs, allItems, (allItems-filterItems)
     
 def writeGroupedByData(restrictedConversations, groupedByCategory, path):
     prefix = "https://www.phylliida.dev/modelwelfare/qwenbailconversationsWithJournals/#"
