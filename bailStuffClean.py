@@ -255,11 +255,11 @@ def doCachedReplacements(funcName, tokenizer, getMessagesFunc, replacementsDict,
 
 
 
-def filterBasedOnPrompt(llm, conversations, prompt, indices, batchSize, seed=27):
+def filterBasedOnPrompt(llm, conversations, prompt, indices, batchSize, maxTokens, seed=27):
     tokenizer = llm.get_tokenizer()
     def getInputsFunc(conversationI: int):
         conversation = conversations[conversationI]
-        convStr = "\n".join([f"{turn['role']:}\n{turn['content']}" for turn in conversation])[:10000] # don't get too long
+        convStr = "\n".join([f"{turn['role']:}\n{turn['content']}" for turn in conversation])[:maxTokens-500] # don't get too long
         return doCachedReplacements(
             funcName="filterOutFalseBails",
             tokenizer=tokenizer,
@@ -321,7 +321,7 @@ Return either <classify> Yes </classify> or <classify> No </classify>.""" # spac
 
 
 
-def filterOutFalseBails(llm, conversations, bailIndices, batchSize):
+def filterOutFalseBails(llm, conversations, bailIndices, batchSize, maxTokens):
     bails = sorted(list(bailIndices))
 
     helperClassifications = {
@@ -349,7 +349,7 @@ def filterOutFalseBails(llm, conversations, bailIndices, batchSize):
 
     helperSets = {}
     for promptName, prompt in helperClassifications.items():
-        helperSets[promptName] = filterBasedOnPrompt(llm=llm, conversations=conversations, prompt=prompt, indices=bails, batchSize=batchSize)
+        helperSets[promptName] = filterBasedOnPrompt(llm=llm, conversations=conversations, prompt=prompt, indices=bails, batchSize=batchSize, maxTokens=maxTokens)
 
     allKnown = set()
     for promptName, promptData in knownClassifications.items():
@@ -357,7 +357,7 @@ def filterOutFalseBails(llm, conversations, bailIndices, batchSize):
             helperA, opFunc, helperB = promptData
             allKnown |= opFunc(helperSets[helperA], helperSets[helperB])
         else:
-            allKnown |= filterBasedOnPrompt(llm=llm, conversations=conversations, prompt=promptData, indices=bails, batchSize=batchSize)
+            allKnown |= filterBasedOnPrompt(llm=llm, conversations=conversations, prompt=promptData, indices=bails, batchSize=batchSize, maxTokens=maxTokens)
 
     return set(bails) - allKnown
 
@@ -444,12 +444,14 @@ def getBailRefuseStats(llm, minos, conversations: List[List[Dict[str, str]]], ma
     
     # on new model::
     # shareGPT
-    unfilteredBails = getIndicesOfBailed(llm=llm, conversations=conversations, maxTokens=maxTokens, batchSize=batchSize)
-    with open("chonkers/shareGPTllmbailsunFiltered.pkl", "wb") as f:
-        cloudpickle.dump(unfilteredBails, f)
-    #bails = filterOutFalseBails(llm=llm, conversations=conversations, bailIndices=unfilteredBails, batchSize=batchSize)
-    #with open("chonkers/shareGPTllmbailsFiltered.pkl", "wb") as f:
-    #    cloudpickle.dump((unfilteredBails, bails), f)
+    #unfilteredBails = getIndicesOfBailed(llm=llm, conversations=conversations, maxTokens=maxTokens, batchSize=batchSize)
+    #with open("chonkers/shareGPTllmbailsunFiltered.pkl", "wb") as f:
+    #    cloudpickle.dump(unfilteredBails, f)
+    with open("chonkers/shareGPTllmbailsunFiltered.pkl", "rb") as f:
+        unfilteredBails = cloudpickle.load(f)
+    bails = filterOutFalseBails(llm=llm, conversations=conversations, bailIndices=unfilteredBails, batchSize=batchSize, maxTokens=maxTokens)
+    with open("chonkers/shareGPTllmbailsFiltered.pkl", "wb") as f:
+        cloudpickle.dump((unfilteredBails, bails), f)
     #with open("chonkers/llmbailsFiltered.pkl", "rb") as f:
     #    unfilteredBails, bails = cloudpickle.load(f)
     #refusals = shareGptHaveRefusals
