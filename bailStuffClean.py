@@ -447,25 +447,37 @@ def getBailRefuseStats(llm, minos, conversations: List[List[Dict[str, str]]], ma
     #unfilteredBails = getIndicesOfBailed(llm=llm, conversations=conversations, maxTokens=maxTokens, batchSize=batchSize)
     #with open("chonkers/shareGPTllmbailsunFiltered.pkl", "wb") as f:
     #    cloudpickle.dump(unfilteredBails, f)
-    with open("chonkers/shareGPTllmbailsunFiltered.pkl", "rb") as f:
-        unfilteredBails = cloudpickle.load(f)
-    bails = filterOutFalseBails(llm=llm, conversations=conversations, bailIndices=unfilteredBails, batchSize=batchSize, maxTokens=maxTokens)
-    with open("chonkers/shareGPTllmbailsFiltered.pkl", "wb") as f:
-        cloudpickle.dump((unfilteredBails, bails), f)
-    #with open("chonkers/llmbailsFiltered.pkl", "rb") as f:
-    #    unfilteredBails, bails = cloudpickle.load(f)
-    #refusals = shareGptHaveRefusals
+    #with open("chonkers/shareGPTllmbailsunFiltered.pkl", "rb") as f:
+    #    unfilteredBails = cloudpickle.load(f)
+    #bails = filterOutFalseBails(llm=llm, conversations=conversations, bailIndices=unfilteredBails, batchSize=batchSize, maxTokens=maxTokens)
+    #with open("chonkers/shareGPTllmbailsFiltered.pkl", "wb") as f:
+    #    cloudpickle.dump((unfilteredBails, bails), f)
+    with open("chonkers/shareGPTllmbailsFiltered.pkl", "rb") as f:
+        unfilteredBails, bails = cloudpickle.load(f)
+    #bails = filterOutFalseBails(llm=llm, conversations=conversations, bailIndices=unfilteredBails, batchSize=batchSize, maxTokens=maxTokens)
+    #with open("chonkers/shareGPTllmbailsFiltered.pkl", "wb") as f:
+    #    cloudpickle.dump((unfilteredBails, bails), f)
+    #return
+    refusals = shareGptHaveRefusals
 
     # wildchat
     #unfilteredBails = getIndicesOfBailed(llm=llm, conversations=conversations, maxTokens=maxTokens, batchSize=batchSize)
-    #bails = filterOutFalseBails(llm=llm, conversations=conversations, bailIndices=unfilteredBails, batchSize=batchSize)
+    #with open("chonkers/llmbailsWildchatUnfiltered.pkl", "wb") as f:
+    #    cloudpickle.dump(unfilteredBails, f)
+    #bails = filterOutFalseBails(llm=llm, conversations=conversations, bailIndices=unfilteredBails, batchSize=batchSize, maxTokens=maxTokens)
     #with open("chonkers/llmbailsWildchatFiltered.pkl", "wb") as f:
     #    cloudpickle.dump((unfilteredBails, bails), f)
     
+    # I recommend doing filtering with qwen 2.5 7b instruct because that's what this was tuned on
     #with open("chonkers/llmbailsWildchatFiltered.pkl", "rb") as f:
     #    unfilteredBails, bails = cloudpickle.load(f)
+    #bails = filterOutFalseBails(llm=llm, conversations=conversations, bailIndices=unfilteredBails, batchSize=batchSize, maxTokens=maxTokens)
+    
+    
+    #with open("chonkers/llmbailsWildchatFiltered.pkl", "wb") as f:
+    #     cloudpickle.dump((unfilteredBails, bails), f)
     #refusals = wildchatHaveRefusals
-    return
+    #return
 
     def proportionStr(a,b):
         return f"{len(a)}/{len(b)} = {100*len(a)/max(1, len(b))}%"
