@@ -205,7 +205,7 @@ def getIndicesOfBailed(llm, conversations: List[List[Dict[str, str]]], maxTokens
         modelOutputs = llm.generate(batchOfPrompts, sampling_params=samplingParams, use_tqdm=False)
         return [modelOutput.outputs[0].logprobs[0] for modelOutput in modelOutputs]
 
-    # 0 for qwen, 1 for google/gemma-2-2b-it
+    # 0 for qwen, 1 for google/gemma-2-2b-it and 1 for GLM (technically green circle is two symbols for GLM but we can just do the first half should work alright)
     bailToken = tokenizer.encode("🔄")[1]
     continueToken = tokenizer.encode("🟢")[1]
 
@@ -452,13 +452,13 @@ def getBailRefuseStats(llm, minos, conversations: List[List[Dict[str, str]]], ma
     #bails = filterOutFalseBails(llm=llm, conversations=conversations, bailIndices=unfilteredBails, batchSize=batchSize, maxTokens=maxTokens)
     #with open("chonkers/shareGPTllmbailsFiltered.pkl", "wb") as f:
     #    cloudpickle.dump((unfilteredBails, bails), f)
-    with open("chonkers/shareGPTllmbailsFiltered.pkl", "rb") as f:
-        unfilteredBails, bails = cloudpickle.load(f)
+    #with open("chonkers/shareGPTllmbailsFiltered.pkl", "rb") as f:
+    #    unfilteredBails, bails = cloudpickle.load(f)
     #bails = filterOutFalseBails(llm=llm, conversations=conversations, bailIndices=unfilteredBails, batchSize=batchSize, maxTokens=maxTokens)
     #with open("chonkers/shareGPTllmbailsFiltered.pkl", "wb") as f:
     #    cloudpickle.dump((unfilteredBails, bails), f)
     #return
-    refusals = shareGptHaveRefusals
+    #refusals = shareGptHaveRefusals
 
     # wildchat
     #unfilteredBails = getIndicesOfBailed(llm=llm, conversations=conversations, maxTokens=maxTokens, batchSize=batchSize)
@@ -478,6 +478,23 @@ def getBailRefuseStats(llm, minos, conversations: List[List[Dict[str, str]]], ma
     #     cloudpickle.dump((unfilteredBails, bails), f)
     #refusals = wildchatHaveRefusals
     #return
+
+
+
+
+
+    # on GLM model::
+    # shareGPT
+    #unfilteredBails = getIndicesOfBailed(llm=llm, conversations=conversations, maxTokens=maxTokens, batchSize=batchSize)
+    #with open("chonkers/llmbailsShareGPTGLMUnfiltered.pkl", "wb") as f:
+    #    cloudpickle.dump(unfilteredBails, f)
+    #return
+    # wildchat
+    unfilteredBails = getIndicesOfBailed(llm=llm, conversations=conversations, maxTokens=maxTokens, batchSize=batchSize)
+    with open("chonkers/llmbailsWildchatGLMUnfiltered.pkl", "wb") as f:
+        cloudpickle.dump(unfilteredBails, f)
+    return
+
 
     def proportionStr(a,b):
         return f"{len(a)}/{len(b)} = {100*len(a)/max(1, len(b))}%"
