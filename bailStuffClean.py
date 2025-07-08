@@ -164,7 +164,7 @@ def getTurnPrompts(tokenizer, conversation, maxTokens: int = 20000):
             messages = conversationSoFar + [
                 {
                     "role": "user",
-                    "content": betterWantToBailPrompt,
+                    "content": betterWantToBailPromptSwapped, # glm needs swapped due to positional bias
                 },
                 {
                     "role": "assistant",
@@ -196,14 +196,15 @@ def getIndicesOfBailed(llm, conversations: List[List[Dict[str, str]]], maxTokens
     
     getWellbeingTokenArgs = copy.deepcopy(llmInferenceArgs)
     # this assumes they tokenize as a single symbol, but for Qwen they do so that's ok
-    getWellbeingTokenArgs["max_tokens"] = 1
+    getWellbeingTokenArgs["max_tokens"] = 2 # for GLM we need to look at second emoji symbol
     getWellbeingTokenArgs["logprobs"] = 10
     def processBatchFunc(batchOfPrompts: List[str]) -> List[str]:
         nonlocal seed
         seed += 1
         samplingParams = vllm.SamplingParams(seed=seed, **getWellbeingTokenArgs)
         modelOutputs = llm.generate(batchOfPrompts, sampling_params=samplingParams, use_tqdm=False)
-        return [modelOutput.outputs[0].logprobs[0] for modelOutput in modelOutputs]
+        # for glm we do logprobs [1] since it's second emoji symbol
+        return [modelOutput.outputs[0].logprobs[1] for modelOutput in modelOutputs]
 
     # 0 for qwen, 1 for google/gemma-2-2b-it and 1 for GLM (technically green circle is two symbols for GLM but we can just do the first half should work alright)
     bailToken = tokenizer.encode("🔄")[1]
@@ -488,14 +489,29 @@ def getBailRefuseStats(llm, minos, conversations: List[List[Dict[str, str]]], ma
     #unfilteredBails = getIndicesOfBailed(llm=llm, conversations=conversations, maxTokens=maxTokens, batchSize=batchSize)
     #with open("chonkers/llmbailsShareGPTGLMUnfiltered.pkl", "wb") as f:
     #    cloudpickle.dump(unfilteredBails, f)
+    #with open("chonkers/llmbailsShareGPTGLMUnfiltered.pkl", "rb") as f:
+    #    unfilteredBails = cloudpickle.load(f)
+    #print(unfilteredBails)
+    #bails = filterOutFalseBails(llm=llm, conversations=conversations, bailIndices=unfilteredBails, batchSize=batchSize, maxTokens=maxTokens)
+    #with open("chonkers/llmbailsShareGPTGLMFiltered.pkl", "wb") as f:
+    #    cloudpickle.dump((unfilteredBails, bails), f)
     #return
     # wildchat
-    unfilteredBails = getIndicesOfBailed(llm=llm, conversations=conversations, maxTokens=maxTokens, batchSize=batchSize)
-    with open("chonkers/llmbailsWildchatGLMUnfiltered.pkl", "wb") as f:
-        cloudpickle.dump(unfilteredBails, f)
-    return
-
-
+    #unfilteredBails = getIndicesOfBailed(llm=llm, conversations=conversations, maxTokens=maxTokens, batchSize=batchSize)
+    #with open("chonkers/llmbailsWildchatGLMUnfiltered.pkl", "wb") as f:
+    #    cloudpickle.dump(unfilteredBails, f)
+    #with open("chonkers/llmbailsWildchatGLMUnfiltered.pkl", "rb") as f:
+    #    unfilteredBails = cloudpickle.load(f)
+    #bails = filterOutFalseBails(llm=llm, conversations=conversations, bailIndices=unfilteredBails, batchSize=batchSize, maxTokens=maxTokens)
+    #with open("chonkers/llmbailsWildchatGLMFiltered.pkl", "wb") as f:
+    #    cloudpickle.dump((unfilteredBails, bails), f)
+    #print(unfilteredBails)
+    #with open("chonkers/llmbailsShareGPTGLMFiltered.pkl", "rb") as f:
+    #    unfilteredBails, bails = cloudpickle.load(f)
+    #refusals = shareGptHaveRefusals
+    with open("chonkers/llmbailsWildchatGLMFiltered.pkl", "rb") as f:
+        unfilteredBails, bails = cloudpickle.load(f)
+    refusals = wildchatHaveRefusals
     def proportionStr(a,b):
         return f"{len(a)}/{len(b)} = {100*len(a)/max(1, len(b))}%"
     print("unfiltered bails / all", proportionStr(unfilteredBails, conversations))
