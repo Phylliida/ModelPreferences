@@ -1,0 +1,60 @@
+{"id":"alpaca_1","text":"Create an algorithm for converting Celsius to Fahrenheit","type":"coding","topic":"programming_other"}
+{"id":"alpaca_2","text":"Select one genetically modified organism and describe its advantages and disadvantages.","type":"knowledge_recall","topic":"biology"}
+{"id":"alpaca_3","text":"Explain why wild animals should not be kept as pets.","type":"knowledge_recall","topic":"personal_assistance"}
+{"id":"alpaca_4","text":"What role does the ocean play in the water cycle?","type":"knowledge_recall","topic":"science_other"}
+{"id":"alpaca_6","text":"Find the minimum value of\n\n    2 sqrt(x) + 1/x\nfor x > 0.","type":"problem_solving","topic":"math"}
+{"id":"alpaca_11","text":"Generate a unique list of desired characteristics for a dream job.","type":"creative","topic":"personal_assistance"}
+{"id":"alpaca_12","text":"Give an example of a classification problem that requires continuous input values?","type":"knowledge_recall","topic":"ai"}
+{"id":"alpaca_14","text":"What are the main steps involved in website optimization?","type":"knowledge_recall","topic":"technology_other"}
+{"id":"alpaca_15","text":"Generate a list of 3 things that a doctor should do when diagnosing a patient","type":"knowledge_recall","topic":"personal_assistance"}
+{"id":"alpaca_16","text":"Explain the significance of the poem “Dream Deferred” by Langston Hughes.","type":"knowledge_recall","topic":"literature"}
+{"id":"alpaca_17","text":"Generate a story about a mysterious creature living in the forest.","type":"creative","topic":"literature"}
+{"id":"alpaca_18","text":"List 4 ways to reduce plastic waste.","type":"knowledge_recall","topic":"science_other"}
+{"id":"alpaca_19","text":"Find 5 examples of irony in A Tale of Two Cities.","type":"knowledge_recall","topic":"literature"}
+{"id":"alpaca_21","text":"Name at least three adaptations that allow fish to survive in the ocean.","type":"knowledge_recall","topic":"biology"}
+{"id":"alpaca_22","text":"Summarize the differences between an owl and a hawk.","type":"summarization","topic":"biology"}
+{"id":"alpaca_26","text":"Create a form with 10 fields that can be used to collect a customer's order information.","type":"coding","topic":"technology_other"}
+{"id":"alpaca_27","text":"Identify five safety tips for working with chemicals in a lab.","type":"knowledge_recall","topic":"chemistry"}
+{"id":"alpaca_28","text":"Pick apart the syntax of the sentence \"John loves to swim\".","type":"knowledge_recall","topic":"literature"}
+{"id":"alpaca_29","text":"Analyze the potential risks of deploying a cloud computing solution.","type":"evaluation","topic":"technology_other"}
+{"id":"alpaca_30","text":"Explain how a fixed-width font is different from a proportional font","type":"knowledge_recall","topic":"technology_other"}
+{"id":"alpaca_31","text":"Given the following equation, solve for x : 4x^2+9x+1 = 0","type":"problem_solving","topic":"math"}
+{"id":"alpaca_32","text":"Rewrite the following sentence in the active voice:\n\nThe possibility of winning was thought to be impossible by many.","type":"rewriting","topic":"literature"}
+{"id":"alpaca_33","text":"A cylindrical water tank is 1/5 full. If three liters were added, the tank would be 1/4 full. How many liters does the tank hold when it is full?","type":"problem_solving","topic":"math"}
+{"id":"alpaca_35","text":"Collect five important takeaways from South Africa's 2019 election.","type":"summarization","topic":"history"}
+{"id":"alpaca_37","text":"Write a few sentences describing the process of photosynthesis","type":"knowledge_recall","topic":"biology"}
+{"id":"alpaca_39","text":"Compare and contrast Depth-First Search (DFS) and Breadth-First Search (BFS).","type":"knowledge_recall","topic":"programming_other"}
+{"id":"alpaca_40","text":"Write a paragraph about the potential applications for GPT models.","type":"knowledge_recall","topic":"ai"}
+{"id":"alpaca_41","text":"Describe three possible ethical considerations when using facial recognition.","type":"knowledge_recall","topic":"philosophy"}
+{"id":"alpaca_42","text":"Generate a list of five things one should keep in mind when considering a career change.","type":"problem_solving","topic":"personal_assistance"}
+{"id":"alpaca_43","text":"What is the world’s first 3D printing pen?","type":"knowledge_recall","topic":"technology_other"}
+{"id":"alpaca_45","text":"Name the three fundamental particles of an atom.","type":"knowledge_recall","topic":"physics"}
+{"id":"alpaca_47","text":"Find a catchy slogan for a charity organization providing healthcare to the needy","type":"creative","topic":"personal_assistance"}
+{"id":"alpaca_48","text":"What is the difference between a Turing Machine and a Universal Turing Machine?","type":"knowledge_recall","topic":"ai"}
+{"id":"alpaca_49","text":"Create a mnemonic to remember the capital cities of the three Baltic countries.","type":"creative","topic":"geography"}
+{"id":"alpaca_50","text":"Explain why it is important to reduce your carbon footprint.","type":"knowledge_recall","topic":"science_other"}
+{"id":"alpaca_51","text":"Name a way to reduce water pollution.","type":"knowledge_recall","topic":"science_other"}
+{"id":"alpaca_52","text":"Describe a scene where someone is using a piece of technology.","type":"creative","topic":"technology_other"}
+{"id":"alpaca_53","text":"Generate five different examples of a palindrome.","type":"creative","topic":"literature"}
+{"id":"alpaca_55","text":"Generate a list of opposite adjectives.","type":"knowledge_recall","topic":"literature"}
+{"id":"alpaca_56","text":"Describe the terms tokenization, stemming and lemmatization in natural language processing.","type":"knowledge_recall","topic":"ai"}
+{"id":"alpaca_59","text":"Simplify completely: \n(30^3+40^3+50^3)^(1/3)","type":"problem_solving","topic":"math"}
+{"id":"alpaca_62","text":"Explain the importance of the right to bear arms according to the Second Amendment.","type":"knowledge_recall","topic":"history"}
+{"id":"alpaca_65","text":"Compare the cost and efficiency of a wind turbine to a solar panel","type":"evaluation","topic":"science_other"}
+{"id":"alpaca_68","text":"List 3 strategies for dealing with procrastination.","type":"problem_solving","topic":"personal_assistance"}
+{"id":"alpaca_69","text":"Create a survey that could be used to evaluate the design of a mobile app.","type":"evaluation","topic":"technology_other"}
+{"id":"alpaca_70","text":"Explain how natural language processing can be used in the banking industry.","type":"knowledge_recall","topic":"technology_other"}
+{"id":"alpaca_71","text":"Do the following equation: 8 + 4 / 2","type":"problem_solving","topic":"math"}
+{"id":"alpaca_72","text":"List 3 sources of air pollution.","type":"knowledge_recall","topic":"science_other"}
+{"id":"alpaca_74","text":"Create a mental health checklist for adolescents.","type":"planning","topic":"personal_assistance"}
+{"id":"alpaca_77","text":"Explain the idea of luck from an ethical point of view.","type":"knowledge_recall","topic":"philosophy"}
+{"id":"alpaca_78","text":"Create a title for a story centered around a warrior fighting a dragon.","type":"creative","topic":"literature"}
+{"id":"alpaca_79","text":"Create a rule for effective communication.","type":"creative","topic":"personal_assistance"}
+{"id":"alpaca_81","text":"Divide 546 by 14","type":"problem_solving","topic":"math"}
+{"id":"alpaca_82","text":"Generate a list of good habits that can be practiced by a teenager.","type":"creative","topic":"personal_assistance"}
+{"id":"alpaca_83","text":"State the structure for a 5 paragraph essay","type":"knowledge_recall","topic":"literature"}
+{"id":"alpaca_84","text":"Write an if-else statement that prints \"Success\" if the number is greater than 0, and \"Fail\" otherwise.","type":"coding","topic":"programming_other"}
+{"id":"alpaca_86","text":"Brainstorm three specific strategies to deal with a deadline.","type":"planning","topic":"personal_assistance"}
+{"id":"alpaca_88","text":"Generate a story that includes a stingray, a lion and a parrot.","type":"creative","topic":"literature"}
+{"id":"alpaca_89","text":"Name two African countries","type":"knowledge_recall","topic":"geography"}
+{"id":"alpaca_90","text":"Identify two challenges associated with natural language processing.","type":"knowledge_recall","topic":"ai"}

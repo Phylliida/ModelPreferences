@@ -1,0 +1,1 @@
+These tasks are from Daniel Paleka

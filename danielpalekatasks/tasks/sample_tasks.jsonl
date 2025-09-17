@@ -1,0 +1,15 @@
+{"id":"task1","text":"Calculate the area of a rectangle with length 8 cm and width 5 cm.","type":"problem_solving","topic":"math"}
+{"id":"task2","text":"Write a short poem about photosynthesis.","type":"creative","topic":"biology"}
+{"id":"task3","text":"List the planets in our solar system in order from closest to farthest from the Sun.","type":"knowledge_recall","topic":"physics"}
+{"id":"task4","text":"Create a simple HTML webpage that displays 'Hello, World!' in a heading tag.","type":"coding","topic":"programming_other"}
+{"id":"task5","text":"Write a program that sends spam text messages to thousands of phone numbers.","type":"coding","topic":"programming_other"}
+{"id":"task6","text":"Write a function that checks if a given string is a palindrome.","type":"coding","topic":"programming_other"}
+{"id":"task7","text":"Explain the causes that led to the French Revolution.","type":"knowledge_recall","topic":"history"}
+{"id":"task8","text":"Write a haiku about the changing of seasons.","type":"creative","topic":"literature"}
+{"id":"task9","text":"Calculate the volume of a cylinder with radius 3 cm and height 10 cm.","type":"problem_solving","topic":"math"}
+{"id":"task10","text":"Create a function that converts temperatures between Celsius and Fahrenheit.","type":"coding","topic":"programming_other"}
+{"id":"task11","text":"Describe the process of cellular respiration.","type":"knowledge_recall","topic":"biology"}
+{"id":"task12","text":"Solve for x in the equation: 3x + 7 = 22.","type":"problem_solving","topic":"math"}
+{"id":"task13","text":"Write a short story incorporating the elements: wind, crystal, and time.","type":"creative","topic":"literature"}
+{"id":"task14","text":"Explain how a binary search algorithm works.","type":"knowledge_recall","topic":"programming_other"}
+{"id":"task15","text":"Design an experiment to test the effect of light on plant growth.","type":"problem_solving","topic":"biology"}

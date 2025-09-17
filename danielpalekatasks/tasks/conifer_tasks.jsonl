@@ -1,0 +1,151 @@
+{"id":"conifer_5","text":"Craft a simple allegory set in the Deep Rock Galactic universe that showcases the power of friendship, including characters that are rocks and stones.","type":"creative","topic":"literature"}
+{"id":"conifer_10","text":"Which automated tools help convert small Fortran projects to C for system upgrades with maintainability in mind?","type":"knowledge_recall","topic":"programming"}
+{"id":"conifer_25","text":"What is the literal translation and etymological meaning of the phrase '连花清瘟'?","type":"knowledge_recall","topic":"humanities_other"}
+{"id":"conifer_27","text":"How does PostgreSQL's file_fdw function facilitate local data access for CSV files?","type":"knowledge_recall","topic":"programming"}
+{"id":"conifer_35","text":"How can you resolve a 'syntax error' related to backslashes within string literals in a Python script?","type":"problem_solving","topic":"programming"}
+{"id":"conifer_40","text":"How can you use OpenCV's cv2.cvtColor and cv2.inRange functions in Python to detect a single shade of red in a static image?","type":"coding","topic":"programming"}
+{"id":"conifer_43","text":"What elements make a children's beach story engaging? Consider the following:\n1. Involving marine animals;\n2. Using bright colors in illustrations.","type":"creative","topic":"literature"}
+{"id":"conifer_54","text":"Pen the first page of a whimsical tale in Dr. Seuss rhyming pattern, introducing the setting and characters that represent the innocence of society amidst the complexities of capitalism.","type":"creative","topic":"literature"}
+{"id":"conifer_57","text":"What are the compression ratio and speed characteristics of Huffman coding for text compression?","type":"knowledge_recall","topic":"programming"}
+{"id":"conifer_59","text":"Which Flask extensions offer authentication support and session management for multi-user access? List in ordered list.","type":"knowledge_recall","topic":"programming"}
+{"id":"conifer_60","text":"What are some historical and fantasy themes suitable for elementary school mystery activities?","type":"creative","topic":"history"}
+{"id":"conifer_64","text":"What are two primary operational challenges for a Director of Data & Insights?","type":"knowledge_recall","topic":"technology_other"}
+{"id":"conifer_65","text":"What are the defining characteristics of Hogwarts' Gothic architecture and its magical protection features?","type":"knowledge_recall","topic":"literature"}
+{"id":"conifer_71","text":"What are some daily rituals for self-reflection that can enhance emotional intelligence?","type":"creative","topic":"personal_assistance"}
+{"id":"conifer_72","text":"How can you update a Git remote URL on a Linux system at the local level? Provide step-by-step instructions.","type":"knowledge_recall","topic":"programming"}
+{"id":"conifer_82","text":"Write a Node.js script using the LTS version that downloads a large file from S3 by making concurrent range requests and logs the progress to the console.","type":"coding","topic":"programming"}
+{"id":"conifer_83","text":"What are some beginner-friendly methods for concatenating mp3 files for creating an audio book?","type":"problem_solving","topic":"technology_other"}
+{"id":"conifer_86","text":"How can Normalize.css be implemented within a React project to comply with CSS3 specifications and support modern browser standards?","type":"problem_solving","topic":"technology_other"}
+{"id":"conifer_94","text":"Could you demonstrate creating a MySQL view that provides read-only access to summarized transactional data?","type":"coding","topic":"programming"}
+{"id":"conifer_108","text":"Develop a Next.js application that enables file uploads with temporary storage, ensuring responsive design for mobile users.","type":"coding","topic":"programming"}
+{"id":"conifer_112","text":"How can Navigator.pushAndRemoveUntil be used in Flutter to prevent a user from returning to the login screen after authentication?","type":"coding","topic":"programming"}
+{"id":"conifer_117","text":"Suggest three cat-themed literary gifts appropriate for a 35-year-old writer and journalist to celebrate her birthday in Rome.","type":"creative","topic":"literature"}
+{"id":"conifer_137","text":"Write a simple JavaScript function using the Canvas API to read a tilemap from a JSON file and render it on a canvas in immediate mode.","type":"coding","topic":"programming"}
+{"id":"conifer_140","text":"How does psilocybin from psychedelic mushrooms influence neuroplasticity and neurotransmitter activity in the short-term?","type":"knowledge_recall","topic":"biology"}
+{"id":"conifer_142","text":"How is array multiplication utilized in linear algebra within the context of high school mathematics? Answer with no more than three sentences.","type":"knowledge_recall","topic":"math"}
+{"id":"conifer_152","text":"How can a gradual loss of interest and reduced emotional connection contribute to a relationship fading out?","type":"problem_solving","topic":"personal_assistance"}
+{"id":"conifer_153","text":"What is an open source, cross-platform tool with regular expression support for text transformations?","type":"knowledge_recall","topic":"technology_other"}
+{"id":"conifer_164","text":"How do you set up a remote Git repository on a new server with SSH access?","type":"knowledge_recall","topic":"programming"}
+{"id":"conifer_165","text":"In sociolinguistics research, what core components are typically included in an academic paper following APA citation style?","type":"knowledge_recall","topic":"humanities_other"}
+{"id":"conifer_167","text":"Develop a release notes script for developers that details new features and bug fixes, includes the date in ISO 8601 format, and uses semantic versioning for the code tags, formatted with ordered list.","type":"coding","topic":"programming"}
+{"id":"conifer_179","text":"How do family naming patterns reflect tradition and honorifics?","type":"knowledge_recall","topic":"personal_assistance"}
+{"id":"conifer_183","text":"Design a single-session lesson plan for upper-level college students focused on journalism, aimed at enhancing their idea generation skills for print publications, including a lecture component and written assignments.","type":"creative","topic":"humanities_other"}
+{"id":"conifer_185","text":"Which Medieval Era civilizations does Age of Empires 2 feature?","type":"knowledge_recall","topic":"history"}
+{"id":"conifer_192","text":"What are two common mistakes related to grammar and spelling that should be avoided in a cover letter?","type":"knowledge_recall","topic":"literature"}
+{"id":"conifer_193","text":"How can a simple bash script be used on a Unix-based OS to print to console the status of a specific process?","type":"coding","topic":"programming"}
+{"id":"conifer_194","text":"What are the best practices for function parameters and return type hints in Python 3.6+ following PEP 484?","type":"knowledge_recall","topic":"programming"}
+{"id":"conifer_196","text":"List 10 tech gadget gift ideas under $50 for a CEO in a startup, using bullet points to convey appreciation.","type":"creative","topic":"technology_other"}
+{"id":"conifer_216","text":"Write an SQL query to calculate a 3-day moving average of the 'total' field from the 'orders' table, grouped by the 'customer' field.","type":"coding","topic":"programming"}
+{"id":"conifer_220","text":"What types of contract lifecycle management tools do small and medium-sized technology enterprises commonly utilize for highly regulated industries?","type":"knowledge_recall","topic":"technology_other"}
+{"id":"conifer_224","text":"What microcontroller type and clock speed define the core functionality of the ESP-8266?","type":"knowledge_recall","topic":"technology_other"}
+{"id":"conifer_231","text":"Who are the protagonist and antagonist in 'The Stonekeeper: Amulet', and what are their species?","type":"knowledge_recall","topic":"literature"}
+{"id":"conifer_235","text":"How do you create a pandas dataframe from a JSON file, and list the steps in bullet points?","type":"coding","topic":"programming"}
+{"id":"conifer_243","text":"What themes of interconnectedness and environmental stewardship should be included in a 5-minute guided meditation for nature lovers?","type":"creative","topic":"personal_assistance"}
+{"id":"conifer_248","text":"Which Python libraries would be best for quick web development prototyping with a focus on back-end functionality?","type":"knowledge_recall","topic":"programming"}
+{"id":"conifer_249","text":"Could you show a simple MySQL query for retrieving data from a single table on a blogging platform, outputted in tabular format?","type":"coding","topic":"programming"}
+{"id":"conifer_255","text":"What are the primary sectors within the energy industry in North America focusing on renewable energy sources?","type":"knowledge_recall","topic":"science_other"}
+{"id":"conifer_272","text":"What interactive websites offer progress tracking features for elementary school students' reading comprehension?","type":"knowledge_recall","topic":"technology_other"}
+{"id":"conifer_284","text":"What is the definition of linear momentum in classical mechanics, using simple language?","type":"knowledge_recall","topic":"physics"}
+{"id":"conifer_286","text":"Write a Python script that extracts the title from an Atom feed and outputs it to a CSV file, ensuring each entry is on a new line.","type":"coding","topic":"programming"}
+{"id":"conifer_296","text":"How can a beginner Django developer change the session name in Django 3.x? Include code snippets.","type":"coding","topic":"programming"}
+{"id":"conifer_299","text":"What are the key health and safety knowledge competencies a driller in the Oil and Gas industry must possess? List in ordered list.","type":"knowledge_recall","topic":"science_other"}
+{"id":"conifer_303","text":"How can a film logline be constructed to encapsulate a clear protagonist with high stakes, an original twist, tone indicative of genre, audience appeal, and marketability, all in active voice and present tense, limited to 35 words without character names, and including the inciting incident?","type":"creative","topic":"literature"}
+{"id":"conifer_307","text":"How does Veeam Cloud Connect ensure the security of data during backup and replication across on-premises and cloud-based multi-tenant repositories?","type":"knowledge_recall","topic":"cybersecurity"}
+{"id":"conifer_319","text":"What are the key components of a technology company's vision statement that reflect innovation and customer service?","type":"knowledge_recall","topic":"technology_other"}
+{"id":"conifer_327","text":"What are two effective installation techniques to minimize noise from a sump pump under a sink?","type":"knowledge_recall","topic":"technology_other"}
+{"id":"conifer_332","text":"What are the capitalization rules for major words in English titles according to APA style?","type":"knowledge_recall","topic":"literature"}
+{"id":"conifer_336","text":"How do you create an application in AWS AppConfig for feature toggles, assuming beginner-level technical complexity?","type":"problem_solving","topic":"technology_other"}
+{"id":"conifer_337","text":"Which AWS Database Service offers triggers for executing custom actions upon real-time data changes?","type":"knowledge_recall","topic":"technology_other"}
+{"id":"conifer_338","text":"What event-driven features does TradeStation Easy Language offer for retail traders?","type":"knowledge_recall","topic":"technology_other"}
+{"id":"conifer_340","text":"How can I add an SSH public key to Windows Server 2019 using PowerShell with administrative privileges?","type":"problem_solving","topic":"cybersecurity"}
+{"id":"conifer_344","text":"What are some widely adopted open source Python libraries used for general statistical analysis?","type":"knowledge_recall","topic":"programming"}
+{"id":"conifer_350","text":"How can you implement gravity and collision detection for a Flappy Bird game using JavaScript?","type":"coding","topic":"programming"}
+{"id":"conifer_352","text":"Write a JavaScript function using ES6 syntax that calculates the Manhattan Distance between two points given as numerical coordinates.","type":"coding","topic":"programming"}
+{"id":"conifer_353","text":"Which relational databases compatible with Windows can be managed using DBeaver?","type":"knowledge_recall","topic":"technology_other"}
+{"id":"conifer_356","text":"Considering hormonal differences and sebum production, how do skincare needs differ between male and female skin?","type":"knowledge_recall","topic":"biology"}
+{"id":"conifer_360","text":"Design a one-week research paper assignment that evaluates a journalism student's writing clarity and ethical reporting, with a focus on citation and fact-checking.","type":"creative","topic":"humanities_other"}
+{"id":"conifer_361","text":"Draft an executive summary for a healthcare-focused AI tech startup that specializes in facial recognition technology for businesses, emphasizing privacy and accuracy.","type":"creative","topic":"ai"}
+{"id":"conifer_374","text":"What are the health benefits of consuming alkaline foods with high mineral content, such as nuts and legumes, as part of a meal?","type":"knowledge_recall","topic":"biology"}
+{"id":"conifer_382","text":"Design a primary school group discussion activity on the sinking of the Titanic, including 3 online articles and a summary in ordered list.","type":"creative","topic":"history"}
+{"id":"conifer_389","text":"How do lossy compression and 24-bit color depth affect the file size of JPEG images?","type":"knowledge_recall","topic":"technology_other"}
+{"id":"conifer_394","text":"Implement a C# method that accepts a valid full pathname as a string and retrieves the file's creation date, returning it as a DateTime object.","type":"coding","topic":"programming"}
+{"id":"conifer_402","text":"What are the key personality traits and aesthetic elements to consider when designing a drag queen character in DnD 5e?","type":"creative","topic":"personal_assistance"}
+{"id":"conifer_409","text":"What are the advantages of using a flatfile database for small desktop applications with simple schema data?","type":"knowledge_recall","topic":"technology_other"}
+{"id":"conifer_411","text":"What are the basic differences between the ERC721 non-fungible token standard and ERC20 fungible token standard?","type":"knowledge_recall","topic":"technology_other"}
+{"id":"conifer_414","text":"Write a Python script using the pandas library to read the rows of a CSV file from Azure Blob Storage, ensuring the use of Managed Identity for authentication.","type":"coding","topic":"programming"}
+{"id":"conifer_416","text":"What individual or organization from Scandinavia was responsible for the inception of the Nordic Games in the late 19th century?","type":"knowledge_recall","topic":"history"}
+{"id":"conifer_418","text":"Can you list examples of industries facing regulatory compliance and cybersecurity threats, summarized in one sentence?","type":"knowledge_recall","topic":"cybersecurity"}
+{"id":"conifer_430","text":"What publicly available developer resources does Freestyle Libre offer for iOS and Android platforms?","type":"knowledge_recall","topic":"technology_other"}
+{"id":"conifer_439","text":"How can I revert to a previous commit on the current branch using the command-line interface?","type":"knowledge_recall","topic":"programming"}
+{"id":"conifer_447","text":"Could you list the key natural language processing capabilities of your AI Chat service, following data handling and privacy standards?","type":"knowledge_recall","topic":"ai"}
+{"id":"conifer_452","text":"How can an administrator change folder permissions on macOS Monterey using Terminal? Provide step-by-step instructions.","type":"knowledge_recall","topic":"technology_other"}
+{"id":"conifer_492","text":"How can a beginner export a single layer as a PNG with transparency in GIMP 2.10 on Windows? Provide a general overview.","type":"problem_solving","topic":"technology_other"}
+{"id":"conifer_494","text":"How does workplace etiquette affect the appropriateness of a request in a formal setting?","type":"knowledge_recall","topic":"personal_assistance"}
+{"id":"conifer_509","text":"What piano techniques can be used to mimic the sound of graggers and incorporate traditional Purim melodies?","type":"creative","topic":"humanities_other"}
+{"id":"conifer_514","text":"Which SpaceX milestone involved the first private spacecraft to dock with the ISS?","type":"knowledge_recall","topic":"technology_other"}
+{"id":"conifer_521","text":"What are key Supreme Court cases that have influenced the interpretation of federal laws in the United States in the 21st Century?","type":"knowledge_recall","topic":"history"}
+{"id":"conifer_525","text":"What are the basic definitions of anabolism and catabolism in metabolic pathways?","type":"knowledge_recall","topic":"biology"}
+{"id":"conifer_529","text":"How does risk management and budgeting contribute to effective web development project management?","type":"knowledge_recall","topic":"technology_other"}
+{"id":"conifer_538","text":"How did the lapse of the Reinsurance Treaty affect German and Russian diplomatic relations in the late 19th century? Answer in a summary paragraph.","type":"knowledge_recall","topic":"history"}
+{"id":"conifer_541","text":"What are some typical behavioral questions asked during entry-level job interviews in the technology sector? Answer using ordered list.","type":"knowledge_recall","topic":"personal_assistance"}
+{"id":"conifer_547","text":"Create an HTML survey form with <input> elements and <label> for questions on the Big Five personality traits, ensuring the use of the <form> tag.","type":"coding","topic":"programming"}
+{"id":"conifer_550","text":"How does Delta-9-THC affect sleep patterns and pain relief in the nervous and cardiovascular systems when administered at moderate doses?","type":"knowledge_recall","topic":"biology"}
+{"id":"conifer_551","text":"How do Bootstrap's nav-pills classes enhance the visual representation of switching between messages in a UI?","type":"knowledge_recall","topic":"technology_other"}
+{"id":"conifer_554","text":"How does a greentext meme use short sentences and humor to tell a personal story?","type":"knowledge_recall","topic":"literature"}
+{"id":"conifer_575","text":"Which Java IDEs are commonly used for Minecraft mod development with Forge?","type":"knowledge_recall","topic":"programming"}
+{"id":"conifer_576","text":"What are examples of weak and strong intramolecular bonds? Answer with simple definitions.","type":"knowledge_recall","topic":"chemistry"}
+{"id":"conifer_584","text":"What are some healthcare industry project ideas that utilize Cassandra DB for data management with a focus on user authentication and authorization?","type":"creative","topic":"technology_other"}
+{"id":"conifer_589","text":"How is PCA utilized for dimensionality reduction in genomics?","type":"knowledge_recall","topic":"ai"}
+{"id":"conifer_598","text":"Can you demonstrate how encapsulation is used in a simple C++ class with inline comments?","type":"coding","topic":"programming"}
+{"id":"conifer_607","text":"How do you use PHP conditional statements to check a toggle state and return a status message?","type":"coding","topic":"programming"}
+{"id":"conifer_611","text":"Could you list examples of AI-based object detection services in the healthcare industry?","type":"knowledge_recall","topic":"ai"}
+{"id":"conifer_618","text":"Can you solve elementary-level algebra word problems and provide the final answer in plain text?","type":"problem_solving","topic":"math"}
+{"id":"conifer_622","text":"For a beginner, how can you use the 'pause' command to keep the command prompt open after a script ends in Windows 10?","type":"knowledge_recall","topic":"programming"}
+{"id":"conifer_643","text":"Who were the prominent translators contributing to the spread of Greco-Islamic medical knowledge to Western Europe in the 13th century?","type":"knowledge_recall","topic":"history"}
+{"id":"conifer_655","text":"How would you use charcoal on sketch paper to create a monochrome drawing of a little bear for an intermediate artist?","type":"creative","topic":"humanities_other"}
+{"id":"conifer_660","text":"How does one compose a football chant that is short enough for repetition, yet long enough to convey a message, with a tune that is easily adaptable, includes famous slogans, and embodies the team's identity through simple and repetitive rhythmic structures, rhyme, and references to key players or coaches?","type":"creative","topic":"humanities_other"}
+{"id":"conifer_665","text":"What are the basic mathematical concepts involving natural numbers that preschoolers should recognize to begin learning counting?","type":"knowledge_recall","topic":"math"}
+{"id":"conifer_674","text":"How does circadian rhythm influence the effectiveness of vitamin D absorption during periods of highest sun elevation?","type":"knowledge_recall","topic":"biology"}
+{"id":"conifer_683","text":"What are the immediate benefits for a Product Manager proficient in Python and SQL regarding product data analysis and communication with engineering teams?","type":"knowledge_recall","topic":"technology_other"}
+{"id":"conifer_686","text":"What objects and arrays constitute the foundational elements of a JSON file?","type":"knowledge_recall","topic":"programming"}
+{"id":"conifer_697","text":"What are basic SEO strategies to improve a blog's mobile-friendliness and loading speed for casual readers?","type":"knowledge_recall","topic":"technology_other"}
+{"id":"conifer_711","text":"In the context of Infrastructure as Code, which Terraform function is used for fetching the AWS account ID in the latest stable release? Answer with less than 20 words.","type":"knowledge_recall","topic":"technology_other"}
+{"id":"conifer_714","text":"What is the MySQL syntax to UPDATE a column with DataType 'Date' using a WHERE clause?","type":"knowledge_recall","topic":"programming"}
+{"id":"conifer_715","text":"How can you verify the integrity and completeness of a backup before restoring a .config folder?","type":"problem_solving","topic":"cybersecurity"}
+{"id":"conifer_725","text":"What are the recommended contrast and brightness levels for a QR code to be easily scannable in various lighting conditions?","type":"knowledge_recall","topic":"technology_other"}
+{"id":"conifer_732","text":"What traditional materials and compound additives are found in Cobalt Blue paint?","type":"knowledge_recall","topic":"chemistry"}
+{"id":"conifer_736","text":"What are the key user research and usability testing responsibilities of a digital product designer?","type":"knowledge_recall","topic":"technology_other"}
+{"id":"conifer_751","text":"Design a minimalist ReactJS chat application for two users with one-on-one messaging and read receipts, ensuring the use of React hooks.","type":"coding","topic":"programming"}
+{"id":"conifer_754","text":"Design an API function that retrieves the CWE Name for a given CVE identifier using the Official CWE Database, returning the result as a JSON object.","type":"coding","topic":"cybersecurity"}
+{"id":"conifer_756","text":"What are the top speeds and service ceilings of the F-15 and F-14, and how do they differ?","type":"knowledge_recall","topic":"technology_other"}
+{"id":"conifer_762","text":"Draft a basic Structured Text (ST) program for a PLC that controls a door's digital lock, including commented code blocks.","type":"coding","topic":"programming"}
+{"id":"conifer_775","text":"How can a film logline be crafted to ensure narrative clarity and high stakes?","type":"creative","topic":"literature"}
+{"id":"conifer_782","text":"How can I use the '_set' attribute in Django 3.0 to retrieve all comments related to a single blog post?","type":"coding","topic":"programming"}
+{"id":"conifer_786","text":"What are some CRM systems commonly used by sales enablement teams for efficiency that offer a user-friendly interface and mobile accessibility?","type":"knowledge_recall","topic":"technology_other"}
+{"id":"conifer_790","text":"How does naming a chatbot improve user engagement and create emotional attachment?","type":"knowledge_recall","topic":"ai"}
+{"id":"conifer_794","text":"How can I implement a reusable JavaScript function to calculate the dot product of 3-dimensional vectors with descriptive variable names?","type":"coding","topic":"programming"}
+{"id":"conifer_824","text":"What are the key functions of New Zealand's highest court in interpreting the Bill of Rights? Limit to one sentence.","type":"knowledge_recall","topic":"humanities_other"}
+{"id":"conifer_827","text":"What scriptural citations do Jehovah's Witnesses use to justify disfellowshipping? Summarize in ordered list.","type":"knowledge_recall","topic":"humanities_other"}
+{"id":"conifer_831","text":"What is a pioneering negligence case in the United States with its decision before 1900?","type":"knowledge_recall","topic":"history"}
+{"id":"conifer_834","text":"How do you configure a server block in Nginx on Linux to create a subdomain, in a numbered list format?","type":"knowledge_recall","topic":"technology_other"}
+{"id":"conifer_853","text":"How can the complexity of design and size of a Lego set influence perceived difficulty for new builders?","type":"problem_solving","topic":"technology_other"}
+{"id":"conifer_857","text":"How do small businesses adhere to FMLA when managing maternity leave?","type":"knowledge_recall","topic":"personal_assistance"}
+{"id":"conifer_858","text":"What are some open access websites that offer large quantitative data sets for healthcare analysis?","type":"knowledge_recall","topic":"science_other"}
+{"id":"conifer_860","text":"How do high angle shots and low angle shots enhance the suspense in classic films? List in bullet points.","type":"knowledge_recall","topic":"humanities_other"}
+{"id":"conifer_869","text":"How does the liver contribute to the detoxification of substances and the metabolism of carbohydrates?","type":"knowledge_recall","topic":"biology"}
+{"id":"conifer_870","text":"How do bedtime stories for preschoolers incorporate comforting emotional tones alongside teaching ethics and social skills?","type":"knowledge_recall","topic":"literature"}
+{"id":"conifer_875","text":"What is time dilation in the context of Special Relativity?","type":"knowledge_recall","topic":"physics"}
+{"id":"conifer_877","text":"Design a day trip itinerary for a city within 2 hours by train from London, focusing on exploring medieval structures and ensuring the return journey to London is by evening.","type":"creative","topic":"history"}
+{"id":"conifer_888","text":"What are the aerodynamic benefits of the Drag Reduction System (DRS) in F1 cars? Explain in under 100 words.","type":"knowledge_recall","topic":"physics"}
+{"id":"conifer_896","text":"What are some beginner-friendly Python frameworks for web development with active community support?","type":"knowledge_recall","topic":"programming"}
+{"id":"conifer_919","text":"How do genetics and sleep deprivation contribute to sleepwalking in adults? Summarize in one paragraph.","type":"knowledge_recall","topic":"biology"}
+{"id":"conifer_936","text":"What features do Cloudflare Workers offer for serverless edge computing, and how do they enhance web performance?","type":"knowledge_recall","topic":"technology_other"}
+{"id":"conifer_956","text":"How does a policy brief on environmental issues cater to the needs of government officials and policy makers?","type":"knowledge_recall","topic":"humanities_other"}
+{"id":"conifer_959","text":"What are some introductory resources for learning basic SQL query writing in PostgreSQL?","type":"knowledge_recall","topic":"programming"}
+{"id":"conifer_963","text":"What was the role of Robert E. Lee in the Confederate States Army during the Civil War era?","type":"knowledge_recall","topic":"history"}
+{"id":"conifer_964","text":"Does gRPC support inter-process communication (IPC) for services on the same host with low latency?","type":"knowledge_recall","topic":"technology_other"}
+{"id":"conifer_970","text":"What technical safeguards should be implemented for protecting PII in an iOS appointment booking app?","type":"knowledge_recall","topic":"cybersecurity"}
+{"id":"conifer_976","text":"Which amino acid sequence variations and post-translational modifications distinguish KRAS4B from other KRAS isoforms?","type":"knowledge_recall","topic":"biology"}
+{"id":"conifer_990","text":"How do you ensure lossless conversion when casting a primitive datatype using Python 3.x?","type":"knowledge_recall","topic":"programming"}
+{"id":"conifer_994","text":"Which Visual Studio Code extensions are essential for LaTeX syntax highlighting and code compilation?","type":"knowledge_recall","topic":"technology_other"}
+{"id":"conifer_995","text":"Implement a basic LRU caching algorithm in Swift with a configurable capacity, including class definition and inline comments.","type":"coding","topic":"programming"}
